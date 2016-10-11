@@ -10,30 +10,39 @@ namespace CastleEscape
     {
         static List<string> commands = new List<string>
         {
-            "Hilfe",
-            "Nimm",
-            "Gehe",
-            "Ja",
-            "Nein"
+            "hilfe",
+            "nimm",
+            "gehe",
+            "ja",
+            "nein",
+            "zurück",
+            "inventar",
+            "benutzen"
         };
 
-        public static void ReadCommand()
+        public static void ReadCommand(/*ActionDelegate Action*/)
         {
+            string[] args = Console.ReadLine().ToLower().Split(' ');
 
-            string[] args = Console.ReadLine().Split(' ');
-
-            if (commands.Contains(args[0]))
+            switch (args[0])
             {
-                if (args.Length > 1)
-                {
+                case "hilfe":
+                    if (args.Length == 1)
+                        GameManager.GoToScreen(GameScreens.HelpList);
+                    else
+                    {
+                        Item.ShowItemInfo(GameManager.ItemList.Find(x => x.Name == args[1]));
+                    }
+                    break;
+                default:
+                    GameManager.GoToScreen(GameScreens.CommandNotFound);
+                    break;
+            }
+        }
 
-                }
-            }
-            else
-            {
-                Console.WriteLine("Befehl wurde nicht erkannt. Gib <Hilfe> ein, um eine Liste aller Befehle zu erhalten.");
-                Console.ReadLine();
-            }
+        static void ExecuteCommand(string Command, string[] Arguments)
+        {
+            
         }
     }
 }
