@@ -17,10 +17,12 @@ namespace CastleEscape
             "nein",
             "zurück",
             "inventar",
-            "benutzen"
+            "benutzen",
+            "ablegen",
+            "raum"
         };
 
-        public static void ReadCommand(/*ActionDelegate Action*/)
+        public static bool ReadCommand(/*ActionDelegate Action*/)
         {
             string[] args = Console.ReadLine().ToLower().Split(' ');
 
@@ -34,10 +36,19 @@ namespace CastleEscape
                         Item.ShowItemInfo(GameManager.ItemList.Find(x => x.Name == args[1]));
                     }
                     break;
+                case "ja":
+                    return true;
+                case "nein":
+                    return false;
+                case "nimm":
+                    //Player.TakeItem();
+                    break;
                 default:
                     GameManager.GoToScreen(GameScreens.CommandNotFound);
                     break;
             }
+
+            return false;
         }
 
         static void ExecuteCommand(string Command, string[] Arguments)

@@ -10,6 +10,7 @@ namespace CastleEscape
 
     class Room
     {
+        public string Name { get; }
         public string Text { get; }
         public Directions Direction { get; }
         public List<Item> Items { get; } 

@@ -22,6 +22,13 @@ namespace CastleEscape
             new Item("Schwert", "Eine Waffe, die zum Verteidigen vor Monstern schützt"),
         };
 
+        public static List<Room> RoomList { get; } = new List<Room>
+        {
+            new Room { }
+        }; 
+
+        public static Room StartRoom { get; } = new Room();
+
         public static void GoToScreen(GameScreens Screen)
         {
             switch (Screen)
@@ -40,14 +47,18 @@ namespace CastleEscape
 
         static void CreatePlayer()
         {
-            Console.WriteLine("Gib einen Namen für deinen Spieler ein: ");
-            Player.Name = Console.ReadLine();
-            Console.WriteLine("Dein Spieler heißt " + Player.Name + ", möchtest du fortfahren?");
-            CommandManager.ReadCommand();
+            do
+            {
+                Console.WriteLine("Gib einen Namen für deinen Spieler ein: ");
+                Player.Name = Console.ReadLine();
+                Console.WriteLine("Dein Spieler heißt " + Player.Name + ", möchtest du fortfahren? (ja/nein)");
+            }
+            while (!CommandManager.ReadCommand());
         }
 
         static void LoadStartRoom()
         {
+            Room startRoom = new Room();
             Console.WriteLine("Du wachst in einer Zelle auf. Die Zellentür ist geöffnet. Im Raum siehst du 2 Türen.");
         }
 

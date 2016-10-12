@@ -10,12 +10,20 @@ namespace CastleEscape
     {
         static void Main(string[] args)
         {
-            int choice;
+            int choice = 0;
 
             Console.WriteLine("Willkommen zu Castle Escape!\nWas möchtest du tun?\n");
             Console.WriteLine("1 - Neues Spiel starten");
             Console.WriteLine("2 - Spiel laden\n");
-            choice = Convert.ToInt32(Console.ReadLine());
+
+            try
+            {
+                choice = Convert.ToInt32(Console.ReadLine());
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Die Eingabe ist nicht korrekt!");
+            }
 
             switch (choice)
             {
@@ -25,6 +33,12 @@ namespace CastleEscape
                 case 2:
                     break;
             }
+
+            /*Player.TakeItem(new Item("test", "Beispiel"));
+            Player.TakeItem(new Item("wewe", "Beispiel"));
+            Player.TakeItem(new Item("bnbn", "Beispiel"));
+            Player.ShowInventory();*/
+            Console.ReadLine();
         }
     }
 }
