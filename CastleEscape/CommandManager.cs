@@ -41,7 +41,13 @@ namespace CastleEscape
                 case "nein":
                     return false;
                 case "nimm":
-                    //Player.TakeItem();
+                    Player.TakeItem(args[1]);
+                    break;
+                case "ablegen":
+                    Player.RemoveItem(args[1]);
+                    break;
+                case "gehe":
+                    Player.MoveToDirection(args[1]);
                     break;
                 default:
                     GameManager.GoToScreen(GameScreens.CommandNotFound);

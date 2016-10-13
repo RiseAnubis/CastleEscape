@@ -19,9 +19,9 @@ namespace CastleEscape
         /// </summary>
         public static string Name { get; set; }
 
-        public static void TakeItem(string Name)
+        public static void TakeItem(string ItemName)
         {
-            Item item = currentRoom.Items.Find(x => x.Name == Name);
+            Item item = currentRoom.Items.Find(x => x.Name == ItemName);
 
             if (item != null)
             {
@@ -36,17 +36,45 @@ namespace CastleEscape
             CommandManager.ReadCommand();
         }
 
-        public static void RemoveItem(Item Item)
+        public static void RemoveItem(string ItemName)
         {
-            inventory.Remove(Item);
+            foreach (Item i in from Item i in inventory where i.Name == ItemName select i)
+                inventory.Remove(i);
         }
 
+        /// <summary>
+        /// Zeigt alle Items im Inventar an
+        /// </summary>
         public static void ShowInventory()
         {
             foreach (Item i in inventory)
                 Console.WriteLine(i.Name);
 
             CommandManager.ReadCommand();
+        }
+
+        public static void MoveToDirection(string Direction)
+        {
+            Directions dir;
+
+            switch (Direction)
+            {
+                case "nord":
+                    dir = Directions.North;
+                    break;
+                case "süd":
+                    dir = Directions.South;
+                    break;
+                case "west":
+                    dir = Directions.West;
+                    break;
+                case "ost":
+                    dir = Directions.East;
+                    break;
+                default:
+                    Console.WriteLine("Die angegebene Richtung existiert nicht!");
+                    break;
+            }
         }
     }
 }
