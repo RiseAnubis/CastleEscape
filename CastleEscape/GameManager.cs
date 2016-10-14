@@ -25,7 +25,7 @@ namespace CastleEscape
         public static List<Room> RoomList { get; } = new List<Room>
         {
             new Room { }
-        }; 
+        };
 
         public static Room StartRoom { get; } = new Room();
 
@@ -47,11 +47,13 @@ namespace CastleEscape
 
         static void CreatePlayer()
         {
+            Console.Clear();
+
             do
             {
-                Console.WriteLine("Gib einen Namen für deinen Spieler ein: ");
+                TextBuffer.WriteLine("Gib einen Namen für deinen Spieler ein: ");
                 Player.Name = Console.ReadLine();
-                Console.WriteLine("Dein Spieler heißt " + Player.Name + ", möchtest du fortfahren? (ja/nein)");
+                TextBuffer.WriteLine("Dein Spieler heißt " + Player.Name + ", möchtest du fortfahren? (ja/nein)");
             }
             while (!CommandManager.ReadCommand());
         }
@@ -73,10 +75,11 @@ namespace CastleEscape
         /// </summary>
         static void ShowHelpList()
         {
+            Console.Clear();
             Console.WriteLine("Verfügbare Befehle");
             Console.WriteLine("Nimm <Item>\tNimmt das Item auf, wenn genug Platz im Inventar ist.");
             Console.WriteLine("Gehe <Richtung>\tGeht in den angegebenen Raum (Nord, Süd, Ost, West)");
-            Console.WriteLine("Zurück\tGeht zum vorherigen Bildschirm zurück, wenn man eine Fehlermeldung erhält.");
+            Console.WriteLine("Zurück\tGeht zum vorherigen Bildschirm zurück.");
             Console.WriteLine("Hilfe <Item>\tRuft eine Beschreibung des eingegeben Items ab, wenn es sich im Inventar befindet.");
             CommandManager.ReadCommand();
         }

@@ -32,9 +32,7 @@ namespace CastleEscape
                     if (args.Length == 1)
                         GameManager.GoToScreen(GameScreens.HelpList);
                     else
-                    {
                         Item.ShowItemInfo(GameManager.ItemList.Find(x => x.Name == args[1]));
-                    }
                     break;
                 case "ja":
                     return true;
@@ -48,6 +46,10 @@ namespace CastleEscape
                     break;
                 case "gehe":
                     Player.MoveToDirection(args[1]);
+                    break;
+                case "zurück":
+                    TextBuffer.ShowBuffer();
+                    TextBuffer.ClearBuffer();
                     break;
                 default:
                     GameManager.GoToScreen(GameScreens.CommandNotFound);
