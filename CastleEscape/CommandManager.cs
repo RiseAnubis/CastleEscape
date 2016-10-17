@@ -19,11 +19,12 @@ namespace CastleEscape
             "inventar",
             "benutzen",
             "ablegen",
-            "raum"
+            "umsehen"
         };
 
         public static bool ReadCommand(/*ActionDelegate Action*/)
         {
+            Console.Write("\nWas soll ich machen?\n>");
             string[] args = Console.ReadLine().ToLower().Split(' ');
 
             switch (args[0])
@@ -49,7 +50,12 @@ namespace CastleEscape
                     break;
                 case "zurück":
                     TextBuffer.ShowBuffer();
-                    TextBuffer.ClearBuffer();
+                    break;
+                case "beenden":
+                    GameManager.CanQuit = true;
+                    break;
+                case "inventar":
+                    GameManager.GoToScreen(GameScreens.PlayerInventory);
                     break;
                 default:
                     GameManager.GoToScreen(GameScreens.CommandNotFound);
@@ -57,11 +63,6 @@ namespace CastleEscape
             }
 
             return false;
-        }
-
-        static void ExecuteCommand(string Command, string[] Arguments)
-        {
-            
         }
     }
 }

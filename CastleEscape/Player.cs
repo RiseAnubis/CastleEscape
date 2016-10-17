@@ -21,19 +21,22 @@ namespace CastleEscape
 
         public static void TakeItem(string ItemName)
         {
-            Item item = currentRoom.Items.Find(x => x.Name == ItemName);
+            Item item = currentRoom.GetItem(ItemName);
 
             if (item != null)
             {
                 if (inventory.IsFull)
                     Console.WriteLine("Dein Inventar ist voll!");
                 else
+                {
                     inventory.Add(item);
+                    currentRoom.RemoveItem(item);
+                }
             }
             else
                 Console.WriteLine("Das Item existiert nicht in diesem Raum!");
 
-            CommandManager.ReadCommand();
+            //CommandManager.ReadCommand();
         }
 
         public static void RemoveItem(string ItemName)
@@ -47,8 +50,19 @@ namespace CastleEscape
         /// </summary>
         public static void ShowInventory()
         {
-            foreach (Item i in inventory)
-                Console.WriteLine(i.Name);
+            Console.Clear();
+
+            if (inventory.IsEmpty)
+                Console.WriteLine("Du hast derzeit keine Items im Inventar.");
+            else
+            {
+                Console.WriteLine("Dein Inventar enthält folgende Items:\n");
+
+                foreach (Item i in inventory)
+                    Console.WriteLine(i.Name);
+
+                Console.WriteLine();
+            }
 
             CommandManager.ReadCommand();
         }

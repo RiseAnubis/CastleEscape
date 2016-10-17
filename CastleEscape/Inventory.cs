@@ -25,6 +25,11 @@ namespace CastleEscape
         public bool IsFull { get; private set; }
 
         /// <summary>
+        /// Gibt an, ob das Inventar leer ist
+        /// </summary>
+        public bool IsEmpty { get; private set; } = true;
+
+        /// <summary>
         /// Initialisiert die Klasse
         /// </summary>
         /// <param name="Size">Gibt die Startgröße den Inventars an</param>
@@ -37,7 +42,10 @@ namespace CastleEscape
         public void Add(Item Item)
         {
             if (!IsFull)
+            {
                 items.Add(Item);
+                IsEmpty = false;
+            }
 
             if (items.Count == Size)
                 IsFull = true;
@@ -50,6 +58,9 @@ namespace CastleEscape
 
             if (IsFull)
                 IsFull = false;
+
+            if (items.Count == 0)
+                IsEmpty = true;
         }
 
         /// <summary>

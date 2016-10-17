@@ -10,35 +10,19 @@ namespace CastleEscape
     {
         static void Main(string[] args)
         {
-            int choice = 0;
+            Console.CursorVisible = false;
+            Console.WriteLine("Willkommen zu Castle Escape! Drücke eine beliebige Taste zum Fortsetzen.");
+            Console.WriteLine("Hinweis: Du kannst jederzeit \"Hilfe\" eingeben, um eine Befehlsliste zu erhalten.");
+            Console.ReadKey();
+            Console.Clear();
+            GameManager.GoToScreen(GameScreens.StartRoom);
+            Console.CursorVisible = true;
 
-            Console.WriteLine("Willkommen zu Castle Escape!\nWas möchtest du tun?\n");
-            Console.WriteLine("1 - Neues Spiel starten");
-            Console.WriteLine("2 - Spiel laden\n");
-
-            try
+            do
             {
-                choice = Convert.ToInt32(Console.ReadLine());
+                CommandManager.ReadCommand();
             }
-            catch (Exception)
-            {
-                Console.WriteLine("Die Eingabe ist nicht korrekt!");
-            }
-
-            switch (choice)
-            {
-                case 1:
-                    GameManager.GoToScreen(GameScreens.CharacterCreation);
-                    break;
-                case 2:
-                    break;
-            }
-
-            /*Player.TakeItem(new Item("test", "Beispiel"));
-            Player.TakeItem(new Item("wewe", "Beispiel"));
-            Player.TakeItem(new Item("bnbn", "Beispiel"));
-            Player.ShowInventory();*/
-            Console.ReadLine();
+            while (!GameManager.CanQuit);
         }
     }
 }

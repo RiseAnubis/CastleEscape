@@ -11,9 +11,13 @@ namespace CastleEscape
         CharacterCreation,
         StartRoom,
         CommandNotFound,
-        HelpList
+        HelpList,
+        PlayerInventory
     }
 
+    /// <summary>
+    /// Klasse zur grundlegenden Verwaltung des Spiels
+    /// </summary>
     static class GameManager
     {
         public static List<Item> ItemList { get; } = new List<Item>
@@ -27,7 +31,10 @@ namespace CastleEscape
             new Room { }
         };
 
-        public static Room StartRoom { get; } = new Room();
+        /// <summary>
+        /// Gibt an, ob das Spiel beendet werden soll
+        /// </summary>
+        public static bool CanQuit { get; set; }
 
         public static void GoToScreen(GameScreens Screen)
         {
@@ -41,6 +48,12 @@ namespace CastleEscape
                     break;
                 case GameScreens.HelpList:
                     ShowHelpList();
+                    break;
+                case GameScreens.StartRoom:
+                    LoadStartRoom();
+                    break;
+                case GameScreens.PlayerInventory:
+                    ShowPlayerInventory();
                     break;
             }
         }
@@ -61,14 +74,17 @@ namespace CastleEscape
         static void LoadStartRoom()
         {
             Room startRoom = new Room();
-            Console.WriteLine("Du wachst in einer Zelle auf. Die Zellentür ist geöffnet. Im Raum siehst du 2 Türen.");
+            TextBuffer.WriteLine("Du wachst in einer Zelle auf. Die Zellentür ist geöffnet. Im Raum siehst du 2 Türen.");
         }
 
         static void ShowCommandNotFound()
         {
+            Console.Clear();
             Console.WriteLine("Befehl wurde nicht erkannt. Gib <Hilfe> ein, um eine Liste aller Befehle zu erhalten oder <Zurück>, um zum vorhergehenden Bildschirm zu wechseln.");
             CommandManager.ReadCommand();
         }
+
+        static void ShowPlayerInventory() => Player.ShowInventory();
 
         /// <summary>
         /// Zeigt eine Liste mit allen verfügbaren Befehlen an
@@ -77,10 +93,12 @@ namespace CastleEscape
         {
             Console.Clear();
             Console.WriteLine("Verfügbare Befehle");
-            Console.WriteLine("Nimm <Item>\tNimmt das Item auf, wenn genug Platz im Inventar ist.");
-            Console.WriteLine("Gehe <Richtung>\tGeht in den angegebenen Raum (Nord, Süd, Ost, West)");
-            Console.WriteLine("Zurück\tGeht zum vorherigen Bildschirm zurück.");
-            Console.WriteLine("Hilfe <Item>\tRuft eine Beschreibung des eingegeben Items ab, wenn es sich im Inventar befindet.");
+            Console.WriteLine("--------------------------------\n");
+            Console.WriteLine("Nimm <Item>\t\tNimmt das Item auf, wenn genug Platz im Inventar ist.");
+            Console.WriteLine("Gehe <Richtung>\t\tGeht in den angegebenen Raum (Nord, Süd, Ost, West)");
+            Console.WriteLine("Zurück\t\tGeht zum vorherigen Bildschirm zurück.");
+            Console.WriteLine("Hilfe <Item>\t\tRuft eine Beschreibung des eingegeben Items ab, wenn es sich im Inventar befindet.");
+            Console.WriteLine("Beenden\t\tBeendet das Spiel");
             CommandManager.ReadCommand();
         }
     }
