@@ -15,14 +15,13 @@ namespace CastleEscape
             Console.WriteLine("Hinweis: Du kannst jederzeit \"Hilfe\" eingeben, um eine Befehlsliste zu erhalten.");
             Console.ReadKey();
             Console.Clear();
-            GameManager.GoToScreen(GameScreens.StartRoom);
+            //GameManager.GoToScreen(GameScreens.StartRoom);
             Console.CursorVisible = true;
+            Level.Initialize();
+            Player.CurrentRoom.ShowDescription();
 
-            do
-            {
+            while (!GameManager.CanQuit)
                 CommandManager.ReadCommand();
-            }
-            while (!GameManager.CanQuit);
         }
     }
 }

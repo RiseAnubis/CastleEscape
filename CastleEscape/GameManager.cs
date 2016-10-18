@@ -11,8 +11,7 @@ namespace CastleEscape
         CharacterCreation,
         StartRoom,
         CommandNotFound,
-        HelpList,
-        PlayerInventory
+        HelpList
     }
 
     /// <summary>
@@ -52,9 +51,6 @@ namespace CastleEscape
                 case GameScreens.StartRoom:
                     LoadStartRoom();
                     break;
-                case GameScreens.PlayerInventory:
-                    ShowPlayerInventory();
-                    break;
             }
         }
 
@@ -83,8 +79,6 @@ namespace CastleEscape
             Console.WriteLine("Befehl wurde nicht erkannt. Gib <Hilfe> ein, um eine Liste aller Befehle zu erhalten oder <Zurück>, um zum vorhergehenden Bildschirm zu wechseln.");
             CommandManager.ReadCommand();
         }
-
-        static void ShowPlayerInventory() => Player.ShowInventory();
 
         /// <summary>
         /// Zeigt eine Liste mit allen verfügbaren Befehlen an

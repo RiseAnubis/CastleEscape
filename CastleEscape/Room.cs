@@ -21,8 +21,8 @@ namespace CastleEscape
         List<string> exits;
         List<Item> items;
          
-        public string Name { get; }
-        public string Text { get; }
+        public string Name { get; set; }
+        public string Text { get; set; }
 
         public Room()
         {
@@ -38,10 +38,27 @@ namespace CastleEscape
                 exits.Add(Exit);
         }
 
+        public void ShowDescription()
+        {
+            Console.Clear();
+            TextBuffer.WriteLine(Text + "\n");
+            TextBuffer.WriteLine("Verfügbare Items:");
+            
+            foreach (Item item in items)
+                TextBuffer.WriteLine(item.Name);
+
+            TextBuffer.WriteLine("\nVerfügbare Ausgänge:");
+
+            foreach (string exit in exits)
+                TextBuffer.WriteLine(exit);
+
+            TextBuffer.ShowBuffer();
+        }
+
         public void AddItem(Item Item) => items.Add(Item);
 
         public void RemoveItem(Item Item) => items.Remove(Item);
 
-        public Item GetItem(string ItemName) => items.Find(x => x.Name == ItemName);
+        public Item GetItem(string ItemName) => items.Find(x => string.Equals(x.Name, ItemName, StringComparison.CurrentCultureIgnoreCase));
     }
 }

@@ -32,8 +32,8 @@ namespace CastleEscape
                 case "hilfe":
                     if (args.Length == 1)
                         GameManager.GoToScreen(GameScreens.HelpList);
-                    else
-                        Item.ShowItemInfo(GameManager.ItemList.Find(x => x.Name == args[1]));
+                    /*else
+                        Item.ShowInfo(GameManager.ItemList.Find(x => x.Name == args[1]));*/
                     break;
                 case "ja":
                     return true;
@@ -43,7 +43,7 @@ namespace CastleEscape
                     Player.TakeItem(args[1]);
                     break;
                 case "ablegen":
-                    Player.RemoveItem(args[1]);
+                    Player.DropItem(args[1]);
                     break;
                 case "gehe":
                     Player.MoveToDirection(args[1]);
@@ -55,7 +55,7 @@ namespace CastleEscape
                     GameManager.CanQuit = true;
                     break;
                 case "inventar":
-                    GameManager.GoToScreen(GameScreens.PlayerInventory);
+                    Player.ShowInventory();
                     break;
                 default:
                     GameManager.GoToScreen(GameScreens.CommandNotFound);

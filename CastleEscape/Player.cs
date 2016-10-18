@@ -12,7 +12,10 @@ namespace CastleEscape
     static class Player
     {
         static Inventory inventory = new Inventory(10);
-        static Room currentRoom;
+        static int availableSpace;
+        static int posX, posY;
+
+        public static Room CurrentRoom { get; set; }
 
         /// <summary>
         /// Ruft den Namen des Spielers ab oder setzt ihn
@@ -21,7 +24,7 @@ namespace CastleEscape
 
         public static void TakeItem(string ItemName)
         {
-            Item item = currentRoom.GetItem(ItemName);
+            Item item = CurrentRoom?.GetItem(ItemName);
 
             if (item != null)
             {
@@ -30,19 +33,23 @@ namespace CastleEscape
                 else
                 {
                     inventory.Add(item);
-                    currentRoom.RemoveItem(item);
+                    CurrentRoom.RemoveItem(item);
                 }
             }
             else
                 Console.WriteLine("Das Item existiert nicht in diesem Raum!");
-
-            //CommandManager.ReadCommand();
         }
 
-        public static void RemoveItem(string ItemName)
+        public static void DropItem(string ItemName)
         {
-            foreach (Item i in from Item i in inventory where i.Name == ItemName select i)
-                inventory.Remove(i);
+            foreach (Item i in inventory)
+            {
+                if (string.Equals(i.Name, ItemName, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    inventory.Remove(i);
+                    CurrentRoom.AddItem(i);
+                }
+            }
         }
 
         /// <summary>
@@ -64,7 +71,7 @@ namespace CastleEscape
                 Console.WriteLine();
             }
 
-            CommandManager.ReadCommand();
+            Console.WriteLine("Verfügbarer Platz: " + inventory.AvailableSize);
         }
 
         public static void MoveToDirection(string Direction)

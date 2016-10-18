@@ -20,6 +20,16 @@ namespace CastleEscape
         public int Size { get; }
 
         /// <summary>
+        /// Gibt an, wie viele Items sich im Inventar befinden
+        /// </summary>
+        public int ItemCount => items.Count;
+
+        /// <summary>
+        /// Gibt an, wie viel Platz noch im Inventar ist
+        /// </summary>
+        public int AvailableSize => Size - ItemCount;
+
+        /// <summary>
         /// Gibt an, ob das Inventar voll ist
         /// </summary>
         public bool IsFull { get; private set; }
@@ -39,6 +49,10 @@ namespace CastleEscape
             items = new List<Item>();
         }
 
+        /// <summary>
+        /// Fügt dem Inventar ein Item hinzu
+        /// </summary>
+        /// <param name="Item">Das Item, das hinzugefügt werden soll</param>
         public void Add(Item Item)
         {
             if (!IsFull)
@@ -51,6 +65,10 @@ namespace CastleEscape
                 IsFull = true;
         }
 
+        /// <summary>
+        /// Entfernt ein Item
+        /// </summary>
+        /// <param name="Item">Das Item, das entfernt werden soll</param>
         public void Remove(Item Item)
         {
             if (items.Count > 0)

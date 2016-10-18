@@ -17,7 +17,7 @@ namespace CastleEscape
             HelpDescription = Description;
         }
 
-        public static void ShowItemInfo(Item Item)
+        public void ShowInfo(Item Item)
         {
             Console.WriteLine(Item.HelpDescription);
             CommandManager.ReadCommand();
