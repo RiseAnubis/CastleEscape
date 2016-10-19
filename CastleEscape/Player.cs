@@ -15,7 +15,10 @@ namespace CastleEscape
         static int availableSpace;
         static int posX, posY;
 
-        public static Room CurrentRoom { get; set; }
+        public static Room CurrentRoom => Level.Rooms[PositionX, PositionY];
+
+        public static int PositionX { get; set; }
+        public static int PositionY { get; set; }
 
         /// <summary>
         /// Ruft den Namen des Spielers ab oder setzt ihn
@@ -40,6 +43,7 @@ namespace CastleEscape
                 Console.WriteLine("Das Item existiert nicht in diesem Raum!");
         }
 
+        // TODO Absturz mit Fehler "Die Auflistung wurde geändert"
         public static void DropItem(string ItemName)
         {
             foreach (Item i in inventory)
@@ -76,26 +80,29 @@ namespace CastleEscape
 
         public static void MoveToDirection(string Direction)
         {
-            Directions dir;
+            if (!CurrentRoom.CanExit(Direction))
+            {
+                Console.WriteLine("Die Richtung ist ungültig!");
+                return;
+            }
 
             switch (Direction)
             {
-                case "nord":
-                    dir = Directions.North;
+                case Exits.North:
+                    PositionY++;
                     break;
-                case "süd":
-                    dir = Directions.South;
+                case Exits.South:
+                    PositionY--;
                     break;
-                case "west":
-                    dir = Directions.West;
+                case Exits.West:
+                    PositionX--;
                     break;
-                case "ost":
-                    dir = Directions.East;
-                    break;
-                default:
-                    Console.WriteLine("Die angegebene Richtung existiert nicht!");
+                case Exits.East:
+                    PositionX++;
                     break;
             }
+
+            CurrentRoom.ShowDescription();
         }
     }
 }

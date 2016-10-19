@@ -55,6 +55,8 @@ namespace CastleEscape
             TextBuffer.ShowBuffer();
         }
 
+        public bool CanExit(string Direction) => exits.Contains(Direction);
+
         public void AddItem(Item Item) => items.Add(Item);
 
         public void RemoveItem(Item Item) => items.Remove(Item);

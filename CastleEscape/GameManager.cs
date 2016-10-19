@@ -77,7 +77,6 @@ namespace CastleEscape
         {
             Console.Clear();
             Console.WriteLine("Befehl wurde nicht erkannt. Gib <Hilfe> ein, um eine Liste aller Befehle zu erhalten oder <Zurück>, um zum vorhergehenden Bildschirm zu wechseln.");
-            CommandManager.ReadCommand();
         }
 
         /// <summary>
@@ -93,7 +92,6 @@ namespace CastleEscape
             Console.WriteLine("Zurück\t\tGeht zum vorherigen Bildschirm zurück.");
             Console.WriteLine("Hilfe <Item>\t\tRuft eine Beschreibung des eingegeben Items ab, wenn es sich im Inventar befindet.");
             Console.WriteLine("Beenden\t\tBeendet das Spiel");
-            CommandManager.ReadCommand();
         }
     }
 }

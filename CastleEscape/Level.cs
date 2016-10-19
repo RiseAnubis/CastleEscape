@@ -8,20 +8,25 @@ namespace CastleEscape
 {
     static class Level
     {
-        static Room[,] rooms;
+        public static Room[,] Rooms { get; private set; }
 
         public static void Initialize()
         {
-            rooms = new Room[2, 1];
-            rooms[0, 0] = new Room { Text = "Dies ist der blaue Raum" };
-            rooms[0, 0].AddExit(Exits.East);
-            rooms[0, 0].AddExit(Exits.North);
-            rooms[0, 0].AddItem(new Item("Schlüssel", "Test"));
-            Player.CurrentRoom = rooms[0, 0];
+            Rooms = new Room[2, 2];
+            Room room = new Room();
+            Rooms[0, 0] = room;
+            room.Text = "Dies ist der blaue Raum";
+            room.AddExit(Exits.East);
+            room.AddExit(Exits.North);
+            room.AddItem(new Item("Schlüssel", "Test"));
+            Player.PositionX = 0;
+            Player.PositionY = 0;
 
-            rooms[1, 0] = new Room { Text = "Dies ist der rote Raum" };
-            rooms[1, 0].AddExit(Exits.North);
-            rooms[1, 0].AddItem(new Item("Schwert", "Eine Waffe, was denn sonst?"));
+            room = new Room();
+            Rooms[1, 0] = room;
+            room.Text = "Dies ist der rote Raum";
+            room.AddExit(Exits.North);
+            room.AddItem(new Item("Schwert", "Eine Waffe, was denn sonst?"));
         }
     }
 }

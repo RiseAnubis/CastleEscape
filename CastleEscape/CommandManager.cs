@@ -57,6 +57,9 @@ namespace CastleEscape
                 case "inventar":
                     Player.ShowInventory();
                     break;
+                case "umsehen":
+                    Player.CurrentRoom.ShowDescription();
+                    break;
                 default:
                     GameManager.GoToScreen(GameScreens.CommandNotFound);
                     break;
