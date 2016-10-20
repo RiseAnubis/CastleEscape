@@ -6,14 +6,6 @@ using System.Threading.Tasks;
 
 namespace CastleEscape
 {
-    enum GameScreens
-    {
-        CharacterCreation,
-        StartRoom,
-        CommandNotFound,
-        HelpList
-    }
-
     /// <summary>
     /// Klasse zur grundlegenden Verwaltung des Spiels
     /// </summary>
@@ -88,10 +80,22 @@ namespace CastleEscape
             Console.WriteLine("Verfügbare Befehle");
             Console.WriteLine("--------------------------------\n");
             Console.WriteLine("Nimm <Item>\t\tNimmt das Item auf, wenn genug Platz im Inventar ist.");
+            Console.WriteLine("Ablegen <Item>\t\tLegt das Item ab.");
             Console.WriteLine("Gehe <Richtung>\t\tGeht in den angegebenen Raum (Nord, Süd, Ost, West)");
-            Console.WriteLine("Zurück\t\tGeht zum vorherigen Bildschirm zurück.");
+            Console.WriteLine("Umsehen\t\tZeigt den aktuellen Raum an.");
             Console.WriteLine("Hilfe <Item>\t\tRuft eine Beschreibung des eingegeben Items ab, wenn es sich im Inventar befindet.");
             Console.WriteLine("Beenden\t\tBeendet das Spiel");
         }
+    }
+
+    /// <summary>
+    /// Aufzählung, die bestimmte Bildschirme anzeigt
+    /// </summary>
+    enum GameScreens
+    {
+        CharacterCreation,
+        StartRoom,
+        CommandNotFound,
+        HelpList
     }
 }

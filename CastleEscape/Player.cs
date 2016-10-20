@@ -12,12 +12,20 @@ namespace CastleEscape
     static class Player
     {
         static Inventory inventory = new Inventory(10);
-        static int availableSpace;
-        static int posX, posY;
 
+        /// <summary>
+        /// Gibt den Raum zurück, in dem sich der Spieler derzeit befindet
+        /// </summary>
         public static Room CurrentRoom => Level.Rooms[PositionX, PositionY];
 
+        /// <summary>
+        /// Die X-Position im Level
+        /// </summary>
         public static int PositionX { get; set; }
+
+        /// <summary>
+        /// Die Y-Position im Level
+        /// </summary>
         public static int PositionY { get; set; }
 
         /// <summary>
@@ -25,6 +33,10 @@ namespace CastleEscape
         /// </summary>
         public static string Name { get; set; }
 
+        /// <summary>
+        /// Nimmt ein Item auf, wenn das Inventar noch Platz hat
+        /// </summary>
+        /// <param name="ItemName">Das aufzunehmende Item</param>
         public static void TakeItem(string ItemName)
         {
             Item item = CurrentRoom?.GetItem(ItemName);
@@ -37,6 +49,7 @@ namespace CastleEscape
                 {
                     inventory.Add(item);
                     CurrentRoom.RemoveItem(item);
+                    CurrentRoom.ShowDescription();
                 }
             }
             else
@@ -46,14 +59,13 @@ namespace CastleEscape
         // TODO Absturz mit Fehler "Die Auflistung wurde geändert"
         public static void DropItem(string ItemName)
         {
-            foreach (Item i in inventory)
-            {
-                if (string.Equals(i.Name, ItemName, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    inventory.Remove(i);
-                    CurrentRoom.AddItem(i);
-                }
-            }
+            Item item = null;
+
+            foreach (Item i in from Item i in inventory where string.Equals(i.Name, ItemName, StringComparison.CurrentCultureIgnoreCase) select i)
+                item = i;
+
+            inventory.Remove(item);
+            CurrentRoom.AddItem(item);
         }
 
         /// <summary>
@@ -78,6 +90,10 @@ namespace CastleEscape
             Console.WriteLine("Verfügbarer Platz: " + inventory.AvailableSize);
         }
 
+        /// <summary>
+        /// Bewegt den Spieler in den nächsten Raum, wenn die Richtung gültig ist
+        /// </summary>
+        /// <param name="Direction">Die Richtung, in die sich der Spieler bewegen soll</param>
         public static void MoveToDirection(string Direction)
         {
             if (!CurrentRoom.CanExit(Direction))

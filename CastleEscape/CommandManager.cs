@@ -15,7 +15,6 @@ namespace CastleEscape
             "gehe",
             "ja",
             "nein",
-            "zurück",
             "inventar",
             "benutzen",
             "ablegen",
@@ -47,9 +46,6 @@ namespace CastleEscape
                     break;
                 case "gehe":
                     Player.MoveToDirection(args[1]);
-                    break;
-                case "zurück":
-                    TextBuffer.ShowBuffer();
                     break;
                 case "beenden":
                     GameManager.CanQuit = true;
