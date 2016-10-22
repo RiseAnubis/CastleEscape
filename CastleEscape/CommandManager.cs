@@ -35,10 +35,22 @@ namespace CastleEscape
                         Item.ShowInfo(GameManager.ItemList.Find(x => x.Name == args[1]));*/
                     break;
                 case "nimm":
-                    Player.TakeItem(args[1]);
+                    if (args.Length > 1)
+                        Player.TakeItem(args[1]);
+                    else
+                    {
+                        TextBuffer.WriteLine("Du musst ein Item angeben!");
+                        TextBuffer.ShowBuffer();
+                    }
                     break;
                 case "ablegen":
-                    Player.DropItem(args[1]);
+                    if (args.Length > 1)
+                        Player.DropItem(args[1]);
+                    else
+                    {
+                        TextBuffer.WriteLine("Du musst ein Item angeben!");
+                        TextBuffer.ShowBuffer();
+                    }
                     break;
                 case "gehe":
                     Player.MoveToDirection(args[1]);

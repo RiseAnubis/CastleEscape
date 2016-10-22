@@ -69,6 +69,7 @@ namespace CastleEscape
 
             inventory.Remove(item);
             CurrentRoom.AddItem(item);
+            CurrentRoom.ShowDescription();
         }
 
         /// <summary>
@@ -79,20 +80,23 @@ namespace CastleEscape
             Console.Clear();
 
             if (inventory.IsEmpty)
-                Console.WriteLine("Du hast derzeit keine Items im Inventar.");
+                TextBuffer.WriteLine("Du hast derzeit keine Items im Inventar.");
             else
             {
-                Console.WriteLine("Dein Inventar enthält folgende Items:\n");
+                TextBuffer.WriteLine("Dein Inventar enthält folgende Items:\n");
 
                 foreach (Item i in inventory)
-                    Console.WriteLine(i.Name);
-
-                Console.WriteLine();
+                    TextBuffer.WriteLine(i.Name);
             }
 
-            Console.WriteLine("Verfügbarer Platz: " + inventory.AvailableSize);
+            TextBuffer.WriteLine("\nVerfügbarer Platz: " + inventory.AvailableSize);
+            TextBuffer.ShowBuffer();
         }
 
+        /// <summary>
+        /// Öffnet den angegebenen Ausgang
+        /// </summary>
+        /// <param name="Exit"></param>
         public static void OpenExit(string Exit)
         {
             if (CurrentRoom.IsExitLocked(Exit))

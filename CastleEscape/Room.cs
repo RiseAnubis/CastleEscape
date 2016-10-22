@@ -92,20 +92,20 @@ namespace CastleEscape
         /// </summary>
         /// <param name="Direction">Der Ausgang, durch den der Raum verlassen werden soll</param>
         /// <returns></returns>
-        public bool CanExit(string Direction) => exits.Contains(Direction) && /*!lockedExits.Contains(Direction) &&*/ !lockedExits.ContainsKey(Direction);
+        public bool CanExit(string Direction) => exits.Contains(Direction) && !lockedExits.ContainsKey(Direction);
 
         /// <summary>
         /// Gibt an, ob der angegebene Ausgang abgeschlossen ist
         /// </summary>
         /// <param name="Exit">Der zu prüfende Ausgang</param>
         /// <returns></returns>
-        public bool IsExitLocked(string Exit) => /*lockedExits.Contains(Exit)*/ lockedExits.ContainsKey(Exit);
+        public bool IsExitLocked(string Exit) => lockedExits.ContainsKey(Exit);
 
         /// <summary>
         /// Öffnet den angegebenen Ausgang
         /// </summary>
         /// <param name="Exit"></param>
-        public void OpenExit(string Exit) => /*lockedExits.Remove(Exit)*/ lockedExits.Remove(Exit);
+        public void OpenExit(string Exit) => lockedExits.Remove(Exit);
 
         /// <summary>
         /// Fügt dem Raum ein Item hinzu

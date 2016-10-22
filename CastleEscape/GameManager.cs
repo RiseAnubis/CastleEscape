@@ -50,7 +50,7 @@ namespace CastleEscape
         static void ShowCommandNotFound()
         {
             Console.Clear();
-            Console.WriteLine("Befehl wurde nicht erkannt. Gib <Hilfe> ein, um eine Liste aller Befehle zu erhalten oder <Zurück>, um zum vorhergehenden Bildschirm zu wechseln.");
+            Console.WriteLine("Befehl wurde nicht erkannt. Gib <Hilfe> ein, um eine Liste aller Befehle zu erhalten.");
         }
 
         /// <summary>
@@ -76,7 +76,6 @@ namespace CastleEscape
     enum GameScreens
     {
         CharacterCreation,
-        StartRoom,
         CommandNotFound,
         HelpList
     }

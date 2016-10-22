@@ -10,6 +10,7 @@ namespace CastleEscape
     {
         static void Main(string[] args)
         {
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.CursorVisible = false;
             Console.Title = "Castle Escape";
             Console.WriteLine("Willkommen zu Castle Escape! Drücke eine beliebige Taste zum Fortsetzen.");
