@@ -11,16 +11,7 @@ namespace CastleEscape
     /// </summary>
     static class GameManager
     {
-        public static List<Item> ItemList { get; } = new List<Item>
-        {
-            new Item("Schlüssel", "Ein Schlüssel, der eine Tür im Schloss öffnet"),
-            new Item("Schwert", "Eine Waffe, die zum Verteidigen vor Monstern schützt"),
-        };
-
-        public static List<Room> RoomList { get; } = new List<Room>
-        {
-            new Room { }
-        };
+        public static Item KeyGreenRoom = new Item("Schlüssel", "Ein Schlüssel, der den grünen Raum öffnet");
 
         /// <summary>
         /// Gibt an, ob das Spiel beendet werden soll
@@ -40,15 +31,12 @@ namespace CastleEscape
                 case GameScreens.HelpList:
                     ShowHelpList();
                     break;
-                case GameScreens.StartRoom:
-                    LoadStartRoom();
-                    break;
             }
         }
 
         static void CreatePlayer()
         {
-            Console.Clear();
+            /*Console.Clear();
 
             do
             {
@@ -56,13 +44,7 @@ namespace CastleEscape
                 Player.Name = Console.ReadLine();
                 TextBuffer.WriteLine("Dein Spieler heißt " + Player.Name + ", möchtest du fortfahren? (ja/nein)");
             }
-            while (!CommandManager.ReadCommand());
-        }
-
-        static void LoadStartRoom()
-        {
-            Room startRoom = new Room();
-            TextBuffer.WriteLine("Du wachst in einer Zelle auf. Die Zellentür ist geöffnet. Im Raum siehst du 2 Türen.");
+            while (!CommandManager.ReadCommand());*/
         }
 
         static void ShowCommandNotFound()

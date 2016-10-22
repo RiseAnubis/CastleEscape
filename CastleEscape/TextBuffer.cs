@@ -10,11 +10,7 @@ namespace CastleEscape
     {
         static string buffer;
 
-        public static void WriteLine(string Text)
-        {
-            buffer += Text + "\n";
-            Console.WriteLine(Text);
-        }
+        public static void WriteLine(string Text) => buffer += Text + "\n";
 
         public static void ShowBuffer()
         {

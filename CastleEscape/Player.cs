@@ -56,7 +56,10 @@ namespace CastleEscape
                 Console.WriteLine("Das Item existiert nicht in diesem Raum!");
         }
 
-        // TODO Absturz mit Fehler "Die Auflistung wurde geändert"
+        /// <summary>
+        /// Legt ein Item wieder ab, welches sich dann im derzeitigen Raum befindet
+        /// </summary>
+        /// <param name="ItemName">Das abzulegende Item</param>
         public static void DropItem(string ItemName)
         {
             Item item = null;
@@ -90,6 +93,31 @@ namespace CastleEscape
             Console.WriteLine("Verfügbarer Platz: " + inventory.AvailableSize);
         }
 
+        public static void OpenExit(string Exit)
+        {
+            if (CurrentRoom.IsExitLocked(Exit))
+            {
+                Item necessaryItem = CurrentRoom.GetItemToOpenExit(Exit);
+
+                if (necessaryItem != null && inventory.Contains(necessaryItem))
+                {
+                    CurrentRoom.OpenExit(Exit);
+                    TextBuffer.WriteLine("Der Ausgang wurde geöffnet!");
+                    TextBuffer.ShowBuffer();
+                }
+                else
+                {
+                    TextBuffer.WriteLine("Du besitzt nicht das richtige Item, um den Ausgang zu öffnen!");
+                    TextBuffer.ShowBuffer();
+                }
+            }
+            else
+            {
+                TextBuffer.WriteLine("Der Ausgang war nicht verschlossen!");
+                TextBuffer.ShowBuffer();
+            }
+        }
+
         /// <summary>
         /// Bewegt den Spieler in den nächsten Raum, wenn die Richtung gültig ist
         /// </summary>
@@ -98,7 +126,7 @@ namespace CastleEscape
         {
             if (!CurrentRoom.CanExit(Direction))
             {
-                Console.WriteLine("Die Richtung ist ungültig!");
+                Console.WriteLine("Die Richtung existiert nicht oder der Ausgang ist verschlossen!");
                 return;
             }
 

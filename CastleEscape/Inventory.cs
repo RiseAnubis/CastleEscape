@@ -93,6 +93,13 @@ namespace CastleEscape
         }
 
         /// <summary>
+        /// Gibt an, ob das Item im Inventar vorhanden ist
+        /// </summary>
+        /// <param name="Item">Das zu überprüfende Item</param>
+        /// <returns></returns>
+        public bool Contains(Item Item) => items.Contains(Item);
+
+        /// <summary>
         /// Durchläuft das Inventar und gibt die Items zurück
         /// </summary>
         /// <returns></returns>

@@ -21,7 +21,7 @@ namespace CastleEscape
             "umsehen"
         };
 
-        public static bool ReadCommand(/*ActionDelegate Action*/)
+        public static void ReadCommand(/*ActionDelegate Action*/)
         {
             Console.Write("\nWas soll ich machen?\n>");
             string[] args = Console.ReadLine().ToLower().Split(' ');
@@ -34,10 +34,6 @@ namespace CastleEscape
                     /*else
                         Item.ShowInfo(GameManager.ItemList.Find(x => x.Name == args[1]));*/
                     break;
-                case "ja":
-                    return true;
-                case "nein":
-                    return false;
                 case "nimm":
                     Player.TakeItem(args[1]);
                     break;
@@ -56,12 +52,13 @@ namespace CastleEscape
                 case "umsehen":
                     Player.CurrentRoom.ShowDescription();
                     break;
+                case "aufschließen":
+                    Player.OpenExit(args[1]);
+                    break;
                 default:
                     GameManager.GoToScreen(GameScreens.CommandNotFound);
                     break;
             }
-
-            return false;
         }
     }
 }

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace CastleEscape
 {
+    /// <summary>
+    /// Struktur, die die möglichen Ausgänge enthält
+    /// </summary>
     struct Exits
     {
         public const string North = "nord";
@@ -20,32 +23,49 @@ namespace CastleEscape
     class Room
     {
         List<string> exits;
+        Dictionary<string, Item> lockedExits;
         List<Item> items;
 
+        /// <summary>
+        /// Der Name des Raums
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Die Beschreibung des Raumes, der beim Betreten angezeigt wird
+        /// </summary>
         public string Text { get; set; }
 
         public Room()
         {
             exits = new List<string>();
             items = new List<Item>();
+            lockedExits = new Dictionary<string, Item>();
         }
 
         /// <summary>
-        /// Fügt dem Raum einen Ausgang hinzu
+        /// Fügt dem Raum einen oder mehrere Ausgänge hinzu
         /// </summary>
-        /// <param name="Exit">Der hinzuzufügende Ausgang</param>
-        public void AddExit(string Exit)
-        {
-            if (!exits.Contains(Exit))
-                exits.Add(Exit);
-        }
-
+        /// <param name="Exits">Array mit den Ausgängen, die der Raum haben soll</param>
         public void AddExits(string[] Exits)
         {
             foreach (string exit in Exits.Where(exit => !exits.Contains(exit)))
                 exits.Add(exit);
         }
+
+        /// <summary>
+        /// Schließt einen Ausgang ab
+        /// </summary>
+        /// <param name="Exit">Der abzuschließene Ausgang</param>
+        /// <param name="Item">Das Item, mit dem der Ausgang geöffnet werden kann</param>
+        public void LockExit(string Exit, Item Item) => lockedExits.Add(Exit, Item);
+
+        /// <summary>
+        /// Gibt das Item zurück, mit dem der angegebene Ausgang geöffnet werden kann
+        /// </summary>
+        /// <param name="Exit"></param>
+        /// <returns></returns>
+        public Item GetItemToOpenExit(string Exit) => lockedExits.Where(item => item.Key == Exit).Select(item => item.Value).FirstOrDefault();
 
         /// <summary>
         /// Zeigt eine Beschreibung des Raumes an mit den verfügbaren Items und Ausgängen
@@ -72,7 +92,20 @@ namespace CastleEscape
         /// </summary>
         /// <param name="Direction">Der Ausgang, durch den der Raum verlassen werden soll</param>
         /// <returns></returns>
-        public bool CanExit(string Direction) => exits.Contains(Direction);
+        public bool CanExit(string Direction) => exits.Contains(Direction) && /*!lockedExits.Contains(Direction) &&*/ !lockedExits.ContainsKey(Direction);
+
+        /// <summary>
+        /// Gibt an, ob der angegebene Ausgang abgeschlossen ist
+        /// </summary>
+        /// <param name="Exit">Der zu prüfende Ausgang</param>
+        /// <returns></returns>
+        public bool IsExitLocked(string Exit) => /*lockedExits.Contains(Exit)*/ lockedExits.ContainsKey(Exit);
+
+        /// <summary>
+        /// Öffnet den angegebenen Ausgang
+        /// </summary>
+        /// <param name="Exit"></param>
+        public void OpenExit(string Exit) => /*lockedExits.Remove(Exit)*/ lockedExits.Remove(Exit);
 
         /// <summary>
         /// Fügt dem Raum ein Item hinzu
