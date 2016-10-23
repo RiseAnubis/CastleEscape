@@ -77,6 +77,7 @@ namespace CastleEscape
             TextBuffer.WriteLine("Verfügbare Items:");
 
             foreach (Item item in items)
+
                 TextBuffer.WriteLine(item.Name);
 
             TextBuffer.WriteLine("\nVerfügbare Ausgänge:");

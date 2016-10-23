@@ -63,9 +63,10 @@ namespace CastleEscape
             Console.WriteLine("--------------------------------\n");
             Console.WriteLine("Nimm <Item>\t\tNimmt das Item auf, wenn genug Platz im Inventar ist.");
             Console.WriteLine("Ablegen <Item>\t\tLegt das Item ab.");
-            Console.WriteLine("Gehe <Richtung>\t\tGeht in den angegebenen Raum (Nord, Süd, Ost, West)");
-            Console.WriteLine("Umsehen\t\tZeigt den aktuellen Raum an.");
             Console.WriteLine("Hilfe <Item>\t\tRuft eine Beschreibung des eingegeben Items ab, wenn es sich im Inventar befindet.");
+            Console.WriteLine("Gehe <Richtung>\t\tGeht in den angegebenen Raum (Nord, Süd, Ost, West)");
+            Console.WriteLine("Öffnen <Richtung>\t\tÖffnet den Weg zur angegebenen Richtung, wenn das entsprechende Item im Inventar ist.");
+            Console.WriteLine("Umsehen\t\tZeigt den aktuellen Raum an.");
             Console.WriteLine("Beenden\t\tBeendet das Spiel");
         }
     }

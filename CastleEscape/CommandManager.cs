@@ -8,23 +8,10 @@ namespace CastleEscape
 {
     static class CommandManager
     {
-        static List<string> commands = new List<string>
-        {
-            "hilfe",
-            "nimm",
-            "gehe",
-            "ja",
-            "nein",
-            "inventar",
-            "benutzen",
-            "ablegen",
-            "umsehen"
-        };
-
         public static void ReadCommand(/*ActionDelegate Action*/)
         {
             Console.Write("\nWas soll ich machen?\n>");
-            string[] args = Console.ReadLine().ToLower().Split(' ');
+            string[] args = Console.ReadLine().ToLower().Trim().Split(' ');
 
             switch (args[0])
             {
@@ -53,7 +40,13 @@ namespace CastleEscape
                     }
                     break;
                 case "gehe":
-                    Player.MoveToDirection(args[1]);
+                    if (args.Length > 1)
+                        Player.MoveToDirection(args[1]);
+                    else
+                    {
+                        TextBuffer.WriteLine("Du musst eine Richtung angeben!");
+                        TextBuffer.ShowBuffer();
+                    }
                     break;
                 case "beenden":
                     GameManager.CanQuit = true;
@@ -64,8 +57,16 @@ namespace CastleEscape
                 case "umsehen":
                     Player.CurrentRoom.ShowDescription();
                     break;
-                case "aufschließen":
-                    Player.OpenExit(args[1]);
+                case "öffnen":
+                    if (args.Length > 1)
+                        Player.OpenExit(args[1]);
+                    else
+                    {
+                        TextBuffer.WriteLine("Du musst eine Richtung angeben!");
+                        TextBuffer.ShowBuffer();
+                    }
+                    break;
+                case "benutzen":
                     break;
                 default:
                     GameManager.GoToScreen(GameScreens.CommandNotFound);

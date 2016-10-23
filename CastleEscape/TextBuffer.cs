@@ -15,6 +15,13 @@ namespace CastleEscape
         public static void ShowBuffer()
         {
             Console.Clear();
+
+            if (buffer.Length > Console.WindowWidth)
+            {
+                int lastSpace = buffer.LastIndexOf(' ');
+                buffer.Replace(' ', '\n').Where(buffer.LastIndexOf(' '));
+            }
+
             Console.Write(buffer);
             buffer = "";
         }
