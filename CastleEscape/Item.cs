@@ -8,11 +8,13 @@ namespace CastleEscape
 {
     class Item
     {
+        public string ID { get; }
         public string Name { get; }
         public string HelpDescription { get; }
 
-        public Item(string Name, string Description)
+        public Item(string ID, string Name, string Description)
         {
+            this.ID = ID;
             this.Name = Name;
             HelpDescription = Description;
         }

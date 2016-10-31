@@ -23,7 +23,7 @@ namespace CastleEscape
     class Room
     {
         List<string> exits;
-        Dictionary<string, Item> lockedExits;
+        Dictionary<string, string> lockedExits;
         List<Item> items;
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace CastleEscape
         {
             exits = new List<string>();
             items = new List<Item>();
-            lockedExits = new Dictionary<string, Item>();
+            lockedExits = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -53,19 +53,28 @@ namespace CastleEscape
                 exits.Add(exit);
         }
 
+        public void AddExit(string Exit)
+        {
+            if (!exits.Contains(Exit))
+                exits.Add(Exit);
+        }
+
         /// <summary>
         /// Schließt einen Ausgang ab
         /// </summary>
         /// <param name="Exit">Der abzuschließene Ausgang</param>
-        /// <param name="Item">Das Item, mit dem der Ausgang geöffnet werden kann</param>
-        public void LockExit(string Exit, Item Item) => lockedExits.Add(Exit, Item);
+        /// <param name="ItemID">Das Item, mit dem der Ausgang geöffnet werden kann</param>
+        public void LockExit(string Exit, string ItemID) => lockedExits.Add(Exit, ItemID);
 
         /// <summary>
         /// Gibt das Item zurück, mit dem der angegebene Ausgang geöffnet werden kann
         /// </summary>
         /// <param name="Exit"></param>
         /// <returns></returns>
-        public Item GetItemToOpenExit(string Exit) => lockedExits.Where(item => item.Key == Exit).Select(item => item.Value).FirstOrDefault();
+        public Item GetItemToOpenExit(string Exit) //=> lockedExits.Where(item => item.Key == Exit).Select(item => item.Value).FirstOrDefault();
+        {
+            return null;
+        }
 
         /// <summary>
         /// Zeigt eine Beschreibung des Raumes an mit den verfügbaren Items und Ausgängen
@@ -77,7 +86,6 @@ namespace CastleEscape
             TextBuffer.WriteLine("Verfügbare Items:");
 
             foreach (Item item in items)
-
                 TextBuffer.WriteLine(item.Name);
 
             TextBuffer.WriteLine("\nVerfügbare Ausgänge:");

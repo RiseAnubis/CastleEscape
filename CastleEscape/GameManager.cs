@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace CastleEscape
 {
@@ -11,12 +12,19 @@ namespace CastleEscape
     /// </summary>
     static class GameManager
     {
-        public static Item KeyGreenRoom = new Item("Schlüssel", "Ein Schlüssel, der den grünen Raum öffnet");
+        public static List<Item> GameItems { get; } = GameFile.LoadItems();
+
+        //public static Item KeyGreenRoom = new Item("KeyGreen", "Schlüssel", "Ein Schlüssel, der den grünen Raum öffnet");
 
         /// <summary>
         /// Gibt an, ob das Spiel beendet werden soll
         /// </summary>
         public static bool CanQuit { get; set; }
+
+        public static void LoadItems()
+        {
+            XElement items = XElement.Load("Game.xml");
+        }
 
         public static void GoToScreen(GameScreens Screen)
         {
