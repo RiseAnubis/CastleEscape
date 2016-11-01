@@ -53,7 +53,10 @@ namespace CastleEscape
                 }
             }
             else
-                Console.WriteLine("Das Item existiert nicht in diesem Raum!");
+            {
+                TextBuffer.WriteLine("Das Item existiert nicht in diesem Raum!");
+                TextBuffer.ShowBuffer();
+            }
         }
 
         /// <summary>
@@ -130,7 +133,8 @@ namespace CastleEscape
         {
             if (!CurrentRoom.CanExit(Direction))
             {
-                Console.WriteLine("Die Richtung existiert nicht oder der Ausgang ist verschlossen!");
+                TextBuffer.WriteLine("Die Richtung existiert nicht oder der Ausgang ist verschlossen!");
+                TextBuffer.ShowBuffer();
                 return;
             }
 
