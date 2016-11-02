@@ -4,7 +4,7 @@
     <Level Name="1" Layout="2,2">
       <Rooms>
         <Room Position="0,0" Name="BlueRoom">
-          <Text>Das hier ist der blaue Raum.</Text>
+          <Text>Das hier ist der blaue Raum. Die nördliche Tür ist verschlossen...</Text>
           <Exits>
             <Exit Direction="nord" IsLocked="true" NecessaryItem="keyGreen"/>
             <Exit Direction="ost" IsLocked="false"/>

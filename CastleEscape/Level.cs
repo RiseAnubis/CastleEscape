@@ -70,7 +70,7 @@ namespace CastleEscape
 
                     foreach (XElement item in items.Elements())
                     {
-                        Item i = GameManager.GameItems.Find(x => x.ID == item.Attribute("ID").Value);
+                        Item i = GameManager.GetGameItem(item.Attribute("ID").Value);
 
                         if (i != null)
                             r.AddItem(i);

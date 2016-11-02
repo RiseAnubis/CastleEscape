@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 namespace CastleEscape
 {
+    /// <summary>
+    /// Verarbeitet die eingegebenen Befehle
+    /// </summary>
     static class CommandManager
     {
-        public static void ReadCommand(/*ActionDelegate Action*/)
+        /// <summary>
+        /// Liest Eingaben des Spielers ein und verarbeitet diese
+        /// </summary>
+        public static void ReadCommand()
         {
             Console.Write("\nWas soll ich machen?\n>");
             string[] args = Console.ReadLine().ToLower().Trim().Split(' ');

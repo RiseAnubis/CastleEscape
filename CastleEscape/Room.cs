@@ -71,7 +71,7 @@ namespace CastleEscape
         /// </summary>
         /// <param name="Exit"></param>
         /// <returns></returns>
-        public Item GetItemToOpenExit(string Exit) => (from element in lockedExits where element.Key == Exit select GameManager.GameItems.Find(x => x.ID == element.Value)).FirstOrDefault();
+        public Item GetItemToOpenExit(string Exit) => lockedExits.Where(x => x.Key == Exit).Select(x => GameManager.GetGameItem(x.Value)).FirstOrDefault();
 
         /// <summary>
         /// Zeigt eine Beschreibung des Raumes an mit den verfügbaren Items und Ausgängen

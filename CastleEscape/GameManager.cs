@@ -12,20 +12,17 @@ namespace CastleEscape
     /// </summary>
     static class GameManager
     {
-        public static List<Item> GameItems { get; } = GameFile.LoadItems();
-
-        //public static Item KeyGreenRoom = new Item("KeyGreen", "Schlüssel", "Ein Schlüssel, der den grünen Raum öffnet");
+        static List<Item> gameItems { get; } = GameFile.LoadItems();
 
         /// <summary>
         /// Gibt an, ob das Spiel beendet werden soll
         /// </summary>
         public static bool CanQuit { get; set; }
 
-        public static void LoadItems()
-        {
-            XElement items = XElement.Load("Game.xml");
-        }
-
+        /// <summary>
+        /// Zeigt einen bestimmten Bildschirm an
+        /// </summary>
+        /// <param name="Screen"></param>
         public static void GoToScreen(GameScreens Screen)
         {
             switch (Screen)
@@ -41,6 +38,13 @@ namespace CastleEscape
                     break;
             }
         }
+
+        /// <summary>
+        /// Gibt ein Item aus der Item-Liste zurück.
+        /// </summary>
+        /// <param name="ID">Die ID zur Identifizierung des Items</param>
+        /// <returns></returns>
+        public static Item GetGameItem(string ID) => gameItems.Find(x => x.ID == ID);
 
         static void CreatePlayer()
         {

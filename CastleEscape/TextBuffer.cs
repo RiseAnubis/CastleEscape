@@ -15,14 +15,36 @@ namespace CastleEscape
         public static void ShowBuffer()
         {
             Console.Clear();
+            string result = "";
+            string[] lines = buffer.Split('\n');
 
+            foreach (string line in lines)
+            {
+                int lineLength = 0;
+                string[] words = line.Split(' ');
+
+                foreach (string word in words)
+                {
+                    if (word.Length + lineLength > Console.WindowWidth - 1)
+                    {
+                        result += "\n";
+                        lineLength = 0;
+                    }
+
+                    result += word + " ";
+                    lineLength += word.Length + 1;
+                }
+
+                result += "\n";
+            }
             /*if (buffer.Length > Console.WindowWidth)
             {
                 int lastSpace = buffer.LastIndexOf(' ');
                 buffer.Replace(' ', '\n').Where(buffer.LastIndexOf(' '));
             }*/
 
-            Console.Write(buffer);
+
+            Console.Write(result);
             buffer = "";
         }
     }
