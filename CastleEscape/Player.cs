@@ -37,7 +37,7 @@ namespace CastleEscape
         /// Nimmt ein Item auf, wenn das Inventar noch Platz hat
         /// </summary>
         /// <param name="ItemName">Das aufzunehmende Item</param>
-        public static void TakeItem(string ItemName)
+        public static void TakeItem(string ItemName) // TODO Umwandeln des Anzeigenamens des Items in dessen ID
         {
             Item item = CurrentRoom?.GetItem(ItemName);
 
@@ -63,16 +63,21 @@ namespace CastleEscape
         /// Legt ein Item wieder ab, welches sich dann im derzeitigen Raum befindet
         /// </summary>
         /// <param name="ItemName">Das abzulegende Item</param>
-        public static void DropItem(string ItemName)
+        public static void DropItem(string ItemName) // TODO Umwandeln des Anzeigenamens des Items in dessen ID
         {
-            Item item = null;
+            Item item = inventory.GetItem(ItemName);
 
-            foreach (Item i in from Item i in inventory where string.Equals(i.Name, ItemName, StringComparison.CurrentCultureIgnoreCase) select i)
-                item = i;
-
-            inventory.Remove(item);
-            CurrentRoom.AddItem(item);
-            CurrentRoom.ShowDescription();
+            if (item != null)
+            {
+                inventory.Remove(item);
+                CurrentRoom.AddItem(item);
+                CurrentRoom.ShowDescription();
+            }
+            else
+            {
+                TextBuffer.WriteLine("Du besitzt so ein Item nicht!");
+                TextBuffer.ShowBuffer();
+            }
         }
 
         /// <summary>
@@ -80,8 +85,6 @@ namespace CastleEscape
         /// </summary>
         public static void ShowInventory()
         {
-            Console.Clear();
-
             if (inventory.IsEmpty)
                 TextBuffer.WriteLine("Du hast derzeit keine Items im Inventar.");
             else
@@ -133,11 +136,19 @@ namespace CastleEscape
         {
             if (!CurrentRoom.CanExit(Direction))
             {
-                TextBuffer.WriteLine("Die Richtung existiert nicht oder der Ausgang ist verschlossen!");
+                TextBuffer.WriteLine("Die Richtung existiert nicht!");
                 TextBuffer.ShowBuffer();
                 return;
             }
 
+            if (CurrentRoom.IsExitLocked(Direction))
+            {
+                TextBuffer.WriteLine("Der Ausgang ist verschlossen!");
+                TextBuffer.ShowBuffer();
+                return;
+            }
+
+            // Ändern der Position des Spielers führt dazu, dass er sich in einem neuen Raum befindet
             switch (Direction)
             {
                 case Exits.North:

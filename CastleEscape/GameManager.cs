@@ -12,7 +12,7 @@ namespace CastleEscape
     /// </summary>
     static class GameManager
     {
-        static List<Item> gameItems { get; } = GameFile.LoadItems();
+        static List<Item> gameItems = GameFile.LoadItems();
 
         /// <summary>
         /// Gibt an, ob das Spiel beendet werden soll
@@ -61,8 +61,8 @@ namespace CastleEscape
 
         static void ShowCommandNotFound()
         {
-            Console.Clear();
-            Console.WriteLine("Befehl wurde nicht erkannt. Gib <Hilfe> ein, um eine Liste aller Befehle zu erhalten.");
+            TextBuffer.WriteLine("Befehl wurde nicht erkannt. Gib <Hilfe> ein, um eine Liste aller Befehle zu erhalten.");
+            TextBuffer.ShowBuffer();
         }
 
         /// <summary>
@@ -70,16 +70,16 @@ namespace CastleEscape
         /// </summary>
         static void ShowHelpList()
         {
-            Console.Clear();
-            Console.WriteLine("Verfügbare Befehle");
-            Console.WriteLine("--------------------------------\n");
-            Console.WriteLine("Nimm <Item>\t\tNimmt das Item auf, wenn genug Platz im Inventar ist.");
-            Console.WriteLine("Ablegen <Item>\t\tLegt das Item ab.");
-            Console.WriteLine("Hilfe <Item>\t\tRuft eine Beschreibung des eingegeben Items ab, wenn es sich im Inventar befindet.");
-            Console.WriteLine("Gehe <Richtung>\t\tGeht in den angegebenen Raum (Nord, Süd, Ost, West)");
-            Console.WriteLine("Öffnen <Richtung>\t\tÖffnet den Weg zur angegebenen Richtung, wenn das entsprechende Item im Inventar ist.");
-            Console.WriteLine("Umsehen\t\tZeigt den aktuellen Raum an.");
-            Console.WriteLine("Beenden\t\tBeendet das Spiel");
+            TextBuffer.WriteLine("Verfügbare Befehle");
+            TextBuffer.WriteLine("--------------------------------\n");
+            TextBuffer.WriteLine("Nimm <Item>\t\tNimmt das Item auf, wenn genug Platz im Inventar ist.");
+            TextBuffer.WriteLine("Ablegen <Item>\t\tLegt das Item ab.");
+            //TextBuffer.WriteLine("Hilfe <Item>\t\tRuft eine Beschreibung des eingegeben Items ab, wenn es sich im Inventar befindet.");
+            TextBuffer.WriteLine("Gehe <Richtung>\t\tGeht in den angegebenen Raum (Nord, Süd, Ost, West)");
+            TextBuffer.WriteLine("Öffnen <Richtung>\t\tÖffnet den Weg zur angegebenen Richtung, wenn das entsprechende Item im Inventar ist.");
+            TextBuffer.WriteLine("Umsehen\t\tZeigt den aktuellen Raum an.");
+            TextBuffer.WriteLine("Beenden\t\tBeendet das Spiel");
+            TextBuffer.ShowBuffer();
         }
     }
 

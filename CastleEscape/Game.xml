@@ -36,6 +36,7 @@
   </Levels>
   <Items>
     <Item ID="keyGreen" Name="Schlüssel" Description="Ein grüner Schlüssel"/>
+    <Item ID="keyGreen" Name="Doppelte ID" Description="Eine doppelte ID zum Test"/>
     <Item ID="treasure" Name="Schatzkiste" Description="Eine Kiste voller Reichtümer"/>
     <Item ID="sword" Name="Schwert" Description="Ein Schwert zur Verteidigung"/>
   </Items>

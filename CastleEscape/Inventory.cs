@@ -100,6 +100,13 @@ namespace CastleEscape
         public bool Contains(Item Item) => items.Contains(Item);
 
         /// <summary>
+        /// Gibt ein im Inventar befindliches Item zurück
+        /// </summary>
+        /// <param name="ID">Die ID des Items, das gesucht werden soll</param>
+        /// <returns></returns>
+        public Item GetItem(string ID) => items.Find(x => x.ID == ID);
+
+        /// <summary>
         /// Durchläuft das Inventar und gibt die Items zurück
         /// </summary>
         /// <returns></returns>

@@ -78,7 +78,6 @@ namespace CastleEscape
         /// </summary>
         public void ShowDescription()
         {
-            Console.Clear();
             TextBuffer.WriteLine(Text + "\n");
             TextBuffer.WriteLine("Verfügbare Items:");
 
@@ -98,7 +97,7 @@ namespace CastleEscape
         /// </summary>
         /// <param name="Direction">Der Ausgang, durch den der Raum verlassen werden soll</param>
         /// <returns></returns>
-        public bool CanExit(string Direction) => exits.Contains(Direction) && !lockedExits.ContainsKey(Direction);
+        public bool CanExit(string Direction) => exits.Contains(Direction);
 
         /// <summary>
         /// Gibt an, ob der angegebene Ausgang abgeschlossen ist
