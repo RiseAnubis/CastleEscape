@@ -12,7 +12,7 @@ namespace CastleEscape
     /// </summary>
     static class GameManager
     {
-        static List<Item> gameItems = GameFile.LoadItems();
+        static List<Item> gameItems = Level.LoadItems();
 
         /// <summary>
         /// Gibt an, ob das Spiel beendet werden soll
@@ -76,7 +76,8 @@ namespace CastleEscape
             TextBuffer.WriteLine("Ablegen <Item>\t\tLegt das Item ab.");
             //TextBuffer.WriteLine("Hilfe <Item>\t\tRuft eine Beschreibung des eingegeben Items ab, wenn es sich im Inventar befindet.");
             TextBuffer.WriteLine("Gehe <Richtung>\t\tGeht in den angegebenen Raum (Nord, Süd, Ost, West)");
-            TextBuffer.WriteLine("Öffnen <Richtung>\t\tÖffnet den Weg zur angegebenen Richtung, wenn das entsprechende Item im Inventar ist.");
+            TextBuffer.WriteLine("Öffne <Richtung>\t\tÖffnet den Weg zur angegebenen Richtung, wenn das entsprechende Item im Inventar ist.");
+            TextBuffer.WriteLine("Inventar\t\tZeigt das Inventar an.");
             TextBuffer.WriteLine("Umsehen\t\tZeigt den aktuellen Raum an.");
             TextBuffer.WriteLine("Beenden\t\tBeendet das Spiel");
             TextBuffer.ShowBuffer();

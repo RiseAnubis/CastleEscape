@@ -10,8 +10,7 @@ namespace CastleEscape
     {
         static void Main(string[] args)
         {
-            //Level.LoadGameFile();
-            GameFile.FilePath = "Game.xml";
+            Level.GameFilePath = "Game.xml";
             Console.ForegroundColor = ConsoleColor.Green;
             Console.CursorVisible = false;
             Console.Title = "Castle Escape";

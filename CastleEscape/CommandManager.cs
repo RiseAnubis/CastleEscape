@@ -63,7 +63,7 @@ namespace CastleEscape
                 case "umsehen":
                     Player.CurrentRoom.ShowDescription();
                     break;
-                case "öffnen":
+                case "öffne":
                     if (args.Length > 1)
                         Player.OpenExit(args[1]);
                     else
@@ -72,8 +72,8 @@ namespace CastleEscape
                         TextBuffer.ShowBuffer();
                     }
                     break;
-                case "benutzen":
-                    break;
+                //case "benutze":
+                //    break;
                 default:
                     GameManager.GoToScreen(GameScreens.CommandNotFound);
                     break;

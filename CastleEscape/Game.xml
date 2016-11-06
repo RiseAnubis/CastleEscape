@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root>
   <Levels>
-    <Level Name="1" Layout="2,2">
+    <Level Name="1" Layout="2,2" StartPosition="0,0">
       <Rooms>
         <Room Position="0,0" Name="BlueRoom">
           <Text>Das hier ist der blaue Raum. Die nördliche Tür ist verschlossen...</Text>
@@ -36,7 +36,6 @@
   </Levels>
   <Items>
     <Item ID="keyGreen" Name="Schlüssel" Description="Ein grüner Schlüssel"/>
-    <Item ID="keyGreen" Name="Doppelte ID" Description="Eine doppelte ID zum Test"/>
     <Item ID="treasure" Name="Schatzkiste" Description="Eine Kiste voller Reichtümer"/>
     <Item ID="sword" Name="Schwert" Description="Ein Schwert zur Verteidigung"/>
   </Items>

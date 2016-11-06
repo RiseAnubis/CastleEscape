@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CastleEscape", "CastleEscape\CastleEscape.csproj", "{B56226EB-526B-4513-A8D0-2D78BC0D1D23}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CastleEdit", "CastleEdit\CastleEdit.csproj", "{3F604E6B-8ACD-42FF-81BF-4761F96646DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B56226EB-526B-4513-A8D0-2D78BC0D1D23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B56226EB-526B-4513-A8D0-2D78BC0D1D23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B56226EB-526B-4513-A8D0-2D78BC0D1D23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F604E6B-8ACD-42FF-81BF-4761F96646DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F604E6B-8ACD-42FF-81BF-4761F96646DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F604E6B-8ACD-42FF-81BF-4761F96646DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F604E6B-8ACD-42FF-81BF-4761F96646DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

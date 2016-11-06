@@ -53,12 +53,6 @@ namespace CastleEscape
                 exits.Add(exit);
         }
 
-        public void AddExit(string Exit)
-        {
-            if (!exits.Contains(Exit))
-                exits.Add(Exit);
-        }
-
         /// <summary>
         /// Schließt einen Ausgang ab
         /// </summary>
@@ -78,13 +72,14 @@ namespace CastleEscape
         /// </summary>
         public void ShowDescription()
         {
-            TextBuffer.WriteLine(Text + "\n");
+            TextBuffer.WriteLine(Text);
+            TextBuffer.WriteLine("=".PadRight(Console.WindowWidth, '=') + "\n");
             TextBuffer.WriteLine("Verfügbare Items:");
 
             foreach (Item item in items)
                 TextBuffer.WriteLine(item.Name);
 
-            TextBuffer.WriteLine("\nVerfügbare Ausgänge:");
+            TextBuffer.WriteLine("\nVerfügbare Richtungen:");
 
             foreach (string exit in exits)
                 TextBuffer.WriteLine(exit);
