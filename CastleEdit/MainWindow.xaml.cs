@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CastleEdit.Classes;
 
 namespace CastleEdit
 {
@@ -23,6 +24,17 @@ namespace CastleEdit
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void miNewItem_Click(object sender, RoutedEventArgs e)
+        {
+            winNewItem newItem = new winNewItem();
+
+            if (newItem.ShowDialog() == true)
+            {
+                Item item = new Item { ID = newItem.tbID.Text, Name = newItem.tbName.Text, Description = newItem.tbDescription.Text };
+                lvItems.Items.Add(item);
+            }
         }
     }
 }

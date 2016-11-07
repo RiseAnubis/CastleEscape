@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\Item.cs" />
     <Compile Include="winNewItem.xaml.cs">
       <DependentUpon>winNewItem.xaml</DependentUpon>
     </Compile>

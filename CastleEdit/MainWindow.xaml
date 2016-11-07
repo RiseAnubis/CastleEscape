@@ -4,33 +4,69 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CastleEdit"
+        xmlns:classes="clr-namespace:CastleEdit.Classes"
         mc:Ignorable="d"
-        Title="Castle Edit" Height="350" Width="525" WindowState="Maximized">
-    <Grid>
+        Title="Castle Edit" MinHeight="350" MinWidth="525" WindowState="Maximized">
+    <Grid Margin="4">
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="400"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <!-- evtl. Toolbar nutzen -->
         <Menu Grid.Row="0" Grid.ColumnSpan="2">
             <MenuItem Header="Spiel">
                 <MenuItem Header="Neu..."/>
-                <MenuItem Header="Öffnen..."/>
+                <MenuItem Header="Laden..."/>
                 <Separator/>
                 <MenuItem Header="Beenden"/>
             </MenuItem>
+            <MenuItem Header="Items">
+                <MenuItem Name="miNewItem" Header="Item hinzufügen..." Click="miNewItem_Click"/>
+                <MenuItem Header="Ausgewähltes Item bearbeiten..."/>
+                <MenuItem Header="Ausgewähltes Item löschen"/>
+            </MenuItem>
         </Menu>
         <StackPanel Grid.Column="0" Grid.Row="1">
-            <Label Content="Items"/>
-            <ListBox>
-                <ListBoxItem Content="Item"/>
-                <ListBoxItem Content="Item"/>
-                <ListBoxItem Content="Item"/>
-                <ListBoxItem Content="Item"/>
-            </ListBox>
+            <StackPanel.Resources>
+                <classes:Item x:Key="item"/>
+            </StackPanel.Resources>
+            <GroupBox Header="Items" Height="200" Margin="4">
+                <ListView Name="lvItems" DataContext="{StaticResource item}">
+                    <ListView.View>
+                        <GridView>
+                            <GridView.Columns>
+                                <GridViewColumn Header="ID" Width="50" DisplayMemberBinding="{Binding ID}"/>
+                                <GridViewColumn Header="Name" Width="100" DisplayMemberBinding="{Binding Name}"/>
+                                <GridViewColumn Header="Beschreibung" Width="220" DisplayMemberBinding="{Binding Description}"/>
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </GroupBox>
+            <GroupBox Header="Ausgänge" Margin="4">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Norden" Width="50"/>
+                    <Button Content="Süden" Width="50"/>
+                    <Button Content="Osten" Width="50"/>
+                    <Button Content="Westen" Width="50"/>
+                </StackPanel>
+            </GroupBox>
         </StackPanel>
+        <ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+
+        </ScrollViewer>
+        <StatusBar Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2">
+            <StatusBarItem>
+                <Label Content="Aktuelle Levelgröße" VerticalAlignment="Center"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <Label Content="Items" VerticalAlignment="Center"/>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

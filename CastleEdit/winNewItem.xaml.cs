@@ -23,5 +23,7 @@ namespace CastleEdit
         {
             InitializeComponent();
         }
+
+        void btnOK_Click(object sender, RoutedEventArgs e) => DialogResult = true;
     }
 }

@@ -90,6 +90,9 @@ namespace CastleEscape
 
             if (IsFull)
                 IsFull = false;
+
+            if (!IsEmpty)
+                IsEmpty = true;
         }
 
         /// <summary>
