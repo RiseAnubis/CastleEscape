@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CastleEdit"
         mc:Ignorable="d"
-        Title="Neues Item erstellen" Height="300" Width="500" ResizeMode="NoResize">
+        Title="Neues Item erstellen" Height="300" Width="500" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid Margin="4">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -20,12 +20,12 @@
         <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" Content="ID"/>
         <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" Content="Name"/>
         <Label Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" Content="Beschreibung"/>
-        <TextBox Grid.Column="1" Grid.Row="0" Margin="0,2,0,2" Name="tbID" ToolTip="Eine eindeutige ID für das Item"/>
-        <TextBox Grid.Column="1" Grid.Row="1" Margin="0,2,0,2" Name="tbName" ToolTip="Der Name des Items, der im Spiel angezeigt wird"/>
-        <TextBox Grid.Column="1" Grid.Row="2" Margin="0,2,0,0" Name="tbDescription" TextWrapping="Wrap" ToolTip="Eine Beschreibung des Items"/>
+        <TextBox Grid.Column="1" Grid.Row="0" Margin="0,2,0,2" Name="tbID" ToolTip="Eine eindeutige ID für das Item" TabIndex="1"/>
+        <TextBox Grid.Column="1" Grid.Row="1" Margin="0,2,0,2" Name="tbName" ToolTip="Der Name des Items, der im Spiel angezeigt wird" TabIndex="2"/>
+        <TextBox Grid.Column="1" Grid.Row="2" Margin="0,2,0,0" Name="tbDescription" TextWrapping="Wrap" ToolTip="Eine Beschreibung des Items" TabIndex="3"/>
         <StackPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,0">
-            <Button Name="btnOK" Content="OK" Width="100" IsDefault="True" Click="btnOK_Click"/>
-            <Button Name="btnCancel" Content="Abbrechen" Width="100" IsCancel="True"/>
+            <Button Name="btnOK" Content="OK" Width="100" IsDefault="True" Click="btnOK_Click" IsTabStop="False"/>
+            <Button Name="btnCancel" Content="Abbrechen" Width="100" IsCancel="True" IsTabStop="False"/>
         </StackPanel>
     </Grid>
 </Window>

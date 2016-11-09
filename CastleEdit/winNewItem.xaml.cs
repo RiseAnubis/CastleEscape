@@ -24,6 +24,12 @@ namespace CastleEdit
             InitializeComponent();
         }
 
-        void btnOK_Click(object sender, RoutedEventArgs e) => DialogResult = true;
+        void btnOK_Click(object sender, RoutedEventArgs e)
+        {
+            if (tbDescription.Text != "" && tbID.Text != "" && tbName.Text != "")
+                DialogResult = true;
+            else
+                MessageBox.Show("Alle Felder müssen ausgefüllt sein!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 }

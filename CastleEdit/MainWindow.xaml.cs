@@ -26,15 +26,25 @@ namespace CastleEdit
             InitializeComponent();
         }
 
-        private void miNewItem_Click(object sender, RoutedEventArgs e)
+        void miNewItem_Click(object sender, RoutedEventArgs e)
         {
             winNewItem newItem = new winNewItem();
+            newItem.tbID.Focus();
 
             if (newItem.ShowDialog() == true)
             {
                 Item item = new Item { ID = newItem.tbID.Text, Name = newItem.tbName.Text, Description = newItem.tbDescription.Text };
-                lvItems.Items.Add(item);
+                dgItems.Items.Add(item);
             }
+        }
+
+        private void miNewRoom_Click(object sender, RoutedEventArgs e)
+        {
+            winNewRoom newRoom = new winNewRoom();
+            newRoom.tbName.Focus();
+
+            if (newRoom.ShowDialog() == true)
+            { }
         }
     }
 }

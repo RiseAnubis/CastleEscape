@@ -61,56 +61,53 @@ namespace CastleEscape
         /// </summary>
         static void LoadGameFile()
         {
-            string[] layout, roomPosition, startPosition = null;
-            XElement levels = XElement.Load("Game.xml").Element("Levels");
+            string[] layout, roomPosition, startPosition;
+            XElement level = XElement.Load("Game.xml").Element("Level");
 
-            if (levels == null)
+            if (level == null)
                 throw new Exception("Levels could not be found in the XML");
 
-            foreach (XElement level in levels.Elements()) // Auslesen der Levels
+            layout = level.Attribute("Layout").Value.Split(',');
+            startPosition = level.Attribute("StartPosition").Value.Split(',');
+            Rooms = new Room[Convert.ToInt32(layout[0]), Convert.ToInt32(layout[1])];
+            XElement rooms = level.Element("Rooms");
+
+            if (rooms == null)
+                throw new Exception("Rooms could not be found in the XML");
+
+            foreach (XElement room in rooms.Elements()) // Auslesen der Räume
             {
-                layout = level.Attribute("Layout").Value.Split(',');
-                startPosition = level.Attribute("StartPosition").Value.Split(',');
-                Rooms = new Room[Convert.ToInt32(layout[0]), Convert.ToInt32(layout[1])];
-                XElement rooms = level.Element("Rooms");
+                roomPosition = room.Attribute("Position").Value.Split(',');
+                Room r = new Room { Name = room.Attribute("Name").Value, Text = room.Element("Text").Value };
+                XElement exits = room.Element("Exits");
 
-                if (rooms == null)
-                    throw new Exception("Rooms could not be found in the XML");
+                if (exits == null)
+                    throw new Exception("Exits could not be found in the XML");
 
-                foreach (XElement room in rooms.Elements()) // Auslesen der Räume
+                foreach (XElement exit in exits.Elements()) // Auslesen der Ausgänge im Raum
                 {
-                    roomPosition = room.Attribute("Position").Value.Split(',');
-                    Room r = new Room { Name = room.Attribute("Name").Value, Text = room.Element("Text").Value };
-                    XElement exits = room.Element("Exits");
+                    string e = exit.Attribute("Direction").Value; // TODO Möglichkeit, den String aus dem Struct mit dem Value zu verknüpfen?
+                    bool isLocked = exit.Attribute("IsLocked").Value == "true";
+                    r.AddExits(new[] { e });
 
-                    if (exits == null)
-                        throw new Exception("Exits could not be found in the XML");
-
-                    foreach (XElement exit in exits.Elements())
-                    {
-                        string e = exit.Attribute("Direction").Value; // TODO Möglichkeit, den String aus dem Struct mit dem Value zu verknüpfen?
-                        bool isLocked = exit.Attribute("IsLocked").Value == "true";
-                        r.AddExits(new[] { e });
-
-                        if (isLocked)
-                            r.LockExit(e, exit.Attribute("NecessaryItem").Value);
-                    }
-
-                    XElement items = room.Element("Items");
-
-                    if (items == null)
-                        throw new Exception("Items for the room could not be found in the XML");
-
-                    foreach (XElement item in items.Elements())
-                    {
-                        Item i = GameManager.GetGameItem(item.Attribute("ID").Value);
-
-                        if (i != null)
-                            r.AddItem(i);
-                    }
-
-                    Rooms[Convert.ToInt32(roomPosition[0]), Convert.ToInt32(roomPosition[1])] = r;
+                    if (isLocked)
+                        r.LockExit(e, exit.Attribute("NecessaryItem").Value);
                 }
+
+                XElement items = room.Element("Items");
+
+                if (items == null)
+                    throw new Exception("Items for the room could not be found in the XML");
+
+                foreach (XElement item in items.Elements()) // Auslesen der Items im Raum
+                {
+                    Item i = GameManager.GetGameItem(item.Attribute("ID").Value);
+
+                    if (i != null)
+                        r.AddItem(i);
+                }
+
+                Rooms[Convert.ToInt32(roomPosition[0]), Convert.ToInt32(roomPosition[1])] = r;
             }
 
             Player.PositionX = Convert.ToInt32(startPosition[0]);
