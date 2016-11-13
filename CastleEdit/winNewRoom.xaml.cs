@@ -28,5 +28,11 @@ namespace CastleEdit
         {
             DialogResult = true;
         }
+
+        private void chbNorth_Unchecked(object sender, RoutedEventArgs e)
+        {
+            chbLockNorth.IsChecked = false;
+            cbItemNorth.SelectedIndex = -1;
+        }
     }
 }

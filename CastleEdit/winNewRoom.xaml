@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CastleEdit"
         mc:Ignorable="d"
-        Title="Neuer Raum" Height="300" Width="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Neuer Raum" Height="500" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid Margin="4">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -14,13 +14,17 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
-        <Label Grid.Column="0" Grid.Row="0" Content="Name"/>
+        <Label Grid.Column="0" Grid.Row="0" Content="Name" HorizontalAlignment="Right"/>
+        <Label Grid.Column="0" Grid.Row="1" Content="Text" HorizontalAlignment="Right"/>
         <TextBox Grid.Column="1" Grid.Row="0" Margin="0,2,0,2" Name="tbName" ToolTip="Der Name des Raumes zur Identifizierung" TabIndex="1"/>
-        <GroupBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Header="Ausgänge" Margin="0,2,0,2">
+        <TextBox Grid.Column="1" Grid.Row="1" Margin="0,2,0,2" Name="tbRoomText" ToolTip="Der Text des Raumes, der beim Betreten angezeigt wird" TabIndex="2" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+        <GroupBox Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Header="Ausgänge" Margin="0,2,0,2">
             <Grid Margin="4">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
@@ -33,17 +37,22 @@
                 </Grid.RowDefinitions>
                 <Label Grid.Column="0" Grid.Row="0" Content="Richtung"/>
                 <Label Grid.Column="1" Grid.Row="0" Content="Verschlossen" HorizontalAlignment="Center"/>
-                <CheckBox Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Content="Norden" Name="chbNorth"/>
+                <Label Grid.Column="2" Grid.Row="0" Content="Item zum Öffnen" HorizontalAlignment="Center"/>
+                <CheckBox Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Content="Norden" Name="chbNorth" Unchecked="chbNorth_Unchecked"/>
                 <CheckBox Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Content="Süden" Name="chbSouth"/>
                 <CheckBox Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" Content="Osten" Name="chbEast"/>
                 <CheckBox Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" Content="Westen" Name="chbWest"/>
-                <CheckBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" IsEnabled="{Binding ElementName=chbNorth, Path=IsChecked}"/>
-                <CheckBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" IsEnabled="{Binding ElementName=chbSouth, Path=IsChecked}"/>
-                <CheckBox Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" IsEnabled="{Binding ElementName=chbEast, Path=IsChecked}"/>
-                <CheckBox Grid.Column="1" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" IsEnabled="{Binding ElementName=chbWest, Path=IsChecked}"/>
+                <CheckBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Name="chbLockNorth" IsEnabled="{Binding ElementName=chbNorth, Path=IsChecked}"/>
+                <CheckBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Name="chbLockSouth" IsEnabled="{Binding ElementName=chbSouth, Path=IsChecked}"/>
+                <CheckBox Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Name="chbLockEast" IsEnabled="{Binding ElementName=chbEast, Path=IsChecked}"/>
+                <CheckBox Grid.Column="1" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" Name="chbLockWest" IsEnabled="{Binding ElementName=chbWest, Path=IsChecked}"/>
+                <ComboBox Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" IsEnabled="{Binding ElementName=chbLockNorth, Path=IsChecked}" Name="cbItemNorth"/>
+                <ComboBox Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" IsEnabled="{Binding ElementName=chbLockSouth, Path=IsChecked}" Name="cbItemSouth"/>
+                <ComboBox Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" IsEnabled="{Binding ElementName=chbLockEast, Path=IsChecked}" Name="cbItemEast"/>
+                <ComboBox Grid.Column="2" Grid.Row="4" VerticalAlignment="Center" IsEnabled="{Binding ElementName=chbLockWest, Path=IsChecked}" Name="cbItemWest"/>
             </Grid>
         </GroupBox>
-        <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,0">
+        <StackPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,0">
             <Button Name="btnOK" Content="OK" Width="100" IsDefault="True" IsTabStop="False" Click="btnOK_Click"/>
             <Button Name="btnCancel" Content="Abbrechen" Width="100" IsCancel="True" IsTabStop="False"/>
         </StackPanel>
