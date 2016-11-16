@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CastleEdit"
              mc:Ignorable="d" 
-             Width="300" Height="300">
-    <Border BorderThickness="2" BorderBrush="Black">
+             Width="290" Height="290" IsHitTestVisible="True">
+    <Border BorderThickness="2" BorderBrush="Black" Background="Transparent" Name="border">
         <Grid Name="mainGrid" Background="Teal">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>
@@ -18,22 +18,49 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
-            <Polygon Name="dirNorth" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" ToolTip="Nördlicher Ausgang"/>
-            <Polygon Name="dirSouth" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" ToolTip="Südlicher Ausgang">
+            <Polygon Name="dirNorth" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" ToolTip="Nördlicher Ausgang"/>
+            <Polygon Name="dirSouth" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" ToolTip="Südlicher Ausgang">
                 <Polygon.LayoutTransform>
                     <RotateTransform Angle="180"/>
                 </Polygon.LayoutTransform>
             </Polygon>
-            <Polygon Name="dirWest" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" ToolTip="Westlicher Ausgang">
+            <Polygon Name="dirWest" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" ToolTip="Westlicher Ausgang">
                 <Polygon.LayoutTransform>
                     <RotateTransform Angle="270"/>
                 </Polygon.LayoutTransform>
             </Polygon>
-            <Polygon Name="dirEast" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" ToolTip="Östlicher Ausgang">
+            <Polygon Name="dirEast" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" ToolTip="Östlicher Ausgang">
                 <Polygon.LayoutTransform>
                     <RotateTransform Angle="90"/>
                 </Polygon.LayoutTransform>
             </Polygon>
         </Grid>
+        <!--<Border.Style>
+            <Style TargetType="Border">
+                <Style.Triggers>
+                    <EventTrigger RoutedEvent="Border.MouseEnter">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ThicknessAnimation Storyboard.TargetProperty="BorderThickness" Duration="0:0:0.300" To="4"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Border.MouseLeave">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ThicknessAnimation Storyboard.TargetProperty="BorderThickness" Duration="0:0:0.300" To="2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                    <Trigger Property="IsFocused" Value="True">
+                        <Setter Property="BorderBrush" Value="Yellow"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>-->
     </Border>
 </UserControl>

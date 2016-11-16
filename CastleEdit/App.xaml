@@ -4,6 +4,35 @@
              xmlns:local="clr-namespace:CastleEdit"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+         <Style TargetType="Border" x:Key="RoomBorderStyle">
+             <Setter Property="BorderThickness" Value="1"/>
+             <Setter Property="BorderBrush" Value="Blue"/>
+             <Setter Property="Background" Value="Transparent"/> <!-- Damit man in den Bereich der Border klicken kann und das ContextMenu erscheint -->
+             <Setter Property="Focusable" Value="True"/>
+             <Style.Triggers>
+                 <Trigger Property="IsFocused" Value="True">
+                     <Setter Property="BorderBrush" Value="Yellow"/>
+                     <Setter Property="BorderThickness" Value="4"/>
+                 </Trigger>
+                <EventTrigger RoutedEvent="Border.MouseEnter">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ThicknessAnimation Storyboard.TargetProperty="BorderThickness" Duration="0:0:0.300" To="4"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Border.MouseLeave">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ThicknessAnimation Storyboard.TargetProperty="BorderThickness" Duration="0:0:0.300" To="1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+         </Style>
     </Application.Resources>
 </Application>

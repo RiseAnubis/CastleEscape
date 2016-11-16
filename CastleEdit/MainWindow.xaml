@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CastleEdit"
         xmlns:classes="clr-namespace:CastleEdit.Classes"
         mc:Ignorable="d"
-        Title="Castle Edit" MinHeight="350" MinWidth="450" WindowState="Maximized">
+        Title="Castle Edit" MinHeight="350" MinWidth="450" Width="1920" Height="1080" WindowState="Maximized">
     <Grid Margin="4">
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -27,11 +27,11 @@
                 <MenuItem Header="Beenden"/>
             </MenuItem>
             <MenuItem Header="Räume">
-                <MenuItem Name="miNewRoom" Header="Neuen Raum erstellen..." Click="miNewRoom_Click"/>
+                <MenuItem Name="miNewRoom" Header="Neuen Raum erstellen..."/>
                 <MenuItem Header="Ausgewählten Raum löschen"/>
             </MenuItem>
             <MenuItem Header="Items">
-                <MenuItem Name="miNewItem" Header="Neues Item erstellen..." Click="miNewItem_Click"/>
+                <MenuItem Name="miNewItem" Header="Neues Item erstellen..."/>
                 <MenuItem Header="Ausgewähltes Item bearbeiten..."/>
                 <MenuItem Header="Ausgewähltes Item löschen"/>
             </MenuItem>
@@ -49,11 +49,34 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
+            <GroupBox Header="Item hinzufügen">
+                <Grid Margin="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="25"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" Content="ID"/>
+                    <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" Content="Name"/>
+                    <Label Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" Content="Beschreibung"/>
+                    <TextBox Grid.Column="1" Grid.Row="0" Margin="0,2,0,2" Name="tbItemID" ToolTip="Eine eindeutige ID für das Item" TabIndex="1"/>
+                    <TextBox Grid.Column="1" Grid.Row="1" Margin="0,2,0,2" Name="tbItemName" ToolTip="Der Name des Items, der im Spiel angezeigt wird" TabIndex="2"/>
+                    <TextBox Grid.Column="1" Grid.Row="2" Margin="0,2,0,0" Name="tbItemDescription" Height="100" TextWrapping="Wrap" ToolTip="Eine Beschreibung des Items" TabIndex="3"/>
+                    <StackPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,0">
+                        <Button Name="btnAddItem" Content="Hinzufügen" Width="100" IsDefault="True" IsTabStop="False"/>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
         </StackPanel>
-        <ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="scrollviewer">
             <Grid Name="roomGrid" Margin="4">
                 <Grid.LayoutTransform>
-                    <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=sliZoom, Path=Value}" ScaleY="{Binding ElementName=sliZoom, Path=Value}"/>
+                    <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=sliZoom, Path=Value}" ScaleY="{Binding ElementName=sliZoom, Path=Value}" x:Name="gridScale"/>
                 </Grid.LayoutTransform>
             </Grid>
         </ScrollViewer>
@@ -69,7 +92,7 @@
             </Grid.RowDefinitions>
             <Label Grid.Column="0" Grid.Row="0" Content="Name" HorizontalAlignment="Right"/>
             <Label Grid.Column="0" Grid.Row="1" Content="Text" HorizontalAlignment="Right"/>
-            <TextBox Grid.Column="1" Grid.Row="0" Margin="0,2,0,2" Name="tbName" ToolTip="Der Name des Raumes zur Identifizierung" TabIndex="1"/>
+            <TextBox Grid.Column="1" Grid.Row="0" Margin="0,2,0,2" Name="tbRoomName" ToolTip="Der Name des Raumes zur Identifizierung" TabIndex="1"/>
             <TextBox Grid.Column="1" Grid.Row="1" Margin="0,2,0,2" Name="tbRoomText" ToolTip="Der Text des Raumes, der beim Betreten angezeigt wird" TabIndex="2" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
             <GroupBox Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Header="Ausgänge" Margin="0,2,0,2">
                 <Grid>
@@ -114,7 +137,7 @@
                 Aktueller Raum
             </StatusBarItem>
             <StatusBarItem>
-                <Slider Width="200" Value="1" Minimum="0.1" Maximum="4" Name="sliZoom"/>
+                <Slider Width="200" Value="1" Minimum="0.1" Maximum="2" Name="sliZoom"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>

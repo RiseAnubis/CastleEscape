@@ -20,7 +20,6 @@ namespace CastleEdit
     /// </summary>
     public partial class RoomControl : UserControl
     {
-
         public RoomControl()
         {
             InitializeComponent();
