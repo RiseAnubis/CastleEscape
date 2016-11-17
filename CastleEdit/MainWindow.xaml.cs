@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
 using CastleEdit.Classes;
 
 namespace CastleEdit
@@ -28,7 +29,7 @@ namespace CastleEdit
         Point? lastMousePositionOnTarget;
         Point? lastDragPoint;
 
-        internal static List<Item> GameItems { get; } = new List<Item>();
+        public ObservableCollection<Item> GameItems { get; } = new ObservableCollection<Item>();        
 
         public MainWindow()
         {
@@ -42,7 +43,15 @@ namespace CastleEdit
             chbSouth.Unchecked += ChbSouth_Unchecked;
             chbEast.Unchecked += ChbEast_Unchecked;
             chbWest.Unchecked += ChbWest_Unchecked;
+            chbLockNorth.Unchecked += (sender, e) => cbItemNorth.SelectedIndex = -1;
+            chbLockSouth.Unchecked += (sender, e) => cbItemSouth.SelectedIndex = -1;
+            chbLockEast.Unchecked += (sender, e) => cbItemEast.SelectedIndex = -1;
+            chbLockWest.Unchecked += (sender, e) => cbItemWest.SelectedIndex = -1;
             btnAddItem.Click += BtnAddItem_Click;
+            btnChangeItem.Click += BtnChangeItem_Click;
+            btnDeleteItem.Click += BtnDeleteItem_Click;
+            dgItems.SelectionChanged += DgItems_SelectionChanged;
+            GameItems.CollectionChanged += (sender, e) => statusItemCount.Content = $"Items: {GameItems.Count}";
 
             for (int i = 0; i < MaxColumns; i++)
                 roomGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(300) });
@@ -55,21 +64,69 @@ namespace CastleEdit
                 {
                     Border border = new Border { Style = (Style)FindResource("RoomBorderStyle") };
                     border.PreviewMouseDown += Border_PreviewMouseDown;
+                    border.MouseMove += Border_MouseMove; // zur Anzeige der Koordinaten
+                    border.GotFocus += Border_GotFocus;   // zum Fokussieren
                     MenuItem miCreateRoom = new MenuItem { Header = "Raum erstellen" };
+                    MenuItem miDeleteRoom = new MenuItem { Header = "Raum löschen", IsEnabled = false };
                     miCreateRoom.Click += MiCreateRoom_Click;
+                    miDeleteRoom.Click += MiDeleteRoom_Click;
                     ContextMenu ctx = new ContextMenu();
                     ctx.Items.Add(miCreateRoom);
+                    ctx.Items.Add(miDeleteRoom);
                     border.ContextMenu = ctx;
                     Grid.SetColumn(border, i);
                     Grid.SetRow(border, j);
                     roomGrid.Children.Add(border);
                 }
+
+            statusRoomsize.Content = $"Levelgröße: {MaxColumns} x {MaxRows}";
+            statusItemCount.Content = $"Items: {GameItems.Count}";
         }
 
-        private void Border_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void BtnDeleteItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (dgItems.SelectedItem == null)
+                return;
+
+            GameItems.Remove((Item)dgItems.SelectedItem);
+            tbItemID.Text = tbItemName.Text = tbItemDescription.Text = "";
+        }
+
+        private void DgItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Item item = (Item)dgItems.SelectedItem;
+
+            if (item != null)
+            {
+                tbItemID.Text = item.ID;
+                tbItemName.Text = item.Name;
+                tbItemDescription.Text = item.Description;
+                btnDeleteItem.IsEnabled = true;
+            }
+            else
+                btnDeleteItem.IsEnabled = false;
+        }
+
+        private void BtnChangeItem_Click(object sender, RoutedEventArgs e)
+        {
+            //Item item = GameItems.First(x => x = (Item)dgItems.SelectedItem != null);
+        }
+
+        private void Border_GotFocus(object sender, RoutedEventArgs e)
         {
             Border b = sender as Border;
-            b.Focus();
+            statusSelectedRoom.Content = $"Ausgewählter Raum: {Grid.GetColumn(b)}, {Grid.GetRow(b)}";
+        }
+
+        private void Border_MouseMove(object sender, MouseEventArgs e)
+        {
+            Border b = sender as Border;
+            statusCoordinates.Content = $"Koordinaten: {Grid.GetColumn(b)}, {Grid.GetRow(b)}";
+        }
+
+        void Border_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            (sender as Border)?.Focus();
             e.Handled = true; // Zum Unterbinden des "Weiterblubberns" des Events, ansonsten schluckt der Scrollviewer das Event
         }
 
@@ -77,12 +134,11 @@ namespace CastleEdit
         {
             if (tbItemID.Text == "" || tbItemName.Text == "" || tbItemDescription.Text == "")
             {
-                MessageBox.Show("Es müssen alle Felder ausgefüllt sein!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Es müssen alle Item-Felder ausgefüllt sein!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             Item item = new Item { ID = tbItemID.Text, Name = tbItemName.Text, Description = tbItemDescription.Text };
-            dgItems.Items.Add(item);
             GameItems.Add(item);
             tbItemID.Text = tbItemName.Text = tbItemDescription.Text = "";
         }
@@ -212,31 +268,35 @@ namespace CastleEdit
         void MiCreateRoom_Click(object sender, RoutedEventArgs e)
         {
             MenuItem mi = sender as MenuItem;
-            Border sourceBorder = ((ContextMenu)mi.Parent).PlacementTarget as Border;
+            ContextMenu ctx = (ContextMenu)mi.Parent;
+            MenuItem invisibleItem = ctx.Items[1] as MenuItem;
+            Border sourceBorder = ctx.PlacementTarget as Border;
+            //Border sourceBorder = ((ContextMenu)mi.Parent).PlacementTarget as Border;
             RoomControl newRoom = new RoomControl();
-            Grid.SetColumn(newRoom, Grid.GetColumn(sourceBorder));
-            Grid.SetRow(newRoom, Grid.GetRow(sourceBorder));
-            roomGrid.Children.Add(newRoom);
+            newRoom.PreviewMouseDown += NewRoom_MouseDown;
+            //Grid.SetColumn(newRoom, Grid.GetColumn(sourceBorder));
+            //Grid.SetRow(newRoom, Grid.GetRow(sourceBorder));
+            //roomGrid.Children.Add(newRoom);
+            sourceBorder.Child = newRoom;
+            invisibleItem.IsEnabled = true;
         }
 
-        /*void miNewRoom_Click(object sender, RoutedEventArgs e)
+        private void MiDeleteRoom_Click(object sender, RoutedEventArgs e)
         {
-            winNewRoom newRoom = new winNewRoom();
-            newRoom.tbName.Focus();
+            MenuItem mi = sender as MenuItem;
+            ContextMenu ctx = (ContextMenu)mi.Parent;
+            MenuItem visibleItem = ctx.Items[1] as MenuItem;
+            Border sourceBorder = ctx.PlacementTarget as Border;
+            sourceBorder.Child = null;
+            visibleItem.IsEnabled = false;
+        }
 
-            if (newRoom.ShowDialog() == true)
-            {
-                RoomControl room = new RoomControl();
-
-                if (newRoom.chbNorth.IsChecked == false)
-                    room.dirNorth.Visibility = Visibility.Hidden;
-                if (newRoom.chbSouth.IsChecked == false)
-                    room.dirSouth.Visibility = Visibility.Hidden;
-                if (newRoom.chbEast.IsChecked == false)
-                    room.dirEast.Visibility = Visibility.Hidden;
-                if (newRoom.chbWest.IsChecked == false)
-                    room.dirWest.Visibility = Visibility.Hidden;
-            }
-        }*/
+        private void NewRoom_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            RoomControl room = sender as RoomControl;
+            Border sourceBorder = room.Parent as Border;
+            if (e.LeftButton == MouseButtonState.Pressed)
+                sourceBorder.Focus();
+        }
     }
 }

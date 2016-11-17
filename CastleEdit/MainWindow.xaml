@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CastleEdit"
         xmlns:classes="clr-namespace:CastleEdit.Classes"
         mc:Ignorable="d"
-        Title="Castle Edit" MinHeight="350" MinWidth="450" Width="1920" Height="1080" WindowState="Maximized">
+        Title="Castle Edit" MinHeight="350" MinWidth="450" Width="1920" Height="1080" WindowState="Maximized" TextElement.FontFamily="Roboto">
     <Grid Margin="4">
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -26,22 +26,14 @@
                 <Separator/>
                 <MenuItem Header="Beenden"/>
             </MenuItem>
-            <MenuItem Header="Räume">
-                <MenuItem Name="miNewRoom" Header="Neuen Raum erstellen..."/>
-                <MenuItem Header="Ausgewählten Raum löschen"/>
-            </MenuItem>
-            <MenuItem Header="Items">
-                <MenuItem Name="miNewItem" Header="Neues Item erstellen..."/>
-                <MenuItem Header="Ausgewähltes Item bearbeiten..."/>
-                <MenuItem Header="Ausgewähltes Item löschen"/>
-            </MenuItem>
         </Menu>
-        <StackPanel Grid.Column="0" Grid.Row="1">
-            <StackPanel.Resources>
-                <classes:Item x:Key="item"/>
-            </StackPanel.Resources>
-            <GroupBox Header="Items" Height="400" Margin="4">
-                <DataGrid Name="dgItems" DataContext="{StaticResource item}" GridLinesVisibility="None">
+        <Grid Grid.Column="0" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <GroupBox Grid.Row="0" Header="Items" Margin="4">
+                <DataGrid Name="dgItems" ItemsSource="{Binding GameItems}" DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}}" GridLinesVisibility="None" IsReadOnly="True" CanUserResizeRows="False" AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" MinWidth="50" Binding="{Binding ID}"/>
                         <DataGridTextColumn Header="Name" MinWidth="100" Binding="{Binding Name}"/>
@@ -49,7 +41,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
-            <GroupBox Header="Item hinzufügen">
+            <GroupBox Grid.Row="1" Header="Item" Margin="4">
                 <Grid Margin="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -66,34 +58,39 @@
                     <Label Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" Content="Beschreibung"/>
                     <TextBox Grid.Column="1" Grid.Row="0" Margin="0,2,0,2" Name="tbItemID" ToolTip="Eine eindeutige ID für das Item" TabIndex="1"/>
                     <TextBox Grid.Column="1" Grid.Row="1" Margin="0,2,0,2" Name="tbItemName" ToolTip="Der Name des Items, der im Spiel angezeigt wird" TabIndex="2"/>
-                    <TextBox Grid.Column="1" Grid.Row="2" Margin="0,2,0,0" Name="tbItemDescription" Height="100" TextWrapping="Wrap" ToolTip="Eine Beschreibung des Items" TabIndex="3"/>
+                    <TextBox Grid.Column="1" Grid.Row="2" Margin="0,2,0,0" Name="tbItemDescription" Height="100" TextWrapping="Wrap" ToolTip="Eine Beschreibung des Items" TabIndex="3" VerticalScrollBarVisibility="Auto"/>
                     <StackPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,0">
-                        <Button Name="btnAddItem" Content="Hinzufügen" Width="100" IsDefault="True" IsTabStop="False"/>
+                        <Button Name="btnAddItem" Content="Hinzufügen" Width="100"/>
+                        <Button Name="btnChangeItem" Content="Ändern" Width="100"/>
+                        <Button Name="btnDeleteItem" Content="Löschen" Width="100" IsEnabled="False"/>
                     </StackPanel>
                 </Grid>
             </GroupBox>
-        </StackPanel>
-        <ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="scrollviewer">
+        </Grid>
+        <ScrollViewer Grid.Column="1" Grid.Row="1" Margin="4" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="scrollviewer">
             <Grid Name="roomGrid" Margin="4">
                 <Grid.LayoutTransform>
                     <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=sliZoom, Path=Value}" ScaleY="{Binding ElementName=sliZoom, Path=Value}" x:Name="gridScale"/>
                 </Grid.LayoutTransform>
             </Grid>
         </ScrollViewer>
-        <Grid Grid.Column="2" Grid.Row="1" Margin="4">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Label Grid.Column="0" Grid.Row="0" Content="Name" HorizontalAlignment="Right"/>
-            <Label Grid.Column="0" Grid.Row="1" Content="Text" HorizontalAlignment="Right"/>
-            <TextBox Grid.Column="1" Grid.Row="0" Margin="0,2,0,2" Name="tbRoomName" ToolTip="Der Name des Raumes zur Identifizierung" TabIndex="1"/>
-            <TextBox Grid.Column="1" Grid.Row="1" Margin="0,2,0,2" Name="tbRoomText" ToolTip="Der Text des Raumes, der beim Betreten angezeigt wird" TabIndex="2" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+        <StackPanel Grid.Column="2" Grid.Row="1" Margin="4">
+            <GroupBox Header="Allgemein" Height="200">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" Content="Name" HorizontalAlignment="Right"/>
+                    <Label Grid.Column="0" Grid.Row="1" Content="Text" HorizontalAlignment="Right"/>
+                    <TextBox Grid.Column="1" Grid.Row="0" Margin="0,2,0,2" Name="tbRoomName" ToolTip="Der Name des Raumes zur Identifizierung" TabIndex="1"/>
+                    <TextBox Grid.Column="1" Grid.Row="1" Margin="0,2,0,2" Name="tbRoomText" ToolTip="Der Text des Raumes, der beim Betreten angezeigt wird" TabIndex="2" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+                </Grid>
+            </GroupBox>
             <GroupBox Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Header="Ausgänge" Margin="0,2,0,2">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -119,22 +116,32 @@
                     <CheckBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Name="chbLockSouth" IsEnabled="{Binding ElementName=chbSouth, Path=IsChecked}"/>
                     <CheckBox Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Name="chbLockEast" IsEnabled="{Binding ElementName=chbEast, Path=IsChecked}"/>
                     <CheckBox Grid.Column="1" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center" Name="chbLockWest" IsEnabled="{Binding ElementName=chbWest, Path=IsChecked}"/>
-                    <ComboBox Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" IsEnabled="{Binding ElementName=chbLockNorth, Path=IsChecked}" Name="cbItemNorth"/>
-                    <ComboBox Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" IsEnabled="{Binding ElementName=chbLockSouth, Path=IsChecked}" Name="cbItemSouth"/>
-                    <ComboBox Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" IsEnabled="{Binding ElementName=chbLockEast, Path=IsChecked}" Name="cbItemEast"/>
-                    <ComboBox Grid.Column="2" Grid.Row="4" VerticalAlignment="Center" IsEnabled="{Binding ElementName=chbLockWest, Path=IsChecked}" Name="cbItemWest"/>
+                    <ComboBox Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" IsEnabled="{Binding ElementName=chbLockNorth, Path=IsChecked}" DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}}" ItemsSource="{Binding GameItems}" DisplayMemberPath="Name" Name="cbItemNorth"/>
+                    <ComboBox Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" IsEnabled="{Binding ElementName=chbLockSouth, Path=IsChecked}" DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}}" ItemsSource="{Binding GameItems}" DisplayMemberPath="Name" Name="cbItemSouth"/>
+                    <ComboBox Grid.Column="2" Grid.Row="3" VerticalAlignment="Center" IsEnabled="{Binding ElementName=chbLockEast, Path=IsChecked}" DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}}" ItemsSource="{Binding GameItems}" DisplayMemberPath="Name" Name="cbItemEast"/>
+                    <ComboBox Grid.Column="2" Grid.Row="4" VerticalAlignment="Center" IsEnabled="{Binding ElementName=chbLockWest, Path=IsChecked}" DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}}" ItemsSource="{Binding GameItems}" DisplayMemberPath="Name" Name="cbItemWest"/>
                 </Grid>
             </GroupBox>
-        </Grid>
+            <GroupBox Header="Items im Raum" Height="300">
+                <ListBox/>
+            </GroupBox>
+            <Button Content="OK" HorizontalAlignment="Center" Width="100" Height="30"/>
+        </StackPanel>
         <StatusBar Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2">
-            <StatusBarItem>
+            <StatusBarItem Name="statusRoomsize">
                 Levelgröße
             </StatusBarItem>
-            <StatusBarItem>
+            <Separator/>
+            <StatusBarItem Name="statusItemCount">
                 Items
             </StatusBarItem>
-            <StatusBarItem>
-                Aktueller Raum
+            <Separator/>
+            <StatusBarItem Name="statusCoordinates">
+                Koordinaten
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem Name="statusSelectedRoom">
+                Ausgewählter Raum
             </StatusBarItem>
             <StatusBarItem>
                 <Slider Width="200" Value="1" Minimum="0.1" Maximum="2" Name="sliZoom"/>

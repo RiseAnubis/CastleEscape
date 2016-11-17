@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:CastleEdit"
              mc:Ignorable="d" 
              Width="290" Height="290" IsHitTestVisible="True">
-    <Border BorderThickness="2" BorderBrush="Black" Background="Transparent" Name="border">
+    <Border BorderThickness="2" BorderBrush="Black" Background="Transparent" Name="border" IsHitTestVisible="True">
         <Grid Name="mainGrid" Background="Teal">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50"/>
@@ -35,32 +35,5 @@
                 </Polygon.LayoutTransform>
             </Polygon>
         </Grid>
-        <!--<Border.Style>
-            <Style TargetType="Border">
-                <Style.Triggers>
-                    <EventTrigger RoutedEvent="Border.MouseEnter">
-                        <EventTrigger.Actions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ThicknessAnimation Storyboard.TargetProperty="BorderThickness" Duration="0:0:0.300" To="4"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger.Actions>
-                    </EventTrigger>
-                    <EventTrigger RoutedEvent="Border.MouseLeave">
-                        <EventTrigger.Actions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ThicknessAnimation Storyboard.TargetProperty="BorderThickness" Duration="0:0:0.300" To="2"/>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger.Actions>
-                    </EventTrigger>
-                    <Trigger Property="IsFocused" Value="True">
-                        <Setter Property="BorderBrush" Value="Yellow"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </Border.Style>-->
     </Border>
 </UserControl>

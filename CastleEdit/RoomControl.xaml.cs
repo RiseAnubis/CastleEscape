@@ -20,6 +20,30 @@ namespace CastleEdit
     /// </summary>
     public partial class RoomControl : UserControl
     {
+        public bool HasExitNorth
+        {
+            get { return dirNorth.Visibility == Visibility.Visible; }
+            set { dirNorth.Visibility = value ? Visibility.Visible : Visibility.Hidden; }
+        }
+
+        public bool HasExitSouth
+        {
+            get { return dirSouth.Visibility == Visibility.Visible; }
+            set { dirSouth.Visibility = value ? Visibility.Visible : Visibility.Hidden; }
+        }
+
+        public bool HasExitEast
+        {
+            get { return dirEast.Visibility == Visibility.Visible; }
+            set { dirEast.Visibility = value ? Visibility.Visible : Visibility.Hidden; }
+        }
+
+        public bool HasExitWest
+        {
+            get { return dirWest.Visibility == Visibility.Visible; }
+            set { dirWest.Visibility = value ? Visibility.Visible : Visibility.Hidden; }
+        }
+
         public RoomControl()
         {
             InitializeComponent();

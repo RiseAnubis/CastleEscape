@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:CastleEdit"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         <Style TargetType="Border" x:Key="RoomBorderStyle">
+        <Style TargetType="Border" x:Key="RoomBorderStyle">
              <Setter Property="BorderThickness" Value="1"/>
              <Setter Property="BorderBrush" Value="Blue"/>
              <Setter Property="Background" Value="Transparent"/> <!-- Damit man in den Bereich der Border klicken kann und das ContextMenu erscheint -->
