@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Collections;
 using System.Collections.ObjectModel;
 using CastleEdit.Classes;
 
@@ -29,7 +30,7 @@ namespace CastleEdit
         Point? lastMousePositionOnTarget;
         Point? lastDragPoint;
 
-        public ObservableCollection<Item> GameItems { get; } = new ObservableCollection<Item>();        
+        public ObservableCollection<Item> GameItems { get; } = new ObservableCollection<Item>();
 
         public MainWindow()
         {
@@ -49,8 +50,9 @@ namespace CastleEdit
             chbLockWest.Unchecked += (sender, e) => cbItemWest.SelectedIndex = -1;
             btnAddItem.Click += BtnAddItem_Click;
             btnChangeItem.Click += BtnChangeItem_Click;
-            btnDeleteItem.Click += BtnDeleteItem_Click;
+            btnDeleteItem.Click += (sender, e) => DeleteItem();
             dgItems.SelectionChanged += DgItems_SelectionChanged;
+            dgItems.PreviewKeyDown += DgItems_PreviewKeyDown;
             GameItems.CollectionChanged += (sender, e) => statusItemCount.Content = $"Items: {GameItems.Count}";
 
             for (int i = 0; i < MaxColumns; i++)
@@ -66,6 +68,7 @@ namespace CastleEdit
                     border.PreviewMouseDown += Border_PreviewMouseDown;
                     border.MouseMove += Border_MouseMove; // zur Anzeige der Koordinaten
                     border.GotFocus += Border_GotFocus;   // zum Fokussieren
+                    border.KeyDown += Border_KeyDown;     // Löschen eines Raumes per DEL
                     MenuItem miCreateRoom = new MenuItem { Header = "Raum erstellen" };
                     MenuItem miDeleteRoom = new MenuItem { Header = "Raum löschen", IsEnabled = false };
                     miCreateRoom.Click += MiCreateRoom_Click;
@@ -83,13 +86,16 @@ namespace CastleEdit
             statusItemCount.Content = $"Items: {GameItems.Count}";
         }
 
-        private void BtnDeleteItem_Click(object sender, RoutedEventArgs e)
+        private void DgItems_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (dgItems.SelectedItem == null)
-                return;
+            if (e.Key == Key.Delete)
+                DeleteItem();
+        }
 
-            GameItems.Remove((Item)dgItems.SelectedItem);
-            tbItemID.Text = tbItemName.Text = tbItemDescription.Text = "";
+        private void Border_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+                (sender as Border).Child = null;
         }
 
         private void DgItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -102,20 +108,29 @@ namespace CastleEdit
                 tbItemName.Text = item.Name;
                 tbItemDescription.Text = item.Description;
                 btnDeleteItem.IsEnabled = true;
+                btnChangeItem.IsEnabled = true;
             }
             else
+            {
                 btnDeleteItem.IsEnabled = false;
+                btnChangeItem.IsEnabled = false;
+            }
         }
 
         private void BtnChangeItem_Click(object sender, RoutedEventArgs e)
         {
             //Item item = GameItems.First(x => x = (Item)dgItems.SelectedItem != null);
+
+            foreach (Item i in GameItems)
+                
+            tbItemID.Text = tbItemName.Text = tbItemDescription.Text = "";
         }
 
         private void Border_GotFocus(object sender, RoutedEventArgs e)
         {
             Border b = sender as Border;
             statusSelectedRoom.Content = $"Ausgewählter Raum: {Grid.GetColumn(b)}, {Grid.GetRow(b)}";
+            spRoomProperties.IsEnabled = b.Child != null;
         }
 
         private void Border_MouseMove(object sender, MouseEventArgs e)
@@ -139,6 +154,14 @@ namespace CastleEdit
             }
 
             Item item = new Item { ID = tbItemID.Text, Name = tbItemName.Text, Description = tbItemDescription.Text };
+
+            foreach (Item i in GameItems)
+                if (i.ID == item.ID)
+                {
+                    MessageBox.Show("Das Item mit der angegebenen ID existiert bereits!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
             GameItems.Add(item);
             tbItemID.Text = tbItemName.Text = tbItemDescription.Text = "";
         }
@@ -269,26 +292,27 @@ namespace CastleEdit
         {
             MenuItem mi = sender as MenuItem;
             ContextMenu ctx = (ContextMenu)mi.Parent;
-            MenuItem invisibleItem = ctx.Items[1] as MenuItem;
+            MenuItem disabledItem = ctx.Items[1] as MenuItem;
             Border sourceBorder = ctx.PlacementTarget as Border;
-            //Border sourceBorder = ((ContextMenu)mi.Parent).PlacementTarget as Border;
             RoomControl newRoom = new RoomControl();
-            newRoom.PreviewMouseDown += NewRoom_MouseDown;
+            //newRoom.PreviewMouseDown += NewRoom_MouseDown;
             //Grid.SetColumn(newRoom, Grid.GetColumn(sourceBorder));
             //Grid.SetRow(newRoom, Grid.GetRow(sourceBorder));
             //roomGrid.Children.Add(newRoom);
             sourceBorder.Child = newRoom;
-            invisibleItem.IsEnabled = true;
+            disabledItem.IsEnabled = true;
+            mi.IsEnabled = false;
         }
 
         private void MiDeleteRoom_Click(object sender, RoutedEventArgs e)
         {
             MenuItem mi = sender as MenuItem;
             ContextMenu ctx = (ContextMenu)mi.Parent;
-            MenuItem visibleItem = ctx.Items[1] as MenuItem;
+            MenuItem disabledItem = ctx.Items[0] as MenuItem;
             Border sourceBorder = ctx.PlacementTarget as Border;
             sourceBorder.Child = null;
-            visibleItem.IsEnabled = false;
+            disabledItem.IsEnabled = true;
+            mi.IsEnabled = false;
         }
 
         private void NewRoom_MouseDown(object sender, MouseButtonEventArgs e)
@@ -297,6 +321,18 @@ namespace CastleEdit
             Border sourceBorder = room.Parent as Border;
             if (e.LeftButton == MouseButtonState.Pressed)
                 sourceBorder.Focus();
+        }
+
+        /// <summary>
+        /// Löscht das ausgewählte Item aus dem DataGrid und aus der Itemliste
+        /// </summary>
+        void DeleteItem()
+        {
+            if (dgItems.SelectedItem == null)
+                return;
+
+            GameItems.Remove((Item)dgItems.SelectedItem);
+            tbItemID.Text = tbItemName.Text = tbItemDescription.Text = "";
         }
     }
 }
