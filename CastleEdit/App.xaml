@@ -5,16 +5,17 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <Style TargetType="Border" x:Key="RoomBorderStyle">
-             <Setter Property="BorderThickness" Value="1"/>
-             <Setter Property="BorderBrush" Value="Blue"/>
-             <Setter Property="Background" Value="Transparent"/> <!-- Damit man in den Bereich der Border klicken kann und das ContextMenu erscheint -->
-             <Setter Property="Focusable" Value="True"/>
-             <Style.Triggers>
-                 <Trigger Property="IsFocused" Value="True">
-                     <Setter Property="BorderBrush" Value="Yellow"/>
-                     <Setter Property="BorderThickness" Value="4"/>
-                 </Trigger>
-                <EventTrigger RoutedEvent="Border.MouseEnter">
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="Blue"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <!-- Damit man in den Bereich der Border klicken kann und das ContextMenu erscheint -->
+            <Setter Property="Focusable" Value="True"/>
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="Yellow"/>
+                    <Setter Property="BorderThickness" Value="4"/>
+                </Trigger>
+                <EventTrigger RoutedEvent="MouseEnter">
                     <EventTrigger.Actions>
                         <BeginStoryboard>
                             <Storyboard>
@@ -23,7 +24,7 @@
                         </BeginStoryboard>
                     </EventTrigger.Actions>
                 </EventTrigger>
-                <EventTrigger RoutedEvent="Border.MouseLeave">
+                <EventTrigger RoutedEvent="MouseLeave">
                     <EventTrigger.Actions>
                         <BeginStoryboard>
                             <Storyboard>
@@ -33,6 +34,6 @@
                     </EventTrigger.Actions>
                 </EventTrigger>
             </Style.Triggers>
-         </Style>
+        </Style>
     </Application.Resources>
 </Application>

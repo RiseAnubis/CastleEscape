@@ -29,6 +29,7 @@ namespace CastleEdit
         Point? lastCenterPositionOnTarget;
         Point? lastMousePositionOnTarget;
         Point? lastDragPoint;
+        Border selectedBorder;
 
         public ObservableCollection<Item> GameItems { get; } = new ObservableCollection<Item>();
 
@@ -49,8 +50,9 @@ namespace CastleEdit
             chbLockEast.Unchecked += (sender, e) => cbItemEast.SelectedIndex = -1;
             chbLockWest.Unchecked += (sender, e) => cbItemWest.SelectedIndex = -1;
             btnAddItem.Click += BtnAddItem_Click;
-            btnChangeItem.Click += BtnChangeItem_Click;
             btnDeleteItem.Click += (sender, e) => DeleteItem();
+            //btnChangeItem.Click += BtnChangeItem_Click;
+            btnConfirmRoom.Click += BtnConfirmRoom_Click;
             dgItems.SelectionChanged += DgItems_SelectionChanged;
             dgItems.PreviewKeyDown += DgItems_PreviewKeyDown;
             GameItems.CollectionChanged += (sender, e) => statusItemCount.Content = $"Items: {GameItems.Count}";
@@ -86,16 +88,23 @@ namespace CastleEdit
             statusItemCount.Content = $"Items: {GameItems.Count}";
         }
 
+        private void BtnConfirmRoom_Click(object sender, RoutedEventArgs e)
+        {
+            RoomControl room = selectedBorder.Child as RoomControl;
+            room.HasExitNorth = (bool)chbNorth.IsChecked;
+            room.HasExitSouth = (bool)chbSouth.IsChecked;
+            room.HasExitEast = (bool)chbEast.IsChecked;
+            room.HasExitWest = (bool)chbWest.IsChecked;
+            room.IsExitNorthLocked = (bool)chbLockNorth.IsChecked;
+            room.IsExitSouthLocked = (bool)chbLockSouth.IsChecked;
+            room.IsExitEastLocked = (bool)chbLockEast.IsChecked;
+            room.IsExitWestLocked = (bool)chbLockWest.IsChecked;
+        }
+
         private void DgItems_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete)
                 DeleteItem();
-        }
-
-        private void Border_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Delete)
-                (sender as Border).Child = null;
         }
 
         private void DgItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -108,20 +117,25 @@ namespace CastleEdit
                 tbItemName.Text = item.Name;
                 tbItemDescription.Text = item.Description;
                 btnDeleteItem.IsEnabled = true;
-                btnChangeItem.IsEnabled = true;
+                //btnChangeItem.IsEnabled = true;
             }
             else
             {
                 btnDeleteItem.IsEnabled = false;
-                btnChangeItem.IsEnabled = false;
+                //btnChangeItem.IsEnabled = false;
             }
         }
 
         private void BtnChangeItem_Click(object sender, RoutedEventArgs e)
         {
-            //Item item = GameItems.First(x => x = (Item)dgItems.SelectedItem != null);
+            Item item = GameItems.FirstOrDefault(x => x.ID == tbItemID.Text);
 
-            foreach (Item i in GameItems)
+            if (item == null)
+                return;
+            //GameItems.RemoveAt(GameItems.IndexOf(item));
+
+            item.Name = tbItemName.Text;
+            item.Description = tbItemDescription.Text;
                 
             tbItemID.Text = tbItemName.Text = tbItemDescription.Text = "";
         }
@@ -129,8 +143,26 @@ namespace CastleEdit
         private void Border_GotFocus(object sender, RoutedEventArgs e)
         {
             Border b = sender as Border;
+            selectedBorder = b;
             statusSelectedRoom.Content = $"Ausgewählter Raum: {Grid.GetColumn(b)}, {Grid.GetRow(b)}";
             spRoomProperties.IsEnabled = b.Child != null;
+
+            if (b.Child == null)
+                ResetRoomProperties();
+
+            RoomControl room = b.Child as RoomControl;
+
+            if (room == null)
+                return;
+
+            chbNorth.IsChecked = room.HasExitNorth;
+            chbSouth.IsChecked = room.HasExitSouth;
+            chbEast.IsChecked = room.HasExitEast;
+            chbWest.IsChecked = room.HasExitWest;
+            chbLockNorth.IsChecked = room.IsExitNorthLocked;
+            chbLockSouth.IsChecked = room.IsExitSouthLocked;
+            chbLockEast.IsChecked = room.IsExitEastLocked;
+            chbLockWest.IsChecked = room.IsExitWestLocked;
         }
 
         private void Border_MouseMove(object sender, MouseEventArgs e)
@@ -302,6 +334,7 @@ namespace CastleEdit
             sourceBorder.Child = newRoom;
             disabledItem.IsEnabled = true;
             mi.IsEnabled = false;
+            spRoomProperties.IsEnabled = true;
         }
 
         private void MiDeleteRoom_Click(object sender, RoutedEventArgs e)
@@ -313,6 +346,7 @@ namespace CastleEdit
             sourceBorder.Child = null;
             disabledItem.IsEnabled = true;
             mi.IsEnabled = false;
+            spRoomProperties.IsEnabled = false;
         }
 
         private void NewRoom_MouseDown(object sender, MouseButtonEventArgs e)
@@ -321,6 +355,18 @@ namespace CastleEdit
             Border sourceBorder = room.Parent as Border;
             if (e.LeftButton == MouseButtonState.Pressed)
                 sourceBorder.Focus();
+        }
+
+        private void Border_KeyDown(object sender, KeyEventArgs e)
+        {
+            Border b = sender as Border;
+
+            if (e.Key == Key.Delete)
+                b.Child = null;
+
+            (b.ContextMenu.Items[0] as MenuItem).IsEnabled = true;   // Eintrag Neuen Raum erstellen wieder aktivieren
+            (b.ContextMenu.Items[1] as MenuItem).IsEnabled = false;  // Eintrag Raum Löschen wieder deaktivieren
+            spRoomProperties.IsEnabled = false;
         }
 
         /// <summary>
@@ -333,6 +379,23 @@ namespace CastleEdit
 
             GameItems.Remove((Item)dgItems.SelectedItem);
             tbItemID.Text = tbItemName.Text = tbItemDescription.Text = "";
+        }
+
+        /// <summary>
+        /// Setzt alle Controls für die Raumeigenschaften auf ihren Standwert zurück
+        /// </summary>
+        void ResetRoomProperties()
+        {
+            chbNorth.IsChecked = false;
+            chbSouth.IsChecked = false;
+            chbEast.IsChecked = false;
+            chbWest.IsChecked = false;
+            chbLockNorth.IsChecked = false;
+            chbLockSouth.IsChecked = false;
+            chbLockEast.IsChecked = false;
+            chbLockWest.IsChecked = false;
+            lbRoomItems.Items.Clear();
+            tbRoomName.Text = tbRoomText.Text = "";
         }
     }
 }
