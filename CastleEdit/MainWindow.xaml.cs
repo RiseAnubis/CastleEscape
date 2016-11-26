@@ -55,6 +55,9 @@ namespace CastleEdit
             btnConfirmRoom.Click += BtnConfirmRoom_Click;
             dgItems.SelectionChanged += DgItems_SelectionChanged;
             dgItems.PreviewKeyDown += DgItems_PreviewKeyDown;
+            dgItems.MouseDown += DgItems_MouseDown;
+            lbRoomItems.DragOver += LbRoomItems_DragOver;
+            lbRoomItems.Drop += LbRoomItems_Drop;
             GameItems.CollectionChanged += (sender, e) => statusItemCount.Content = $"Items: {GameItems.Count}";
 
             for (int i = 0; i < MaxColumns; i++)
@@ -71,8 +74,8 @@ namespace CastleEdit
                     border.MouseMove += Border_MouseMove; // zur Anzeige der Koordinaten
                     border.GotFocus += Border_GotFocus;   // zum Fokussieren
                     border.KeyDown += Border_KeyDown;     // Löschen eines Raumes per DEL
-                    MenuItem miCreateRoom = new MenuItem { Header = "Raum erstellen" };
-                    MenuItem miDeleteRoom = new MenuItem { Header = "Raum löschen", IsEnabled = false };
+                    MenuItem miCreateRoom = new MenuItem { Header = "Raum erstellen", Style = (Style)FindResource("ctxMenuItemStyle") };
+                    MenuItem miDeleteRoom = new MenuItem { Header = "Raum löschen", IsEnabled = false, Style = (Style)FindResource("ctxMenuItemStyle") };
                     miCreateRoom.Click += MiCreateRoom_Click;
                     miDeleteRoom.Click += MiDeleteRoom_Click;
                     ContextMenu ctx = new ContextMenu();
@@ -86,6 +89,29 @@ namespace CastleEdit
 
             statusRoomsize.Content = $"Levelgröße: {MaxColumns} x {MaxRows}";
             statusItemCount.Content = $"Items: {GameItems.Count}";
+        }
+
+        private void LbRoomItems_Drop(object sender, DragEventArgs e)
+        {
+            Item item = (Item)e.Data.GetData(typeof (Item));
+            lbRoomItems.Items.Add(new ListBoxItem { Content = item?.Name });
+        }
+
+        private void LbRoomItems_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effects = e.Data.GetDataPresent(typeof (Item)) ? DragDropEffects.Copy : DragDropEffects.None;
+            e.Handled = true;
+        }
+
+        private void DgItems_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Item item = (Item)dgItems.SelectedItem;
+
+            if (item != null)
+            {
+                DataObject data = new DataObject(typeof(Item), item);
+                DragDrop.DoDragDrop(dgItems, data, DragDropEffects.Copy);
+            }
         }
 
         private void BtnConfirmRoom_Click(object sender, RoutedEventArgs e)
@@ -347,6 +373,7 @@ namespace CastleEdit
             disabledItem.IsEnabled = true;
             mi.IsEnabled = false;
             spRoomProperties.IsEnabled = false;
+            ResetRoomProperties();
         }
 
         private void NewRoom_MouseDown(object sender, MouseButtonEventArgs e)
@@ -367,6 +394,7 @@ namespace CastleEdit
             (b.ContextMenu.Items[0] as MenuItem).IsEnabled = true;   // Eintrag Neuen Raum erstellen wieder aktivieren
             (b.ContextMenu.Items[1] as MenuItem).IsEnabled = false;  // Eintrag Raum Löschen wieder deaktivieren
             spRoomProperties.IsEnabled = false;
+            ResetRoomProperties();
         }
 
         /// <summary>
@@ -394,6 +422,10 @@ namespace CastleEdit
             chbLockSouth.IsChecked = false;
             chbLockEast.IsChecked = false;
             chbLockWest.IsChecked = false;
+            cbItemNorth.SelectedIndex = -1;
+            cbItemSouth.SelectedIndex = -1;
+            cbItemEast.SelectedIndex = -1;
+            cbItemWest.SelectedIndex = -1;
             lbRoomItems.Items.Clear();
             tbRoomName.Text = tbRoomText.Text = "";
         }

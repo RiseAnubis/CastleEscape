@@ -70,7 +70,7 @@ namespace CastleEscape
         /// <summary>
         /// Zeigt eine Beschreibung des Raumes an mit den verfügbaren Items und Ausgängen
         /// </summary>
-        public void ShowDescription()
+        public void ShowDescription() //TODO ich meinte übrigens, dass es vielleicht nicht besonders gut ist, gleich Infos über den raum anzuzeigen, ohne "umsehen" einzugeben, so kann man keine Fallen stellen
         {
             TextBuffer.WriteLine(Text);
             TextBuffer.WriteLine("=".PadRight(Console.WindowWidth, '=') + "\n");
