@@ -94,7 +94,7 @@ namespace CastleEdit
         private void LbRoomItems_Drop(object sender, DragEventArgs e)
         {
             Item item = (Item)e.Data.GetData(typeof (Item));
-            lbRoomItems.Items.Add(new ListBoxItem { Content = item?.Name });
+            lbRoomItems.Items.Add(item);
         }
 
         private void LbRoomItems_DragOver(object sender, DragEventArgs e)
@@ -125,6 +125,9 @@ namespace CastleEdit
             room.IsExitSouthLocked = (bool)chbLockSouth.IsChecked;
             room.IsExitEastLocked = (bool)chbLockEast.IsChecked;
             room.IsExitWestLocked = (bool)chbLockWest.IsChecked;
+
+            //foreach (ListBoxItem lbItem in lbRoomItems.Items)
+            //    room.RoomItems.Add();
         }
 
         private void DgItems_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -171,7 +174,7 @@ namespace CastleEdit
             Border b = sender as Border;
             selectedBorder = b;
             statusSelectedRoom.Content = $"Ausgewählter Raum: {Grid.GetColumn(b)}, {Grid.GetRow(b)}";
-            spRoomProperties.IsEnabled = b.Child != null;
+            gridRoomProperties.IsEnabled = b.Child != null;
 
             if (b.Child == null)
                 ResetRoomProperties();
@@ -360,7 +363,7 @@ namespace CastleEdit
             sourceBorder.Child = newRoom;
             disabledItem.IsEnabled = true;
             mi.IsEnabled = false;
-            spRoomProperties.IsEnabled = true;
+            gridRoomProperties.IsEnabled = true;
         }
 
         private void MiDeleteRoom_Click(object sender, RoutedEventArgs e)
@@ -372,7 +375,7 @@ namespace CastleEdit
             sourceBorder.Child = null;
             disabledItem.IsEnabled = true;
             mi.IsEnabled = false;
-            spRoomProperties.IsEnabled = false;
+            gridRoomProperties.IsEnabled = false;
             ResetRoomProperties();
         }
 
@@ -393,7 +396,7 @@ namespace CastleEdit
 
             (b.ContextMenu.Items[0] as MenuItem).IsEnabled = true;   // Eintrag Neuen Raum erstellen wieder aktivieren
             (b.ContextMenu.Items[1] as MenuItem).IsEnabled = false;  // Eintrag Raum Löschen wieder deaktivieren
-            spRoomProperties.IsEnabled = false;
+            gridRoomProperties.IsEnabled = false;
             ResetRoomProperties();
         }
 
