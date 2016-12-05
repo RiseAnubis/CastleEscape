@@ -91,7 +91,26 @@ namespace CastleEdit
             }
         }
 
-        public ObservableCollection<Item> RoomItems { get; } 
+        public Item ItemExitNorth { get; set; }
+        public Item ItemExitSouth { get; set; }
+        public Item ItemExitEast { get; set; }
+        public Item ItemExitWest { get; set; }
+
+        /// <summary>
+        /// Der Name des Raumes
+        /// </summary>
+        public string RoomName
+        {
+            get { return txt_RoomName.Text; }
+            set { txt_RoomName.Text = value; }
+        }
+
+        /// <summary>
+        /// Der Text, der beim Betreten des Raumes angezeigt werden soll
+        /// </summary>
+        public string RoomDescription { get; set; }
+
+        public ObservableCollection<Item> RoomItems { get; } = new ObservableCollection<Item>();
 
         public RoomControl()
         {

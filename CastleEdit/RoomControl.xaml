@@ -34,6 +34,9 @@
                     <RotateTransform Angle="90"/>
                 </Polygon.LayoutTransform>
             </Polygon>
+            <Grid Grid.Row="1" Grid.Column="1">
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Name="txt_RoomName"/>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>

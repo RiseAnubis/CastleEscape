@@ -14,7 +14,10 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections;
 using System.Collections.ObjectModel;
+using System.Threading;
 using CastleEdit.Classes;
+
+//TODO Eventlistener auf das Formular, welches auf Änderungen prüft und dann den Timer in gang setzt. 2s nach dem ändern eines Werts wird gespeichert solange er nicht in ein anderes Feld schreibt. Wird der Timer zurück gesetzt. Ebenfalls wenn er einen anderen Raum auswählt.Dann faded kurz eine grüne Box auf mit dem Hinweis "Änderungen gespeichert".
 
 namespace CastleEdit
 {
@@ -58,6 +61,7 @@ namespace CastleEdit
             dgItems.MouseDown += DgItems_MouseDown;
             lbRoomItems.DragOver += LbRoomItems_DragOver;
             lbRoomItems.Drop += LbRoomItems_Drop;
+            lbRoomItems.PreviewKeyDown+= LbRoomItems_PreviewKeyDown;
             GameItems.CollectionChanged += (sender, e) => statusItemCount.Content = $"Items: {GameItems.Count}";
 
             for (int i = 0; i < MaxColumns; i++)
@@ -91,15 +95,28 @@ namespace CastleEdit
             statusItemCount.Content = $"Items: {GameItems.Count}";
         }
 
+        private void LbRoomItems_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+            {
+                lbRoomItems.Items.Remove(lbRoomItems.SelectedItem);
+                lbRoomItems.SelectedIndex = -1;
+                //ListBoxItem lbitem = lbRoomItems.SelectedItem as ListBoxItem;
+                //if (lbitem != null)
+                //    lbRoomItems.Items.Remove(lbitem);
+            }
+        }
+
         private void LbRoomItems_Drop(object sender, DragEventArgs e)
         {
-            Item item = (Item)e.Data.GetData(typeof (Item));
-            lbRoomItems.Items.Add(item);
+            Item item = (Item)e.Data.GetData(typeof(Item));
+            (selectedBorder.Child as RoomControl).RoomItems.Add(item);
+            //lbRoomItems.DisplayMemberPath = "Name";
         }
 
         private void LbRoomItems_DragOver(object sender, DragEventArgs e)
         {
-            e.Effects = e.Data.GetDataPresent(typeof (Item)) ? DragDropEffects.Copy : DragDropEffects.None;
+            e.Effects = e.Data.GetDataPresent(typeof(Item)) ? DragDropEffects.Copy : DragDropEffects.None;
             e.Handled = true;
         }
 
@@ -125,9 +142,11 @@ namespace CastleEdit
             room.IsExitSouthLocked = (bool)chbLockSouth.IsChecked;
             room.IsExitEastLocked = (bool)chbLockEast.IsChecked;
             room.IsExitWestLocked = (bool)chbLockWest.IsChecked;
+            room.RoomName = tbRoomName.Text;
+            room.RoomDescription = tbRoomText.Text;
 
-            //foreach (ListBoxItem lbItem in lbRoomItems.Items)
-            //    room.RoomItems.Add();
+            foreach (Item lbItem in lbRoomItems.Items)
+                room.RoomItems.Add(lbItem);
         }
 
         private void DgItems_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -165,7 +184,7 @@ namespace CastleEdit
 
             item.Name = tbItemName.Text;
             item.Description = tbItemDescription.Text;
-                
+
             tbItemID.Text = tbItemName.Text = tbItemDescription.Text = "";
         }
 
@@ -192,6 +211,10 @@ namespace CastleEdit
             chbLockSouth.IsChecked = room.IsExitSouthLocked;
             chbLockEast.IsChecked = room.IsExitEastLocked;
             chbLockWest.IsChecked = room.IsExitWestLocked;
+            tbRoomName.Text = room.RoomName;
+            tbRoomText.Text = room.RoomDescription;
+            lbRoomItems.ItemsSource = room.RoomItems;
+            //lbRoomItems.DisplayMemberPath = "Name";
         }
 
         private void Border_MouseMove(object sender, MouseEventArgs e)
@@ -429,7 +452,7 @@ namespace CastleEdit
             cbItemSouth.SelectedIndex = -1;
             cbItemEast.SelectedIndex = -1;
             cbItemWest.SelectedIndex = -1;
-            lbRoomItems.Items.Clear();
+            //lbRoomItems.Items.Clear();
             tbRoomName.Text = tbRoomText.Text = "";
         }
     }
