@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CastleEdit"
+             xmlns:classes="clr-namespace:CastleEdit.Classes"
              mc:Ignorable="d" 
              Width="290" Height="290" Focusable="True">
     <Border BorderThickness="2" BorderBrush="Black" Background="Transparent" Name="border">
@@ -18,18 +19,18 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
-            <Polygon Name="dirNorth" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" ToolTip="Nördlicher Ausgang"/>
-            <Polygon Name="dirSouth" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" ToolTip="Südlicher Ausgang">
+            <Polygon Name="dirNorth" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" classes:MovingTooltip.Tooltip="Nördlicher Ausgang"/>
+            <Polygon Name="dirSouth" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" classes:MovingTooltip.Tooltip="Südlicher Ausgang">
                 <Polygon.LayoutTransform>
                     <RotateTransform Angle="180"/>
                 </Polygon.LayoutTransform>
             </Polygon>
-            <Polygon Name="dirWest" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" ToolTip="Westlicher Ausgang">
+            <Polygon Name="dirWest" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" classes:MovingTooltip.Tooltip="Westlicher Ausgang">
                 <Polygon.LayoutTransform>
                     <RotateTransform Angle="270"/>
                 </Polygon.LayoutTransform>
             </Polygon>
-            <Polygon Name="dirEast" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" ToolTip="Östlicher Ausgang">
+            <Polygon Name="dirEast" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" classes:MovingTooltip.Tooltip="Östlicher Ausgang">
                 <Polygon.LayoutTransform>
                     <RotateTransform Angle="90"/>
                 </Polygon.LayoutTransform>

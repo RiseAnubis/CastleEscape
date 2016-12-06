@@ -35,18 +35,16 @@ namespace CastleEdit.Classes
             UIElement element = o as UIElement;
             ContentControl content = new ContentControl { Content = GetTooltip(element), Style = (Style)Application.Current.Resources["PopupStyle"] };
             Popup p = new Popup { Placement = PlacementMode.Relative, PlacementTarget = element, Child = content };
-            
+
             element.MouseMove += (sender, e) =>
             {
-                if (!p.IsOpen)
-                    p.IsOpen = true;
-                
+                p.IsOpen = true;
                 Point currentPos = e.GetPosition(element);
                 p.HorizontalOffset = currentPos.X + 20;
                 p.VerticalOffset = currentPos.Y + 10;
             };
 
-            element.MouseLeave += (sender, e) => p.IsOpen = false; 
+            element.MouseLeave += (sender, e) => p.IsOpen = false;
         }
     }
 }
