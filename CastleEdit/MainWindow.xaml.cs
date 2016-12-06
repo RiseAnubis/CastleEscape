@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Threading;
+using System.Windows.Controls.Primitives;
 using CastleEdit.Classes;
 
 //TODO Eventlistener auf das Formular, welches auf Änderungen prüft und dann den Timer in gang setzt. 2s nach dem ändern eines Werts wird gespeichert solange er nicht in ein anderes Feld schreibt. Wird der Timer zurück gesetzt. Ebenfalls wenn er einen anderen Raum auswählt.Dann faded kurz eine grüne Box auf mit dem Hinweis "Änderungen gespeichert".
@@ -61,7 +62,7 @@ namespace CastleEdit
             dgItems.MouseDown += DgItems_MouseDown;
             lbRoomItems.DragOver += LbRoomItems_DragOver;
             lbRoomItems.Drop += LbRoomItems_Drop;
-            lbRoomItems.PreviewKeyDown+= LbRoomItems_PreviewKeyDown;
+            lbRoomItems.PreviewKeyDown += LbRoomItems_PreviewKeyDown;
             GameItems.CollectionChanged += (sender, e) => statusItemCount.Content = $"Items: {GameItems.Count}";
 
             for (int i = 0; i < MaxColumns; i++)
@@ -95,7 +96,7 @@ namespace CastleEdit
             statusItemCount.Content = $"Items: {GameItems.Count}";
         }
 
-        private void LbRoomItems_PreviewKeyDown(object sender, KeyEventArgs e)
+        void LbRoomItems_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete)
             {
@@ -107,20 +108,20 @@ namespace CastleEdit
             }
         }
 
-        private void LbRoomItems_Drop(object sender, DragEventArgs e)
+        void LbRoomItems_Drop(object sender, DragEventArgs e)
         {
             Item item = (Item)e.Data.GetData(typeof(Item));
             (selectedBorder.Child as RoomControl).RoomItems.Add(item);
             //lbRoomItems.DisplayMemberPath = "Name";
         }
 
-        private void LbRoomItems_DragOver(object sender, DragEventArgs e)
+        void LbRoomItems_DragOver(object sender, DragEventArgs e)
         {
             e.Effects = e.Data.GetDataPresent(typeof(Item)) ? DragDropEffects.Copy : DragDropEffects.None;
             e.Handled = true;
         }
 
-        private void DgItems_MouseDown(object sender, MouseButtonEventArgs e)
+        void DgItems_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Item item = (Item)dgItems.SelectedItem;
 
@@ -131,7 +132,7 @@ namespace CastleEdit
             }
         }
 
-        private void BtnConfirmRoom_Click(object sender, RoutedEventArgs e)
+        void BtnConfirmRoom_Click(object sender, RoutedEventArgs e)
         {
             RoomControl room = selectedBorder.Child as RoomControl;
             room.HasExitNorth = (bool)chbNorth.IsChecked;
@@ -143,19 +144,19 @@ namespace CastleEdit
             room.IsExitEastLocked = (bool)chbLockEast.IsChecked;
             room.IsExitWestLocked = (bool)chbLockWest.IsChecked;
             room.RoomName = tbRoomName.Text;
-            room.RoomDescription = tbRoomText.Text;
+            room.RoomDescription = tbRoomDescription.Text;
 
             foreach (Item lbItem in lbRoomItems.Items)
                 room.RoomItems.Add(lbItem);
         }
 
-        private void DgItems_PreviewKeyDown(object sender, KeyEventArgs e)
+        void DgItems_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete)
                 DeleteItem();
         }
 
-        private void DgItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        void DgItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Item item = (Item)dgItems.SelectedItem;
 
@@ -174,7 +175,7 @@ namespace CastleEdit
             }
         }
 
-        private void BtnChangeItem_Click(object sender, RoutedEventArgs e)
+        void BtnChangeItem_Click(object sender, RoutedEventArgs e)
         {
             Item item = GameItems.FirstOrDefault(x => x.ID == tbItemID.Text);
 
@@ -188,7 +189,7 @@ namespace CastleEdit
             tbItemID.Text = tbItemName.Text = tbItemDescription.Text = "";
         }
 
-        private void Border_GotFocus(object sender, RoutedEventArgs e)
+        void Border_GotFocus(object sender, RoutedEventArgs e)
         {
             Border b = sender as Border;
             selectedBorder = b;
@@ -212,12 +213,12 @@ namespace CastleEdit
             chbLockEast.IsChecked = room.IsExitEastLocked;
             chbLockWest.IsChecked = room.IsExitWestLocked;
             tbRoomName.Text = room.RoomName;
-            tbRoomText.Text = room.RoomDescription;
+            tbRoomDescription.Text = room.RoomDescription;
             lbRoomItems.ItemsSource = room.RoomItems;
             //lbRoomItems.DisplayMemberPath = "Name";
         }
 
-        private void Border_MouseMove(object sender, MouseEventArgs e)
+        void Border_MouseMove(object sender, MouseEventArgs e)
         {
             Border b = sender as Border;
             statusCoordinates.Content = $"Koordinaten: {Grid.GetColumn(b)}, {Grid.GetRow(b)}";
@@ -239,12 +240,11 @@ namespace CastleEdit
 
             Item item = new Item { ID = tbItemID.Text, Name = tbItemName.Text, Description = tbItemDescription.Text };
 
-            foreach (Item i in GameItems)
-                if (i.ID == item.ID)
-                {
-                    MessageBox.Show("Das Item mit der angegebenen ID existiert bereits!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
+            if (GameItems.Any(i => i.ID == item.ID))
+            {
+                MessageBox.Show("Das Item mit der angegebenen ID existiert bereits!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             GameItems.Add(item);
             tbItemID.Text = tbItemName.Text = tbItemDescription.Text = "";
@@ -453,7 +453,7 @@ namespace CastleEdit
             cbItemEast.SelectedIndex = -1;
             cbItemWest.SelectedIndex = -1;
             //lbRoomItems.Items.Clear();
-            tbRoomName.Text = tbRoomText.Text = "";
+            tbRoomName.Text = tbRoomDescription.Text = "";
         }
     }
 }

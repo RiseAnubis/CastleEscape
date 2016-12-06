@@ -57,6 +57,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Classes\Item.cs" />
+    <Compile Include="Classes\MovingTooltip.cs" />
     <Compile Include="Classes\Room.cs" />
     <Compile Include="RoomControl.xaml.cs">
       <DependentUpon>RoomControl.xaml</DependentUpon>

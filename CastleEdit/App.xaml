@@ -186,10 +186,10 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style TargetType="ToolTip">
+        <Style x:Key="PopupStyle" TargetType="ContentControl">
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="ToolTip">
+                    <ControlTemplate TargetType="ContentControl">
                         <Border BorderThickness="1" BorderBrush="White" Background="Black">
                             <TextBlock Text="{TemplateBinding Content}" Margin="4"/>
                         </Border>
