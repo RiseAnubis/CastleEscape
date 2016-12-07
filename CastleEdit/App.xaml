@@ -5,6 +5,9 @@
              xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" x:Class="CastleEdit.App"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <!-- Brushes -->
+        <SolidColorBrush x:Key="BackgroundBrush" Color="#FF27272B"/>
+        <SolidColorBrush x:Key="ForegroundBrush" Color="#FFCBCBCB"/>
         <Style TargetType="ContextMenu">
             <Setter Property="Template">
                 <Setter.Value>
@@ -45,11 +48,11 @@
             </Setter>
         </Style>
         <Style TargetType="Button">
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border BorderThickness="2" CornerRadius="10" BorderBrush="{DynamicResource ForegroundBrush}" Background="Transparent" x:Name="border">
+                        <Border BorderThickness="2" CornerRadius="10" BorderBrush="{StaticResource ForegroundBrush}" Background="Transparent" x:Name="border">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -95,12 +98,12 @@
             </Style.Triggers>
         </Style>
         <Style TargetType="TextBox">
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
-            <Setter Property="CaretBrush" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+            <Setter Property="CaretBrush" Value="{StaticResource ForegroundBrush}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
-                        <Border Background="Transparent" BorderThickness="1" BorderBrush="{DynamicResource ForegroundBrush}" Name="border">
+                        <Border Background="Transparent" BorderThickness="1" BorderBrush="{StaticResource ForegroundBrush}" Name="border">
                             <ScrollViewer Margin="2" x:Name="PART_ContentHost"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -116,10 +119,10 @@
             </Setter>
         </Style>
         <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
         </Style>
         <Style TargetType="Label">
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Opacity" Value="0.5"/>
@@ -127,7 +130,7 @@
             </Style.Triggers>
         </Style>
         <Style TargetType="CheckBox">
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -201,7 +204,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ListBox">
-                        <Border x:Name="Bd" BorderBrush="{DynamicResource ForegroundBrush}" BorderThickness="1" Background="Transparent" Padding="1" SnapsToDevicePixels="True">
+                        <Border x:Name="Bd" BorderBrush="{StaticResource ForegroundBrush}" BorderThickness="1" Background="Transparent" Padding="1" SnapsToDevicePixels="True">
                             <ScrollViewer Focusable="False" Padding="{TemplateBinding Padding}">
                                 <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                             </ScrollViewer>
@@ -233,7 +236,7 @@
                             </Grid.ColumnDefinitions>
                             <Popup x:Name="PART_Popup" AllowsTransparency="True" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
                                 <Themes:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding ActualWidth, ElementName=templateRoot}">
-                                    <Border x:Name="DropDownBorder" BorderBrush="{DynamicResource ForegroundBrush}" BorderThickness="1" Background="{DynamicResource BackgroundBrush}">
+                                    <Border x:Name="DropDownBorder" BorderBrush="{StaticResource ForegroundBrush}" BorderThickness="1" Background="{StaticResource BackgroundBrush}">
                                         <ScrollViewer x:Name="DropDownScrollViewer">
                                             <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
                                                 <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
@@ -255,9 +258,9 @@
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="{x:Type ToggleButton}">
-                                                    <Border x:Name="templateRoot" BorderBrush="{DynamicResource ForegroundBrush}" BorderThickness="2" SnapsToDevicePixels="True" Background="Transparent">
+                                                    <Border x:Name="templateRoot" BorderBrush="{StaticResource ForegroundBrush}" BorderThickness="2" SnapsToDevicePixels="True" Background="Transparent">
                                                         <Border x:Name="splitBorder" BorderBrush="Transparent" BorderThickness="1" HorizontalAlignment="Right" Margin="0" SnapsToDevicePixels="True" Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
-                                                            <Path x:Name="Arrow" Data="F1M0,0L2.667,2.66665 5.3334,0 5.3334,-1.78168 2.6667,0.88501 0,-1.78168 0,0z" Fill="{DynamicResource ForegroundBrush}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center"/>
+                                                            <Path x:Name="Arrow" Data="F1M0,0L2.667,2.66665 5.3334,0 5.3334,-1.78168 2.6667,0.88501 0,-1.78168 0,0z" Fill="{StaticResource ForegroundBrush}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center"/>
                                                         </Border>
                                                     </Border>
                                                     <ControlTemplate.Triggers>
@@ -319,7 +322,7 @@
             </Setter>
         </Style>
         <Style TargetType="GroupBox">
-            <Setter Property="BorderBrush" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ForegroundBrush}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="GroupBox">
@@ -365,8 +368,8 @@
         </Style>
         <Style TargetType="DataGrid">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ForegroundBrush}"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="RowDetailsVisibilityMode" Value="VisibleWhenSelected"/>
             <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
@@ -439,23 +442,37 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
                         <Grid>
-                            <Themes:DataGridHeaderBorder BorderBrush="{DynamicResource ForegroundBrush}" BorderThickness="1" Background="Transparent" IsClickable="{TemplateBinding CanUserSort}" IsPressed="{TemplateBinding IsPressed}" IsHovered="{TemplateBinding IsMouseOver}" Padding="{TemplateBinding Padding}" SortDirection="{TemplateBinding SortDirection}" SeparatorBrush="{TemplateBinding SeparatorBrush}" SeparatorVisibility="{TemplateBinding SeparatorVisibility}">
+                            <Themes:DataGridHeaderBorder BorderBrush="{StaticResource ForegroundBrush}" BorderThickness="1" Background="Transparent" IsClickable="{TemplateBinding CanUserSort}" IsPressed="{TemplateBinding IsPressed}" IsHovered="{TemplateBinding IsMouseOver}" Padding="{TemplateBinding Padding}" SortDirection="{TemplateBinding SortDirection}" SeparatorBrush="{TemplateBinding SeparatorBrush}" SeparatorVisibility="{TemplateBinding SeparatorVisibility}">
                                 <ContentPresenter Margin="4,0,0,0" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
                             </Themes:DataGridHeaderBorder>
-                            <Thumb x:Name="PART_LeftHeaderGripper" HorizontalAlignment="Left" Style="{StaticResource ColumnHeaderGripperStyle}"/>
-                            <Thumb x:Name="PART_RightHeaderGripper" HorizontalAlignment="Right" Style="{StaticResource ColumnHeaderGripperStyle}"/>
+                            <Thumb x:Name="PART_LeftHeaderGripper" HorizontalAlignment="Left" Style="{DynamicResource ColumnHeaderGripperStyle}"/>
+                            <Thumb x:Name="PART_RightHeaderGripper" HorizontalAlignment="Right" Style="{DynamicResource ColumnHeaderGripperStyle}"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
         <Style TargetType="Menu">
-            <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="Background" Value="{StaticResource BackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
         </Style>
-        <!-- Brushes -->
-        <SolidColorBrush x:Key="BackgroundBrush" Color="#FF27272B"/>
-        <SolidColorBrush x:Key="ForegroundBrush" Color="#FFCBCBCB"/>
+        <Style TargetType="StatusBar">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.StatusFontFamilyKey}}"/>
+            <Setter Property="FontSize" Value="{DynamicResource {x:Static SystemFonts.StatusFontSizeKey}}"/>
+            <Setter Property="FontStyle" Value="{DynamicResource {x:Static SystemFonts.StatusFontStyleKey}}"/>
+            <Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.StatusFontWeightKey}}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type StatusBar}">
+                        <Border BorderBrush="{StaticResource ForegroundBrush}" BorderThickness="1" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>
 

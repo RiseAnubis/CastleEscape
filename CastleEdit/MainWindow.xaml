@@ -11,7 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="400"/>
@@ -131,7 +131,7 @@
             </GroupBox>
             <Button Grid.Row="3" Content="OK" HorizontalAlignment="Center" Width="100" Name="btnConfirmRoom"/>
         </Grid>
-        <StatusBar Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Background="Transparent">
+        <StatusBar Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Margin="8,4,8,4">
             <StatusBarItem Name="statusRoomsize">
                 Levelgröße
             </StatusBarItem>

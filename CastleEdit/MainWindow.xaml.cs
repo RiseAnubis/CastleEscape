@@ -33,8 +33,11 @@ namespace CastleEdit
         Point? lastCenterPositionOnTarget;
         Point? lastMousePositionOnTarget;
         Point? lastDragPoint;
-        Border selectedBorder;
+        RoomControl selectedRoom;
 
+        /// <summary>
+        /// Liste, die alle Items des Spiels enthält
+        /// </summary>
         public ObservableCollection<Item> GameItems { get; } = new ObservableCollection<Item>();
 
         public MainWindow()
@@ -54,7 +57,7 @@ namespace CastleEdit
             chbLockEast.Unchecked += (sender, e) => cbItemEast.SelectedIndex = -1;
             chbLockWest.Unchecked += (sender, e) => cbItemWest.SelectedIndex = -1;
             btnAddItem.Click += BtnAddItem_Click;
-            btnDeleteItem.Click += (sender, e) => DeleteItem();
+            btnDeleteItem.Click += (sender, e) => DeleteGameItem();
             //btnChangeItem.Click += BtnChangeItem_Click;
             btnConfirmRoom.Click += BtnConfirmRoom_Click;
             dgItems.SelectionChanged += DgItems_SelectionChanged;
@@ -78,6 +81,7 @@ namespace CastleEdit
                     border.PreviewMouseDown += Border_PreviewMouseDown;
                     border.MouseMove += Border_MouseMove; // zur Anzeige der Koordinaten
                     border.GotFocus += Border_GotFocus;   // zum Fokussieren
+                    //border.LostFocus += Border_LostFocus; // zum Speichern der Eigenschaften
                     border.KeyDown += Border_KeyDown;     // Löschen eines Raumes per DEL
                     MenuItem miCreateRoom = new MenuItem { Header = "Raum erstellen", Style = (Style)FindResource("ctxMenuItemStyle") };
                     MenuItem miDeleteRoom = new MenuItem { Header = "Raum löschen", IsEnabled = false, Style = (Style)FindResource("ctxMenuItemStyle") };
@@ -100,7 +104,7 @@ namespace CastleEdit
         {
             if (e.Key == Key.Delete)
             {
-                lbRoomItems.Items.Remove(lbRoomItems.SelectedItem);
+                selectedRoom.RoomItems.Remove(lbRoomItems.SelectedItem as Item);
                 lbRoomItems.SelectedIndex = -1;
                 //ListBoxItem lbitem = lbRoomItems.SelectedItem as ListBoxItem;
                 //if (lbitem != null)
@@ -111,7 +115,7 @@ namespace CastleEdit
         void LbRoomItems_Drop(object sender, DragEventArgs e)
         {
             Item item = (Item)e.Data.GetData(typeof(Item));
-            (selectedBorder.Child as RoomControl).RoomItems.Add(item);
+            selectedRoom.RoomItems.Add(item);
             //lbRoomItems.DisplayMemberPath = "Name";
         }
 
@@ -134,26 +138,28 @@ namespace CastleEdit
 
         void BtnConfirmRoom_Click(object sender, RoutedEventArgs e)
         {
-            RoomControl room = selectedBorder.Child as RoomControl;
-            room.HasExitNorth = (bool)chbNorth.IsChecked;
-            room.HasExitSouth = (bool)chbSouth.IsChecked;
-            room.HasExitEast = (bool)chbEast.IsChecked;
-            room.HasExitWest = (bool)chbWest.IsChecked;
-            room.IsExitNorthLocked = (bool)chbLockNorth.IsChecked;
-            room.IsExitSouthLocked = (bool)chbLockSouth.IsChecked;
-            room.IsExitEastLocked = (bool)chbLockEast.IsChecked;
-            room.IsExitWestLocked = (bool)chbLockWest.IsChecked;
-            room.RoomName = tbRoomName.Text;
-            room.RoomDescription = tbRoomDescription.Text;
+            if (selectedRoom == null)
+                return;
 
-            foreach (Item lbItem in lbRoomItems.Items)
-                room.RoomItems.Add(lbItem);
+            selectedRoom.HasExitNorth = (bool)chbNorth.IsChecked;
+            selectedRoom.HasExitSouth = (bool)chbSouth.IsChecked;
+            selectedRoom.HasExitEast = (bool)chbEast.IsChecked;
+            selectedRoom.HasExitWest = (bool)chbWest.IsChecked;
+            selectedRoom.IsExitNorthLocked = (bool)chbLockNorth.IsChecked;
+            selectedRoom.IsExitSouthLocked = (bool)chbLockSouth.IsChecked;
+            selectedRoom.IsExitEastLocked = (bool)chbLockEast.IsChecked;
+            selectedRoom.IsExitWestLocked = (bool)chbLockWest.IsChecked;
+            selectedRoom.RoomName = tbRoomName.Text;
+            selectedRoom.RoomDescription = tbRoomDescription.Text;
+
+            //foreach (Item lbItem in lbRoomItems.Items)
+            //    selectedRoom.RoomItems.Add(lbItem);
         }
 
         void DgItems_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete)
-                DeleteItem();
+                DeleteGameItem();
         }
 
         void DgItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -192,7 +198,7 @@ namespace CastleEdit
         void Border_GotFocus(object sender, RoutedEventArgs e)
         {
             Border b = sender as Border;
-            selectedBorder = b;
+            selectedRoom = b.Child as RoomControl;
             statusSelectedRoom.Content = $"Ausgewählter Raum: {Grid.GetColumn(b)}, {Grid.GetRow(b)}";
             gridRoomProperties.IsEnabled = b.Child != null;
 
@@ -215,7 +221,20 @@ namespace CastleEdit
             tbRoomName.Text = room.RoomName;
             tbRoomDescription.Text = room.RoomDescription;
             lbRoomItems.ItemsSource = room.RoomItems;
-            //lbRoomItems.DisplayMemberPath = "Name";
+        }
+
+        void Border_LostFocus(object sender, RoutedEventArgs e)
+        {
+            selectedRoom.HasExitNorth = (bool)chbNorth.IsChecked;
+            selectedRoom.HasExitSouth = (bool)chbSouth.IsChecked;
+            selectedRoom.HasExitEast = (bool)chbEast.IsChecked;
+            selectedRoom.HasExitWest = (bool)chbWest.IsChecked;
+            selectedRoom.IsExitNorthLocked = (bool)chbLockNorth.IsChecked;
+            selectedRoom.IsExitSouthLocked = (bool)chbLockSouth.IsChecked;
+            selectedRoom.IsExitEastLocked = (bool)chbLockEast.IsChecked;
+            selectedRoom.IsExitWestLocked = (bool)chbLockWest.IsChecked;
+            selectedRoom.RoomName = tbRoomName.Text;
+            selectedRoom.RoomDescription = tbRoomDescription.Text;
         }
 
         void Border_MouseMove(object sender, MouseEventArgs e)
@@ -379,17 +398,13 @@ namespace CastleEdit
             MenuItem disabledItem = ctx.Items[1] as MenuItem;
             Border sourceBorder = ctx.PlacementTarget as Border;
             RoomControl newRoom = new RoomControl();
-            //newRoom.PreviewMouseDown += NewRoom_MouseDown;
-            //Grid.SetColumn(newRoom, Grid.GetColumn(sourceBorder));
-            //Grid.SetRow(newRoom, Grid.GetRow(sourceBorder));
-            //roomGrid.Children.Add(newRoom);
             sourceBorder.Child = newRoom;
             disabledItem.IsEnabled = true;
             mi.IsEnabled = false;
             gridRoomProperties.IsEnabled = true;
         }
 
-        private void MiDeleteRoom_Click(object sender, RoutedEventArgs e)
+        void MiDeleteRoom_Click(object sender, RoutedEventArgs e)
         {
             MenuItem mi = sender as MenuItem;
             ContextMenu ctx = (ContextMenu)mi.Parent;
@@ -402,15 +417,7 @@ namespace CastleEdit
             ResetRoomProperties();
         }
 
-        private void NewRoom_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            RoomControl room = sender as RoomControl;
-            Border sourceBorder = room.Parent as Border;
-            if (e.LeftButton == MouseButtonState.Pressed)
-                sourceBorder.Focus();
-        }
-
-        private void Border_KeyDown(object sender, KeyEventArgs e)
+        void Border_KeyDown(object sender, KeyEventArgs e)
         {
             Border b = sender as Border;
 
@@ -426,7 +433,7 @@ namespace CastleEdit
         /// <summary>
         /// Löscht das ausgewählte Item aus dem DataGrid und aus der Itemliste
         /// </summary>
-        void DeleteItem()
+        void DeleteGameItem()
         {
             if (dgItems.SelectedItem == null)
                 return;
