@@ -36,7 +36,10 @@
                 </Polygon.LayoutTransform>
             </Polygon>
             <Grid Grid.Row="1" Grid.Column="1">
-                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Name="txt_RoomName"/>
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Name="txt_RoomName"/>
+                    <TextBlock Name="txt_Items"/>
+                </StackPanel>
             </Grid>
         </Grid>
     </Border>

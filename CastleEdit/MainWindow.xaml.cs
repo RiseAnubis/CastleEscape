@@ -66,6 +66,8 @@ namespace CastleEdit
             lbRoomItems.DragOver += LbRoomItems_DragOver;
             lbRoomItems.Drop += LbRoomItems_Drop;
             lbRoomItems.PreviewKeyDown += LbRoomItems_PreviewKeyDown;
+            tbRoomName.TextChanged += (Sender, Args) => { if (selectedRoom != null) selectedRoom.RoomName = tbRoomName.Text; };
+            tbRoomDescription.TextChanged += (Sender, Args) => { if (selectedRoom != null) selectedRoom.RoomDescription = tbRoomDescription.Text; };
             GameItems.CollectionChanged += (sender, e) => statusItemCount.Content = $"Items: {GameItems.Count}";
 
             for (int i = 0; i < MaxColumns; i++)
@@ -205,22 +207,20 @@ namespace CastleEdit
             if (b.Child == null)
                 ResetRoomProperties();
 
-            RoomControl room = b.Child as RoomControl;
-
-            if (room == null)
+            if (selectedRoom == null)
                 return;
 
-            chbNorth.IsChecked = room.HasExitNorth;
-            chbSouth.IsChecked = room.HasExitSouth;
-            chbEast.IsChecked = room.HasExitEast;
-            chbWest.IsChecked = room.HasExitWest;
-            chbLockNorth.IsChecked = room.IsExitNorthLocked;
-            chbLockSouth.IsChecked = room.IsExitSouthLocked;
-            chbLockEast.IsChecked = room.IsExitEastLocked;
-            chbLockWest.IsChecked = room.IsExitWestLocked;
-            tbRoomName.Text = room.RoomName;
-            tbRoomDescription.Text = room.RoomDescription;
-            lbRoomItems.ItemsSource = room.RoomItems;
+            chbNorth.IsChecked = selectedRoom.HasExitNorth;
+            chbSouth.IsChecked = selectedRoom.HasExitSouth;
+            chbEast.IsChecked = selectedRoom.HasExitEast;
+            chbWest.IsChecked = selectedRoom.HasExitWest;
+            chbLockNorth.IsChecked = selectedRoom.IsExitNorthLocked;
+            chbLockSouth.IsChecked = selectedRoom.IsExitSouthLocked;
+            chbLockEast.IsChecked = selectedRoom.IsExitEastLocked;
+            chbLockWest.IsChecked = selectedRoom.IsExitWestLocked;
+            tbRoomName.Text = selectedRoom.RoomName;
+            tbRoomDescription.Text = selectedRoom.RoomDescription;
+            lbRoomItems.ItemsSource = selectedRoom.RoomItems;
         }
 
         void Border_LostFocus(object sender, RoutedEventArgs e)
@@ -365,12 +365,30 @@ namespace CastleEdit
         {
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                 sliZoom.Value += e.Delta * 0.001;
+
             if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
             {
-                if (e.Delta > 0)
-                    scrollviewer.LineLeft();
+                double offset = scrollviewer.HorizontalOffset - (e.Delta * 10.0 / 6);
+
+                if (offset < 0)
+                    scrollviewer.ScrollToHorizontalOffset(0);
+                else if (offset > scrollviewer.ExtentHeight)
+                    scrollviewer.ScrollToHorizontalOffset(scrollviewer.ExtentHeight);
                 else
-                    scrollviewer.LineRight();
+                    scrollviewer.ScrollToHorizontalOffset(offset);
+
+                e.Handled = true;
+            }
+            else
+            {
+                double offset = scrollviewer.VerticalOffset - (e.Delta * 10.0 / 6);
+
+                if (offset < 0)
+                    scrollviewer.ScrollToVerticalOffset(0);
+                else if (offset > scrollviewer.ExtentHeight)
+                    scrollviewer.ScrollToVerticalOffset(scrollviewer.ExtentHeight);
+                else
+                    scrollviewer.ScrollToVerticalOffset(offset);
 
                 e.Handled = true;
             }
