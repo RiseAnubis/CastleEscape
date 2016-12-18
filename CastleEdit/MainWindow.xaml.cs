@@ -48,6 +48,7 @@ namespace CastleEdit
             scrollviewer.PreviewMouseWheel += Scrollviewer_PreviewMouseWheel;
             scrollviewer.PreviewMouseMove += Scrollviewer_PreviewMouseMove;
             scrollviewer.ScrollChanged += Scrollviewer_ScrollChanged;
+            scrollviewer.PreviewKeyDown += (sender, e) => e.Handled = true;  // verhindert, dass die RoomProperties deaktiviert werden, sollte ein Raum markiert sein und Eingaben auf der Tastatur gemacht werden 
             chbNorth.Unchecked += ChbNorth_Unchecked;
             chbSouth.Unchecked += ChbSouth_Unchecked;
             chbEast.Unchecked += ChbEast_Unchecked;
@@ -350,12 +351,9 @@ namespace CastleEdit
             if (lastDragPoint.HasValue)
             {
                 Point posNow = e.GetPosition(scrollviewer);
-
                 double dX = posNow.X - lastDragPoint.Value.X;
                 double dY = posNow.Y - lastDragPoint.Value.Y;
-
                 lastDragPoint = posNow;
-
                 scrollviewer.ScrollToHorizontalOffset(scrollviewer.HorizontalOffset - dX);
                 scrollviewer.ScrollToVerticalOffset(scrollviewer.VerticalOffset - dY);
             }
@@ -364,7 +362,14 @@ namespace CastleEdit
         void Scrollviewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            {
                 sliZoom.Value += e.Delta * 0.001;
+                //gridMatrix.Matrix.ScaleAtPrepend(sliZoom.Value, sliZoom.Value, e.GetPosition(roomGrid).X, e.GetPosition(roomGrid).Y);
+                //Point position = e.GetPosition(roomGrid);
+                //Matrix matrix = (roomGrid.RenderTransform as MatrixTransform).Matrix;
+                //matrix.ScaleAtPrepend(sliZoom.Value, sliZoom.Value, position.X, position.Y);
+                //roomGrid.RenderTransform = new MatrixTransform(matrix);
+            }
 
             if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
             {
@@ -416,10 +421,12 @@ namespace CastleEdit
             MenuItem disabledItem = ctx.Items[1] as MenuItem;
             Border sourceBorder = ctx.PlacementTarget as Border;
             RoomControl newRoom = new RoomControl();
+            //SetBinding()
             sourceBorder.Child = newRoom;
             disabledItem.IsEnabled = true;
             mi.IsEnabled = false;
             gridRoomProperties.IsEnabled = true;
+            selectedRoom = newRoom;
         }
 
         void MiDeleteRoom_Click(object sender, RoutedEventArgs e)

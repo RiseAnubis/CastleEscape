@@ -65,13 +65,14 @@
                 </Grid>
             </GroupBox>
         </Grid>
-        <ScrollViewer Grid.Column="1" Grid.Row="1" Margin="4" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="scrollviewer">
-            <Grid Name="roomGrid" Margin="4">
-                <Grid.LayoutTransform>
-                    <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=sliZoom, Path=Value}" ScaleY="{Binding ElementName=sliZoom, Path=Value}" x:Name="gridScale"/>
-                </Grid.LayoutTransform>
-            </Grid>
-        </ScrollViewer>
+        <ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="scrollviewer">
+                <Grid Name="roomGrid" Margin="4">
+                    <Grid.LayoutTransform>
+                        <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=sliZoom, Path=Value}" ScaleY="{Binding ElementName=sliZoom, Path=Value}" x:Name="gridScale"/>
+                        <!--<MatrixTransform x:Name="gridMatrix"/>-->
+                    </Grid.LayoutTransform>
+                </Grid>
+            </ScrollViewer>
         <Grid Grid.Column="2" Grid.Row="1" Margin="4" Name="gridRoomProperties" IsEnabled="False">
             <Grid.RowDefinitions>
                 <RowDefinition Height="200"/>
@@ -132,6 +133,10 @@
             <Button Grid.Row="3" Content="OK" HorizontalAlignment="Center" Width="100" Name="btnConfirmRoom"/>
         </Grid>
         <StatusBar Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Margin="8,4,8,4">
+            <StatusBarItem Name="statusLevelName">
+                Levelname
+            </StatusBarItem>
+            <Separator/>
             <StatusBarItem Name="statusRoomsize">
                 Levelgröße
             </StatusBarItem>
