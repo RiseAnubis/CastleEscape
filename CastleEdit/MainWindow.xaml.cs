@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Threading;
 using System.Windows.Controls.Primitives;
 using CastleEdit.Classes;
@@ -34,7 +35,7 @@ namespace CastleEdit
         Point? lastMousePositionOnTarget;
         Point? lastDragPoint;
         RoomControl selectedRoom;
-
+       
         /// <summary>
         /// Liste, die alle Items des Spiels enthält
         /// </summary>
@@ -67,8 +68,8 @@ namespace CastleEdit
             lbRoomItems.DragOver += LbRoomItems_DragOver;
             lbRoomItems.Drop += LbRoomItems_Drop;
             lbRoomItems.PreviewKeyDown += LbRoomItems_PreviewKeyDown;
-            tbRoomName.TextChanged += (Sender, Args) => { if (selectedRoom != null) selectedRoom.RoomName = tbRoomName.Text; };
-            tbRoomDescription.TextChanged += (Sender, Args) => { if (selectedRoom != null) selectedRoom.RoomDescription = tbRoomDescription.Text; };
+            //tbRoomName.TextChanged += (Sender, Args) => { if (selectedRoom != null) selectedRoom.RoomName = tbRoomName.Text; };
+            //tbRoomDescription.TextChanged += (Sender, Args) => { if (selectedRoom != null) selectedRoom.RoomDescription = tbRoomDescription.Text; };
             GameItems.CollectionChanged += (sender, e) => statusItemCount.Content = $"Items: {GameItems.Count}";
 
             for (int i = 0; i < MaxColumns; i++)
@@ -102,7 +103,7 @@ namespace CastleEdit
             statusRoomsize.Content = $"Levelgröße: {MaxColumns} x {MaxRows}";
             statusItemCount.Content = $"Items: {GameItems.Count}";
         }
-
+     
         void LbRoomItems_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete)
@@ -171,7 +172,6 @@ namespace CastleEdit
 
             if (item != null)
             {
-                tbItemID.Text = item.ID;
                 tbItemName.Text = item.Name;
                 tbItemDescription.Text = item.Description;
                 btnDeleteItem.IsEnabled = true;
@@ -186,7 +186,7 @@ namespace CastleEdit
 
         void BtnChangeItem_Click(object sender, RoutedEventArgs e)
         {
-            Item item = GameItems.FirstOrDefault(x => x.ID == tbItemID.Text);
+            Item item = GameItems.FirstOrDefault(x => x.Name == tbItemName.Text);
 
             if (item == null)
                 return;
@@ -195,7 +195,7 @@ namespace CastleEdit
             item.Name = tbItemName.Text;
             item.Description = tbItemDescription.Text;
 
-            tbItemID.Text = tbItemName.Text = tbItemDescription.Text = "";
+            tbItemName.Text = tbItemDescription.Text = "";
         }
 
         void Border_GotFocus(object sender, RoutedEventArgs e)
@@ -252,22 +252,22 @@ namespace CastleEdit
 
         void BtnAddItem_Click(object sender, RoutedEventArgs e)
         {
-            if (tbItemID.Text == "" || tbItemName.Text == "" || tbItemDescription.Text == "")
+            if (tbItemName.Text == "" || tbItemDescription.Text == "")
             {
-                MessageBox.Show("Es müssen alle Item-Felder ausgefüllt sein!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBoxWindow.Show(DialogType.Information, "Es müssen alle Item-Felder ausgefüllt sein!", "Fehler");
                 return;
             }
 
-            Item item = new Item { ID = tbItemID.Text, Name = tbItemName.Text, Description = tbItemDescription.Text };
+            Item item = new Item { Name = tbItemName.Text, Description = tbItemDescription.Text };
 
-            if (GameItems.Any(i => i.ID == item.ID))
+            if (GameItems.Any(i => i.Name == item.Name))
             {
-                MessageBox.Show("Das Item mit der angegebenen ID existiert bereits!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBoxWindow.Show(DialogType.Information, "Das Item mit der angegebenen ID existiert bereits!", "Information");
                 return;
             }
 
             GameItems.Add(item);
-            tbItemID.Text = tbItemName.Text = tbItemDescription.Text = "";
+            tbItemName.Text = tbItemDescription.Text = "";
         }
 
         void ChbWest_Unchecked(object sender, RoutedEventArgs e)
@@ -315,7 +315,6 @@ namespace CastleEdit
                 {
                     targetBefore = lastMousePositionOnTarget;
                     targetNow = Mouse.GetPosition(roomGrid);
-
                     lastMousePositionOnTarget = null;
                 }
 
@@ -421,7 +420,6 @@ namespace CastleEdit
             MenuItem disabledItem = ctx.Items[1] as MenuItem;
             Border sourceBorder = ctx.PlacementTarget as Border;
             RoomControl newRoom = new RoomControl();
-            //SetBinding()
             sourceBorder.Child = newRoom;
             disabledItem.IsEnabled = true;
             mi.IsEnabled = false;
@@ -464,7 +462,7 @@ namespace CastleEdit
                 return;
 
             GameItems.Remove((Item)dgItems.SelectedItem);
-            tbItemID.Text = tbItemName.Text = tbItemDescription.Text = "";
+            tbItemName.Text = tbItemDescription.Text = "";
         }
 
         /// <summary>
@@ -486,6 +484,26 @@ namespace CastleEdit
             cbItemWest.SelectedIndex = -1;
             //lbRoomItems.Items.Clear();
             tbRoomName.Text = tbRoomDescription.Text = "";
+        }
+
+        void ListenToRoomChanges()
+        {
+            while (true)  // CPU !!!!
+            {
+                if (selectedRoom != null)
+                {
+                    selectedRoom.RoomName = tbRoomName.Text;
+                    selectedRoom.RoomDescription = tbRoomDescription.Text;
+                    selectedRoom.HasExitNorth = (bool)chbNorth.IsChecked;
+                    selectedRoom.HasExitSouth = (bool)chbSouth.IsChecked;
+                    selectedRoom.HasExitEast = (bool)chbEast.IsChecked;
+                    selectedRoom.HasExitWest = (bool)chbWest.IsChecked;
+                    selectedRoom.IsExitNorthLocked = (bool)chbLockNorth.IsChecked;
+                    selectedRoom.IsExitSouthLocked = (bool)chbLockSouth.IsChecked;
+                    selectedRoom.IsExitEastLocked = (bool)chbLockEast.IsChecked;
+                    selectedRoom.IsExitWestLocked = (bool)chbLockWest.IsChecked;
+                }
+            }
         }
     }
 }

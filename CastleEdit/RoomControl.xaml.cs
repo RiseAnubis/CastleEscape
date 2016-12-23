@@ -110,6 +110,8 @@ namespace CastleEdit
         /// </summary>
         public string RoomDescription { get; set; }
 
+        public bool IsSelected { get; set; }
+
         public ObservableCollection<Item> RoomItems { get; } = new ObservableCollection<Item>();
 
         public RoomControl()
