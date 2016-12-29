@@ -35,7 +35,7 @@ namespace CastleEdit
         Point? lastMousePositionOnTarget;
         Point? lastDragPoint;
         RoomControl selectedRoom;
-       
+
         /// <summary>
         /// Liste, die alle Items des Spiels enthält
         /// </summary>
@@ -85,7 +85,7 @@ namespace CastleEdit
                     border.PreviewMouseDown += Border_PreviewMouseDown;
                     border.MouseMove += Border_MouseMove; // zur Anzeige der Koordinaten
                     border.GotFocus += Border_GotFocus;   // zum Fokussieren
-                    //border.LostFocus += Border_LostFocus; // zum Speichern der Eigenschaften
+                    border.LostFocus += (Sender, Args) => Args.Handled = true;
                     border.KeyDown += Border_KeyDown;     // Löschen eines Raumes per DEL
                     MenuItem miCreateRoom = new MenuItem { Header = "Raum erstellen", Style = (Style)FindResource("ctxMenuItemStyle") };
                     MenuItem miDeleteRoom = new MenuItem { Header = "Raum löschen", IsEnabled = false, Style = (Style)FindResource("ctxMenuItemStyle") };
@@ -103,7 +103,7 @@ namespace CastleEdit
             statusRoomsize.Content = $"Levelgröße: {MaxColumns} x {MaxRows}";
             statusItemCount.Content = $"Items: {GameItems.Count}";
         }
-     
+
         void LbRoomItems_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete)
@@ -205,11 +205,11 @@ namespace CastleEdit
             statusSelectedRoom.Content = $"Ausgewählter Raum: {Grid.GetColumn(b)}, {Grid.GetRow(b)}";
             gridRoomProperties.IsEnabled = b.Child != null;
 
-            if (b.Child == null)
-                ResetRoomProperties();
-
             if (selectedRoom == null)
+            {
+                ResetRoomProperties();
                 return;
+            }
 
             chbNorth.IsChecked = selectedRoom.HasExitNorth;
             chbSouth.IsChecked = selectedRoom.HasExitSouth;
@@ -222,20 +222,6 @@ namespace CastleEdit
             tbRoomName.Text = selectedRoom.RoomName;
             tbRoomDescription.Text = selectedRoom.RoomDescription;
             lbRoomItems.ItemsSource = selectedRoom.RoomItems;
-        }
-
-        void Border_LostFocus(object sender, RoutedEventArgs e)
-        {
-            selectedRoom.HasExitNorth = (bool)chbNorth.IsChecked;
-            selectedRoom.HasExitSouth = (bool)chbSouth.IsChecked;
-            selectedRoom.HasExitEast = (bool)chbEast.IsChecked;
-            selectedRoom.HasExitWest = (bool)chbWest.IsChecked;
-            selectedRoom.IsExitNorthLocked = (bool)chbLockNorth.IsChecked;
-            selectedRoom.IsExitSouthLocked = (bool)chbLockSouth.IsChecked;
-            selectedRoom.IsExitEastLocked = (bool)chbLockEast.IsChecked;
-            selectedRoom.IsExitWestLocked = (bool)chbLockWest.IsChecked;
-            selectedRoom.RoomName = tbRoomName.Text;
-            selectedRoom.RoomDescription = tbRoomDescription.Text;
         }
 
         void Border_MouseMove(object sender, MouseEventArgs e)

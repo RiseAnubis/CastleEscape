@@ -73,8 +73,8 @@
         <Style TargetType="Border" x:Key="RoomBorderStyle">
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="BorderBrush" Value="DarkGreen"/>
-            <Setter Property="Background" Value="Transparent"/>
             <!-- Damit man in den Bereich der Border klicken kann und das ContextMenu erscheint -->
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Focusable" Value="True"/>
             <Style.Triggers>
                 <Trigger Property="IsFocused" Value="True">

@@ -25,6 +25,7 @@ namespace CastleEdit
         MessageBoxWindow()
         {
             InitializeComponent();
+            mainBorder.MouseDown += (Sender, Args) => DragMove();
         }
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace CastleEdit
         {
             Button button;
             MessageBoxResult result = MessageBoxResult.None;
-            MessageBoxWindow box = new MessageBoxWindow { Title = Caption, Owner = Application.Current.MainWindow, txtMessage = { Text = Message } };
+            MessageBoxWindow box = new MessageBoxWindow { Owner = Application.Current.MainWindow, txtMessage = { Text = Message }, txtTitle = {Text = Caption} };
 
             switch (Type)
             {
