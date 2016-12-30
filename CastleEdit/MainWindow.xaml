@@ -75,7 +75,6 @@
                 <RowDefinition Height="200"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <GroupBox Grid.Row="0" Header="Raumeigenschaften" Margin="4">
                 <Grid Margin="4">
@@ -127,7 +126,6 @@
             <GroupBox Grid.Row="2" Header="Items im Raum" Margin="4">
                 <ListBox Margin="4" Name="lbRoomItems" AllowDrop="True" DisplayMemberPath="Name"/>
             </GroupBox>
-            <Button Grid.Row="3" Content="OK" HorizontalAlignment="Center" Width="100" Name="btnConfirmRoom"/>
         </Grid>
         <StatusBar Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Margin="8,4,8,4">
             <StatusBarItem Name="statusLevelName">
