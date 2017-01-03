@@ -22,73 +22,76 @@ namespace CastleEdit
     /// </summary>
     public partial class RoomControl : UserControl
     {
-        bool isExitNorthLocked;
-        bool isExitSouthLocked;
-        bool isExitEastLocked;
-        bool isExitWestLocked;
+        public static readonly DependencyProperty HasExitNorthProperty = DependencyProperty.Register(
+            "HasExitNorth", typeof(bool), typeof(RoomControl), new PropertyMetadata(false, OnHasExitChanged));
 
-        public bool HasExitNorth
-        {
-            get { return dirNorth.Visibility == Visibility.Visible; }
-            set { dirNorth.Visibility = value ? Visibility.Visible : Visibility.Hidden; }
-        }
+        public static readonly DependencyProperty HasExitSouthProperty = DependencyProperty.Register(
+            "HasExitSouth", typeof (bool), typeof (RoomControl), new PropertyMetadata(false, OnHasExitChanged));
 
-        public bool HasExitSouth
-        {
-            get { return dirSouth.Visibility == Visibility.Visible; }
-            set { dirSouth.Visibility = value ? Visibility.Visible : Visibility.Hidden; }
-        }
+        public static readonly DependencyProperty HasExitEastProperty = DependencyProperty.Register(
+            "HasExitEast", typeof (bool), typeof (RoomControl), new PropertyMetadata(false, OnHasExitChanged));
 
-        public bool HasExitEast
-        {
-            get { return dirEast.Visibility == Visibility.Visible; }
-            set { dirEast.Visibility = value ? Visibility.Visible : Visibility.Hidden; }
-        }
+        public static readonly DependencyProperty HasExitWestProperty = DependencyProperty.Register(
+            "HasExitWest", typeof (bool), typeof (RoomControl), new PropertyMetadata(false, OnHasExitChanged));
 
-        public bool HasExitWest
-        {
-            get { return dirWest.Visibility == Visibility.Visible; }
-            set { dirWest.Visibility = value ? Visibility.Visible : Visibility.Hidden; }
-        }
+        public static readonly DependencyProperty IsExitNorthLockedProperty = DependencyProperty.Register(
+            "IsExitNorthLocked", typeof (bool), typeof (RoomControl), new PropertyMetadata(false, OnExitLockedChanged));
 
-        public bool IsExitNorthLocked
-        {
-            get { return isExitNorthLocked; }
-            set
-            {
-                isExitNorthLocked = value;
-                dirNorth.Fill = isExitNorthLocked ? Brushes.DarkOrange : Brushes.LawnGreen;
-            }
-        }
+        public static readonly DependencyProperty IsExitSouthLockedProperty = DependencyProperty.Register(
+            "IsExitSouthLocked", typeof (bool), typeof (RoomControl), new PropertyMetadata(false, OnExitLockedChanged));
 
-        public bool IsExitSouthLocked
+        public static readonly DependencyProperty IsExitEastLockedProperty = DependencyProperty.Register(
+            "IsExitEastLocked", typeof (bool), typeof (RoomControl), new PropertyMetadata(false, OnExitLockedChanged));
+
+        public static readonly DependencyProperty IsExitWestLockedProperty = DependencyProperty.Register(
+            "IsExitWestLocked", typeof (bool), typeof (RoomControl), new PropertyMetadata(false, OnExitLockedChanged));
+
+        public bool IsExitWestLocked
         {
-            get { return isExitSouthLocked; }
-            set
-            {
-                isExitSouthLocked = value;
-                dirSouth.Fill = isExitSouthLocked ? Brushes.DarkOrange : Brushes.LawnGreen;
-            }
+            get { return (bool)GetValue(IsExitWestLockedProperty); }
+            set { SetValue(IsExitWestLockedProperty, value); }
         }
 
         public bool IsExitEastLocked
         {
-            get { return isExitEastLocked; }
-            set
-            {
-                isExitEastLocked = value;
-                dirEast.Fill = isExitEastLocked ? Brushes.DarkOrange : Brushes.LawnGreen;
-            }
+            get { return (bool)GetValue(IsExitEastLockedProperty); }
+            set { SetValue(IsExitEastLockedProperty, value); }
         }
 
-        public bool IsExitWestLocked
+        public bool IsExitSouthLocked
         {
-            get { return isExitWestLocked; }
-            set
-            {
-                isExitWestLocked = value;
-                dirWest.Fill = isExitWestLocked ? Brushes.DarkOrange : Brushes.LawnGreen;
-            }
+            get { return (bool)GetValue(IsExitSouthLockedProperty); }
+            set { SetValue(IsExitSouthLockedProperty, value); }
+        }
+
+        public bool IsExitNorthLocked
+        {
+            get { return (bool)GetValue(IsExitNorthLockedProperty); }
+            set { SetValue(IsExitNorthLockedProperty, value); }
+        }
+
+        public bool HasExitWest
+        {
+            get { return (bool)GetValue(HasExitWestProperty); }
+            set { SetValue(HasExitWestProperty, value); }
+        }
+
+        public bool HasExitEast
+        {
+            get { return (bool)GetValue(HasExitEastProperty); }
+            set { SetValue(HasExitEastProperty, value); }
+        }
+
+        public bool HasExitSouth
+        {
+            get { return (bool)GetValue(HasExitSouthProperty); }
+            set { SetValue(HasExitSouthProperty, value); }
+        }
+
+        public bool HasExitNorth
+        {
+            get { return (bool)GetValue(HasExitNorthProperty); }
+            set { SetValue(HasExitNorthProperty, value); }
         }
 
         public Item ItemExitNorth { get; set; }
@@ -115,6 +118,48 @@ namespace CastleEdit
         public RoomControl()
         {
             InitializeComponent();
+        }
+
+        static void OnHasExitChanged(DependencyObject O, DependencyPropertyChangedEventArgs Args)
+        {
+            RoomControl sender = O as RoomControl;
+
+            switch (Args.Property.Name)
+            {
+                case "HasExitNorth":
+                    sender.dirNorth.Visibility = (bool)Args.NewValue ? Visibility.Visible : Visibility.Hidden;
+                    break;
+                case "HasExitSouth":
+                    sender.dirSouth.Visibility = (bool)Args.NewValue ? Visibility.Visible : Visibility.Hidden;
+                    break;
+                case "HasExitEast":
+                    sender.dirEast.Visibility = (bool)Args.NewValue ? Visibility.Visible : Visibility.Hidden;
+                    break;
+                case "HasExitWest":
+                    sender.dirWest.Visibility = (bool)Args.NewValue ? Visibility.Visible : Visibility.Hidden;
+                    break;
+            }
+        }
+
+        static void OnExitLockedChanged(DependencyObject O, DependencyPropertyChangedEventArgs Args)
+        {
+            RoomControl sender = O as RoomControl;
+
+            switch (Args.Property.Name)
+            {
+                case "IsExitNorthLocked":
+                    sender.dirNorth.Fill = (bool)Args.NewValue ? Brushes.DarkOrange : Brushes.LawnGreen;
+                    break;
+                case "IsExitSouthLocked":
+                    sender.dirSouth.Fill = (bool)Args.NewValue ? Brushes.DarkOrange : Brushes.LawnGreen;
+                    break;
+                case "IsExitEastLocked":
+                    sender.dirEast.Fill = (bool)Args.NewValue ? Brushes.DarkOrange : Brushes.LawnGreen;
+                    break;
+                case "IsExitWestLocked":
+                    sender.dirWest.Fill = (bool)Args.NewValue ? Brushes.DarkOrange : Brushes.LawnGreen;
+                    break;
+            }
         }
     }
 }

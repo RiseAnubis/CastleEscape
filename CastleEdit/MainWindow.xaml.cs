@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows.Controls.Primitives;
@@ -151,6 +152,7 @@ namespace CastleEdit
         {
             Item item = (Item)e.Data.GetData(typeof(Item));
             selectedRoom.RoomItems.Add(item);
+            //lbRoomItems.Items.Add(item);
             //lbRoomItems.DisplayMemberPath = "Name";
         }
 
@@ -426,6 +428,7 @@ namespace CastleEdit
             mi.IsEnabled = false;
             gridRoomProperties.IsEnabled = true;
             selectedRoom = newRoom;
+            lbRoomItems.ItemsSource = selectedRoom.RoomItems;
         }
 
         void MiDeleteRoom_Click(object sender, RoutedEventArgs e)
@@ -483,7 +486,7 @@ namespace CastleEdit
             cbItemSouth.SelectedIndex = -1;
             cbItemEast.SelectedIndex = -1;
             cbItemWest.SelectedIndex = -1;
-            //lbRoomItems.Items.Clear();
+            lbRoomItems.ItemsSource = null;
             tbRoomName.Text = tbRoomDescription.Text = "";
         }
 
@@ -529,6 +532,8 @@ namespace CastleEdit
                 case RoomProperties.IsExitWestLocked:
                     selectedRoom.IsExitWestLocked = (bool)Value;
                     break;
+                default:
+                    throw new ArgumentException("Die angegebene Raumeigenschaft existiert nicht", nameof(Property));
             }
         }
     }
