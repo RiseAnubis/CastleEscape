@@ -22,6 +22,7 @@ namespace CastleEdit
     /// </summary>
     public partial class RoomControl : UserControl
     {
+        List<string> exits = new List<string>(); 
         public static readonly DependencyProperty HasExitNorthProperty = DependencyProperty.Register(
             "HasExitNorth", typeof(bool), typeof(RoomControl), new PropertyMetadata(false, OnHasExitChanged));
 
@@ -45,6 +46,36 @@ namespace CastleEdit
 
         public static readonly DependencyProperty IsExitWestLockedProperty = DependencyProperty.Register(
             "IsExitWestLocked", typeof (bool), typeof (RoomControl), new PropertyMetadata(false, OnExitLockedChanged));
+
+        public static readonly DependencyProperty ItemExitNorthProperty = DependencyProperty.Register("ItemExitNorth", typeof (Item), typeof (RoomControl));
+
+        public static readonly DependencyProperty ItemExitSouthProperty = DependencyProperty.Register("ItemExitSouth", typeof (Item), typeof (RoomControl));
+
+        public static readonly DependencyProperty ItemExitEastProperty = DependencyProperty.Register("ItemExitEast", typeof (Item), typeof (RoomControl));
+
+        public static readonly DependencyProperty ItemExitWestProperty = DependencyProperty.Register("ItemExitWest", typeof (Item), typeof (RoomControl));
+
+        public Item ItemExitWest
+        {
+            get { return (Item)GetValue(ItemExitWestProperty); }
+            set { SetValue(ItemExitWestProperty, value); }
+        }
+        public Item ItemExitEast
+        {
+            get { return (Item)GetValue(ItemExitEastProperty); }
+            set { SetValue(ItemExitEastProperty, value); }
+        }
+        public Item ItemExitSouth
+        {
+            get { return (Item)GetValue(ItemExitSouthProperty); }
+            set { SetValue(ItemExitSouthProperty, value); }
+        }
+
+        public Item ItemExitNorth
+        {
+            get { return (Item)GetValue(ItemExitNorthProperty); }
+            set { SetValue(ItemExitNorthProperty, value); }
+        }
 
         public bool IsExitWestLocked
         {
@@ -94,11 +125,6 @@ namespace CastleEdit
             set { SetValue(HasExitNorthProperty, value); }
         }
 
-        public Item ItemExitNorth { get; set; }
-        public Item ItemExitSouth { get; set; }
-        public Item ItemExitEast { get; set; }
-        public Item ItemExitWest { get; set; }
-
         /// <summary>
         /// Der Name des Raumes
         /// </summary>
@@ -113,6 +139,9 @@ namespace CastleEdit
         /// </summary>
         public string RoomDescription { get; set; }
 
+        /// <summary>
+        /// Liste, die alle Items enthält, die sich im Raum befinden
+        /// </summary>
         public ObservableCollection<Item> RoomItems { get; } = new ObservableCollection<Item>();
 
         public RoomControl()

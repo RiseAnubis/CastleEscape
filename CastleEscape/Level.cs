@@ -62,7 +62,7 @@ namespace CastleEscape
         static void LoadGameFile()
         {
             string[] layout, roomPosition, startPosition;
-            XElement level = XElement.Load("Game.xml").Element("Level");
+            XElement level = XElement.Load("Game.xml");     // Liest die xml Root ein, welche "Level" sein sollte, ansonsten Exception auslösen
 
             if (level == null)
                 throw new Exception("Levels could not be found in the XML");

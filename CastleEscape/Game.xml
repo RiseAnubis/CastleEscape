@@ -1,40 +1,38 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Root>
-  <Level Layout="2,2" StartPosition="0,0">
-    <Rooms>
-      <Room Position="0,0" Name="BlueRoom">
-        <Text>Das hier ist der blaue Raum. Die nördliche Tür ist verschlossen...</Text>
-        <Exits>
-          <Exit Direction="nord" IsLocked="true" NecessaryItem="keyGreen"/>
-          <Exit Direction="ost" IsLocked="false"/>
-        </Exits>
-        <Items>
-          <Item ID="sword"/>
-        </Items>
-      </Room>
-      <Room Position="1,0" Name="RedRoom">
-        <Text>Das hier ist der rote Raum.</Text>
-        <Exits>
-          <Exit Direction="west" IsLocked="false"/>
-        </Exits>
-        <Items>
-          <Item ID="keyGreen"/>
-        </Items>
-      </Room>
-      <Room Position="0,1" Name="GreenRoom">
-        <Text>Das hier ist der grüne Raum.</Text>
-        <Exits>
-          <Exit Direction="süd" IsLocked="false"/>
-        </Exits>
-        <Items>
-          <Item ID="treasure"/>
-        </Items>
-      </Room>
-    </Rooms>
-  </Level>
+<Level Layout="2,2" StartPosition="0,0">
+  <Rooms>
+    <Room Position="0,0" Name="BlueRoom">
+      <Text>Das hier ist der blaue Raum. Die nördliche Tür ist verschlossen...</Text>
+      <Exits>
+        <Exit Direction="nord" IsLocked="true" NecessaryItem="keyGreen"/>
+        <Exit Direction="ost" IsLocked="false"/>
+      </Exits>
+      <Items>
+        <Item ID="sword"/>
+      </Items>
+    </Room>
+    <Room Position="1,0" Name="RedRoom">
+      <Text>Das hier ist der rote Raum.</Text>
+      <Exits>
+        <Exit Direction="west" IsLocked="false"/>
+      </Exits>
+      <Items>
+        <Item ID="keyGreen"/>
+      </Items>
+    </Room>
+    <Room Position="0,1" Name="GreenRoom">
+      <Text>Das hier ist der grüne Raum.</Text>
+      <Exits>
+        <Exit Direction="süd" IsLocked="false"/>
+      </Exits>
+      <Items>
+        <Item ID="treasure"/>
+      </Items>
+    </Room>
+  </Rooms>
   <Items>
     <Item ID="keyGreen" Name="Schlüssel" Description="Ein grüner Schlüssel"/>
     <Item ID="treasure" Name="Schatzkiste" Description="Eine Kiste voller Reichtümer"/>
     <Item ID="sword" Name="Schwert" Description="Ein Schwert zur Verteidigung"/>
   </Items>
-</Root>
+</Level>

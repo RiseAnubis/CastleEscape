@@ -19,6 +19,8 @@ using System.ComponentModel;
 using System.Threading;
 using System.Windows.Controls.Primitives;
 using CastleEdit.Classes;
+using Microsoft.Win32;
+using System.Xml;
 
 //TODO Eventlistener auf das Formular, welches auf Änderungen prüft und dann den Timer in gang setzt. 2s nach dem ändern eines Werts wird gespeichert solange er nicht in ein anderes Feld schreibt. Wird der Timer zurück gesetzt. Ebenfalls wenn er einen anderen Raum auswählt.Dann faded kurz eine grüne Box auf mit dem Hinweis "Änderungen gespeichert".
 
@@ -51,18 +53,22 @@ namespace CastleEdit
             scrollviewer.PreviewMouseMove += Scrollviewer_PreviewMouseMove;
             scrollviewer.ScrollChanged += Scrollviewer_ScrollChanged;
             scrollviewer.PreviewKeyDown += (sender, e) => e.Handled = true;  // verhindert, dass die RoomProperties deaktiviert werden, sollte ein Raum markiert sein und Eingaben auf der Tastatur gemacht werden 
+            cbItemNorth.SelectionChanged += (sender, e) => ChangeRoomProperty(RoomProperties.ItemExitNorth, cbItemNorth.SelectedItem);
+            cbItemSouth.SelectionChanged += (sender, e) => ChangeRoomProperty(RoomProperties.ItemExitSouth, cbItemSouth.SelectedItem);
+            cbItemEast.SelectionChanged += (sender, e) => ChangeRoomProperty(RoomProperties.ItemExitEast, cbItemEast.SelectedItem);
+            cbItemWest.SelectionChanged += (sender, e) => ChangeRoomProperty(RoomProperties.ItemExitWest, cbItemWest.SelectedItem);
             chbNorth.Checked += (sender, e) => ChangeRoomProperty(RoomProperties.HasExitNorth, true);
             chbSouth.Checked += (sender, e) => ChangeRoomProperty(RoomProperties.HasExitSouth, true);
             chbEast.Checked += (sender, e) => ChangeRoomProperty(RoomProperties.HasExitEast, true);
             chbWest.Checked += (sender, e) => ChangeRoomProperty(RoomProperties.HasExitWest, true);
-            chbNorth.Unchecked += ChbNorth_Unchecked;
-            chbSouth.Unchecked += ChbSouth_Unchecked;
-            chbEast.Unchecked += ChbEast_Unchecked;
-            chbWest.Unchecked += ChbWest_Unchecked;
             chbLockNorth.Checked += (sender, e) => ChangeRoomProperty(RoomProperties.IsExitNorthLocked, true);
             chbLockSouth.Checked += (sender, e) => ChangeRoomProperty(RoomProperties.IsExitSouthLocked, true);
             chbLockEast.Checked += (sender, e) => ChangeRoomProperty(RoomProperties.IsExitEastLocked, true);
             chbLockWest.Checked += (sender, e) => ChangeRoomProperty(RoomProperties.IsExitWestLocked, true);
+            chbNorth.Unchecked += ChbNorth_Unchecked;
+            chbSouth.Unchecked += ChbSouth_Unchecked;
+            chbEast.Unchecked += ChbEast_Unchecked;
+            chbWest.Unchecked += ChbWest_Unchecked;
             chbLockNorth.Unchecked += ChbLockNorth_Unchecked;
             chbLockSouth.Unchecked += ChbLockSouth_Unchecked;
             chbLockEast.Unchecked += ChbLockEast_Unchecked;
@@ -78,6 +84,7 @@ namespace CastleEdit
             lbRoomItems.PreviewKeyDown += LbRoomItems_PreviewKeyDown;
             tbRoomName.TextChanged += (sender, e) => ChangeRoomProperty(RoomProperties.RoomName, tbRoomName.Text);
             tbRoomDescription.TextChanged += (sender, e) => ChangeRoomProperty(RoomProperties.RoomDescription, tbRoomDescription.Text);
+            miSaveLevel.Click += MiSaveLevel_Click;
             GameItems.CollectionChanged += (sender, e) => statusItemCount.Content = $"Items: {GameItems.Count}";
 
             for (int i = 0; i < MaxColumns; i++)
@@ -93,7 +100,7 @@ namespace CastleEdit
                     border.PreviewMouseDown += Border_PreviewMouseDown;
                     border.MouseMove += Border_MouseMove; // zur Anzeige der Koordinaten
                     border.GotFocus += Border_GotFocus;   // zum Fokussieren
-                    border.LostFocus += (Sender, Args) => Args.Handled = true;
+                    //border.LostFocus += (Sender, Args) => Args.Handled = true;
                     border.KeyDown += Border_KeyDown;     // Löschen eines Raumes per DEL
                     MenuItem miCreateRoom = new MenuItem { Header = "Raum erstellen", Style = (Style)FindResource("ctxMenuItemStyle") };
                     MenuItem miDeleteRoom = new MenuItem { Header = "Raum löschen", IsEnabled = false, Style = (Style)FindResource("ctxMenuItemStyle") };
@@ -110,6 +117,14 @@ namespace CastleEdit
 
             statusRoomsize.Content = $"Levelgröße: {MaxColumns} x {MaxRows}";
             statusItemCount.Content = $"Items: {GameItems.Count}";
+        }
+
+        void MiSaveLevel_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog { FileName = "Game.xml" };
+
+            if (sfd.ShowDialog(this) == true)
+                SaveLevel(sfd.FileName);
         }
 
         void ChbLockNorth_Unchecked(object sender, RoutedEventArgs e)
@@ -235,6 +250,10 @@ namespace CastleEdit
             tbRoomName.Text = selectedRoom.RoomName;
             tbRoomDescription.Text = selectedRoom.RoomDescription;
             lbRoomItems.ItemsSource = selectedRoom.RoomItems;
+            cbItemNorth.SelectedItem = selectedRoom.ItemExitNorth;
+            cbItemSouth.SelectedItem = selectedRoom.ItemExitSouth;
+            cbItemEast.SelectedItem = selectedRoom.ItemExitEast;
+            cbItemWest.SelectedItem = selectedRoom.ItemExitWest;
         }
 
         void Border_MouseMove(object sender, MouseEventArgs e)
@@ -495,7 +514,7 @@ namespace CastleEdit
         /// </summary>
         /// <param name="Property">Die zu ändernde Eigenschaft</param>
         /// <param name="Value">Der neue Wert der Eigenschaft</param>
-        void ChangeRoomProperty(string Property, object Value)
+        void ChangeRoomProperty(RoomProperties Property, object Value)
         {
             if (selectedRoom == null)
                 return;
@@ -532,26 +551,104 @@ namespace CastleEdit
                 case RoomProperties.IsExitWestLocked:
                     selectedRoom.IsExitWestLocked = (bool)Value;
                     break;
+                case RoomProperties.ItemExitNorth:
+                    selectedRoom.ItemExitNorth = (Item)Value;
+                    break;
+                case RoomProperties.ItemExitSouth:
+                    selectedRoom.ItemExitSouth = (Item)Value;
+                    break;
+                case RoomProperties.ItemExitEast:
+                    selectedRoom.ItemExitEast = (Item)Value;
+                    break;
+                case RoomProperties.ItemExitWest:
+                    selectedRoom.ItemExitWest = (Item)Value;
+                    break;
                 default:
                     throw new ArgumentException("Die angegebene Raumeigenschaft existiert nicht", nameof(Property));
             }
         }
+
+        /// <summary>
+        /// Speichert das Level in einer XML-Datei ab
+        /// </summary>
+        /// <param name="Path">Der Pfad der zu erstelllenden Datei</param>
+        void SaveLevel(string Path)
+        {
+            List<RoomControl> roomList = (from b in roomGrid.Children.OfType<Border>() where b.Child != null select b.Child as RoomControl).ToList();
+            XmlDocument file = new XmlDocument();
+            XmlDeclaration decl = file.CreateXmlDeclaration("1.0", "utf-8", "yes");
+            file.AppendChild(decl);
+            
+            XmlElement level = file.CreateElement("Level"); // XML Root
+            level.SetAttribute("Layout", $"{MaxColumns},{MaxRows}");
+            level.SetAttribute("StartPosition", $"{MaxColumns},{MaxRows}");
+
+            XmlElement rooms = file.CreateElement("Rooms"); // Rooms-Unterelement
+            level.AppendChild(rooms);
+
+            foreach (RoomControl room in roomList)
+            {
+                XmlElement roomElement = file.CreateElement("Room"); // einzelne Räume erstellen
+                roomElement.SetAttribute("Position", $"{Grid.GetColumn(room.Parent as Border)},{Grid.GetRow(room.Parent as Border)}");
+                roomElement.SetAttribute("Name", room.RoomName);
+                XmlElement roomText = file.CreateElement("Text"); // Raumbeschreibung
+                roomText.InnerText = room.RoomDescription;
+                roomElement.AppendChild(roomText);
+
+
+
+                XmlElement roomItems = file.CreateElement("Items");
+
+                foreach (Item item in room.RoomItems)
+                {
+                    XmlElement itemElement = file.CreateElement("Item");
+                    itemElement.SetAttribute("Name", item.Name);
+                    roomItems.AppendChild(itemElement);
+                }
+
+                rooms.AppendChild(roomElement);
+                rooms.AppendChild(roomItems);
+            }
+
+            XmlElement items = file.CreateElement("Items"); // Items-Unterelement
+
+            foreach (Item item in GameItems)
+            {
+                XmlElement itemElement = file.CreateElement("Item"); // einzelne Items erstellen
+                itemElement.SetAttribute("Name", item.Name);
+                itemElement.SetAttribute("Description", item.Description);
+                items.AppendChild(itemElement);
+            }
+
+            level.AppendChild(items);
+            file.AppendChild(level);
+            file.Save(Path);
+            /*XElement level =
+                new XElement("Level", new XAttribute("Layout", $"{MaxColumns},{MaxRows}"), new XAttribute("StartPosition", 0),
+                    new XElement("Rooms")
+                        new XElement("Room", from room in rooms select new XElement("as", room)));
+            level.Save(Path);*/
+        }
     }
 
     /// <summary>
-    /// Hilfsstruktur, die die Eigenschaften eines Raumes enthält
+    /// Auflistung, die die Eigenschaften eines Raumes enthält
     /// </summary>
-    struct RoomProperties
+    enum RoomProperties
     {
-        public const string HasExitNorth = "HasExitNorth";
-        public const string HasExitSouth = "HasExitSouth";
-        public const string HasExitEast = "HasExitEast";
-        public const string HasExitWest = "HasExitWest";
-        public const string IsExitNorthLocked = "IsExitNorthLocked";
-        public const string IsExitSouthLocked = "IsExitSouthLocked";
-        public const string IsExitEastLocked = "IsExitEastLocked";
-        public const string IsExitWestLocked = "IsExitWestLocked";
-        public const string RoomName = "RoomName";
-        public const string RoomDescription = "RoomDescription";
+        HasExitNorth,
+        HasExitSouth,
+        HasExitEast,
+        HasExitWest,
+        IsExitNorthLocked,
+        IsExitSouthLocked,
+        IsExitEastLocked,
+        IsExitWestLocked,
+        ItemExitNorth,
+        ItemExitSouth,
+        ItemExitEast,
+        ItemExitWest,
+        RoomName,
+        RoomDescription
     }
 }

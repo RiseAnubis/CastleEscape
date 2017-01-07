@@ -20,12 +20,9 @@
         </Grid.ColumnDefinitions>
         <!-- evtl. Toolbar nutzen -->
         <Menu Grid.Row="0" Grid.ColumnSpan="3">
-            <MenuItem Header="Spiel">
-                <MenuItem Header="Neu..."/>
-                <MenuItem Header="Laden..."/>
-                <Separator/>
-                <MenuItem Header="Beenden"/>
-            </MenuItem>
+            <MenuItem Header="Level laden..." Name="miLoadLevel"/>
+            <MenuItem Header="Level speichern..." Name="miSaveLevel"/>
+            <MenuItem Header="Beenden" Name="miClose"/>
         </Menu>
         <Grid Grid.Column="0" Grid.Row="1" Margin="4">
             <Grid.RowDefinitions>
