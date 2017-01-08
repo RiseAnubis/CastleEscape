@@ -125,9 +125,6 @@
             </GroupBox>
         </Grid>
         <StatusBar Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" Margin="8,4,8,4">
-            <StatusBarItem Name="statusLevelName">
-                Levelname
-            </StatusBarItem>
             <Separator/>
             <StatusBarItem Name="statusRoomsize">
                 Levelgröße
@@ -146,6 +143,15 @@
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Startposition des Spielers:  X  "/>
+                    <TextBox Width="25" MaxLength="2" Name="tbPosX"/>
+                    <TextBlock Text="  Y  "/>
+                    <TextBox Width="25" MaxLength="2" Name="tbPosY"/>
+                </StackPanel>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem HorizontalAlignment="Right">
                 <Slider Width="200" Value="1" Minimum="0.1" Maximum="2" Name="sliZoom"/>
             </StatusBarItem>
         </StatusBar>

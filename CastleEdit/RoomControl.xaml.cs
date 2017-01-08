@@ -22,7 +22,6 @@ namespace CastleEdit
     /// </summary>
     public partial class RoomControl : UserControl
     {
-        List<string> exits = new List<string>(); 
         public static readonly DependencyProperty HasExitNorthProperty = DependencyProperty.Register(
             "HasExitNorth", typeof(bool), typeof(RoomControl), new PropertyMetadata(false, OnHasExitChanged));
 

@@ -574,14 +574,15 @@ namespace CastleEdit
         /// <param name="Path">Der Pfad der zu erstelllenden Datei</param>
         void SaveLevel(string Path)
         {
+            string direction = "Direction", necessary = "NecessaryItem", isLocked = "IsLocked";
             List<RoomControl> roomList = (from b in roomGrid.Children.OfType<Border>() where b.Child != null select b.Child as RoomControl).ToList();
             XmlDocument file = new XmlDocument();
             XmlDeclaration decl = file.CreateXmlDeclaration("1.0", "utf-8", "yes");
             file.AppendChild(decl);
-            
+
             XmlElement level = file.CreateElement("Level"); // XML Root
             level.SetAttribute("Layout", $"{MaxColumns},{MaxRows}");
-            level.SetAttribute("StartPosition", $"{MaxColumns},{MaxRows}");
+            level.SetAttribute("StartPosition", $"{tbPosX.Text},{tbPosY.Text}");
 
             XmlElement rooms = file.CreateElement("Rooms"); // Rooms-Unterelement
             level.AppendChild(rooms);
@@ -594,9 +595,55 @@ namespace CastleEdit
                 XmlElement roomText = file.CreateElement("Text"); // Raumbeschreibung
                 roomText.InnerText = room.RoomDescription;
                 roomElement.AppendChild(roomText);
+                XmlElement roomExits = file.CreateElement("Exits");
+                XmlElement exit;
 
+                if (room.HasExitNorth)
+                {
+                    exit = file.CreateElement("Exit");
+                    exit.SetAttribute(direction, "nord");
+                    if (room.IsExitNorthLocked)
+                    {
+                        exit.SetAttribute(isLocked, "true");
+                        exit.SetAttribute(necessary, room.ItemExitNorth.Name);
+                    }
+                    roomExits.AppendChild(exit);
+                }
+                if (room.HasExitSouth)
+                {
+                    exit = file.CreateElement("Exit");
+                    exit.SetAttribute(direction, "süd");
+                    if (room.IsExitSouthLocked)
+                    {
+                        exit.SetAttribute(isLocked, "true");
+                        exit.SetAttribute(necessary, room.ItemExitSouth.Name);
+                    }
+                    roomExits.AppendChild(exit);
+                }
+                if (room.HasExitEast)
+                {
+                    exit = file.CreateElement("Exit");
+                    exit.SetAttribute(direction, "ost");
+                    if (room.IsExitEastLocked)
+                    {
+                        exit.SetAttribute(isLocked, "true");
+                        exit.SetAttribute(necessary, room.ItemExitEast.Name);
+                    }
+                    roomExits.AppendChild(exit);
+                }
+                if (room.HasExitWest)
+                {
+                    exit = file.CreateElement("Exit");
+                    exit.SetAttribute(direction, "west");
+                    if (room.IsExitWestLocked)
+                    {
+                        exit.SetAttribute(isLocked, "true");
+                        exit.SetAttribute(necessary, room.ItemExitWest.Name);
+                    }
+                    roomExits.AppendChild(exit);
+                }
 
-
+                roomElement.AppendChild(roomExits);
                 XmlElement roomItems = file.CreateElement("Items");
 
                 foreach (Item item in room.RoomItems)
@@ -606,8 +653,8 @@ namespace CastleEdit
                     roomItems.AppendChild(itemElement);
                 }
 
+                roomElement.AppendChild(roomItems);
                 rooms.AppendChild(roomElement);
-                rooms.AppendChild(roomItems);
             }
 
             XmlElement items = file.CreateElement("Items"); // Items-Unterelement

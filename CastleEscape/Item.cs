@@ -12,11 +12,6 @@ namespace CastleEscape
     class Item
     {
         /// <summary>
-        /// Die ID zur Identifizierung
-        /// </summary>
-        public string ID { get; }
-
-        /// <summary>
         /// Der Name des Items
         /// </summary>
         public string Name { get; }
@@ -29,12 +24,10 @@ namespace CastleEscape
         /// <summary>
         /// Erstellt ein neues Item
         /// </summary>
-        /// <param name="ID">Die ID zur Identifizierung</param>
         /// <param name="Name">Der Name des Items</param>
         /// <param name="Description">Die Beschreibung des Items</param>
-        public Item(string ID, string Name, string Description)
+        public Item(string Name, string Description)
         {
-            this.ID = ID;
             this.Name = Name;
             HelpDescription = Description;
         }

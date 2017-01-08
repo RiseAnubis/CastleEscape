@@ -45,9 +45,9 @@ namespace CastleEscape
 
             foreach (XElement item in root.Elements())
             {
-                Item i = new Item(item.Attribute("ID").Value, item.Attribute("Name").Value, item.Attribute("Description").Value);
+                Item i = new Item(item.Attribute("Name").Value, item.Attribute("Description").Value);
 
-                if (items.Exists(x => x.ID == i.ID))
+                if (items.Exists(x => x.Name == i.Name))
                     throw new Exception("There is more than one item with the same ID");
 
                 items.Add(i);
@@ -87,7 +87,7 @@ namespace CastleEscape
                 foreach (XElement exit in exits.Elements()) // Auslesen der Ausgänge im Raum
                 {
                     string e = exit.Attribute("Direction").Value; // TODO Möglichkeit, den String aus dem Struct mit dem Value zu verknüpfen?
-                    bool isLocked = exit.Attribute("IsLocked").Value == "true";
+                    bool isLocked = exit.Attribute("IsLocked")?.Value == "true";
                     r.AddExits(new[] { e });
 
                     if (isLocked)
@@ -101,7 +101,7 @@ namespace CastleEscape
 
                 foreach (XElement item in items.Elements()) // Auslesen der Items im Raum
                 {
-                    Item i = GameManager.GetGameItem(item.Attribute("ID").Value);
+                    Item i = GameManager.GetGameItem(item.Attribute("Name").Value);
 
                     if (i != null)
                         r.AddItem(i);

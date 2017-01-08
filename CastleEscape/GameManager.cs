@@ -42,9 +42,9 @@ namespace CastleEscape
         /// <summary>
         /// Gibt ein Item aus der Item-Liste zurück.
         /// </summary>
-        /// <param name="ID">Die ID zur Identifizierung des Items</param>
+        /// <param name="Name">Der Name zur Identifizierung des Items</param>
         /// <returns></returns>
-        public static Item GetGameItem(string ID) => gameItems.Find(x => x.ID == ID);
+        public static Item GetGameItem(string Name) => gameItems.Find(x => x.Name == Name);
 
         static void CreatePlayer()
         {

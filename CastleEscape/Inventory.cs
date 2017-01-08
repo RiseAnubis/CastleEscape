@@ -105,9 +105,9 @@ namespace CastleEscape
         /// <summary>
         /// Gibt ein im Inventar befindliches Item zurück
         /// </summary>
-        /// <param name="ID">Die ID des Items, das gesucht werden soll</param>
+        /// <param name="Name">Der Name des zu suchenden Items</param>
         /// <returns></returns>
-        public Item GetItem(string ID) => items.Find(x => x.ID == ID);
+        public Item GetItem(string Name) => items.Find(x => x.Name == Name);
 
         /// <summary>
         /// Durchläuft das Inventar und gibt die Items zurück
