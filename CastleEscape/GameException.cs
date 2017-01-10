@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CastleEdit.Classes
+namespace CastleEscape
 {
-    public class Item
+    public class GameException : Exception
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
     }
 }

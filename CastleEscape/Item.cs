@@ -9,17 +9,17 @@ namespace CastleEscape
     /// <summary>
     /// Stellt ein Item dar
     /// </summary>
-    class Item
+    public class Item
     {
         /// <summary>
         /// Der Name des Items
         /// </summary>
-        public string Name { get; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Die Beschreibung des Items
         /// </summary>
-        public string HelpDescription { get; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Erstellt ein neues Item
@@ -29,7 +29,7 @@ namespace CastleEscape
         public Item(string Name, string Description)
         {
             this.Name = Name;
-            HelpDescription = Description;
+            this.Description = Description;
         }
     }
 }

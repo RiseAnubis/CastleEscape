@@ -18,9 +18,10 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows.Controls.Primitives;
-using CastleEdit.Classes;
+using CastleEscape;
 using Microsoft.Win32;
 using System.Xml;
+using System.Xml.Linq;
 
 //TODO Eventlistener auf das Formular, welches auf Änderungen prüft und dann den Timer in gang setzt. 2s nach dem ändern eines Werts wird gespeichert solange er nicht in ein anderes Feld schreibt. Wird der Timer zurück gesetzt. Ebenfalls wenn er einen anderen Raum auswählt.Dann faded kurz eine grüne Box auf mit dem Hinweis "Änderungen gespeichert".
 
@@ -38,6 +39,7 @@ namespace CastleEdit
         Point? lastMousePositionOnTarget;
         Point? lastDragPoint;
         RoomControl selectedRoom;
+        string direction = "Direction", necessary = "NecessaryItem", isLocked = "IsLocked";
 
         /// <summary>
         /// Liste, die alle Items des Spiels enthält
@@ -84,6 +86,7 @@ namespace CastleEdit
             lbRoomItems.PreviewKeyDown += LbRoomItems_PreviewKeyDown;
             tbRoomName.TextChanged += (sender, e) => ChangeRoomProperty(RoomProperties.RoomName, tbRoomName.Text);
             tbRoomDescription.TextChanged += (sender, e) => ChangeRoomProperty(RoomProperties.RoomDescription, tbRoomDescription.Text);
+            miLoadLevel.Click += MiLoadLevel_Click;
             miSaveLevel.Click += MiSaveLevel_Click;
             GameItems.CollectionChanged += (sender, e) => statusItemCount.Content = $"Items: {GameItems.Count}";
 
@@ -119,8 +122,33 @@ namespace CastleEdit
             statusItemCount.Content = $"Items: {GameItems.Count}";
         }
 
+        void MiLoadLevel_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog { Filter = "Game.xml|Game.xml" };
+
+            if (ofd.ShowDialog() == true)
+                LoadLevel(ofd.FileName);
+        }
+
         void MiSaveLevel_Click(object sender, RoutedEventArgs e)
         {
+            if (tbPosX.Text == "" || tbPosY.Text == "")
+            {
+                MessageBoxWindow.Show(DialogType.Error, "Es wurde keine Startposition für den Spieler festgelegt!", "Fehler");
+                return;
+            }
+
+            try
+            {
+                Convert.ToInt32(tbPosX.Text);
+                Convert.ToInt32(tbPosY.Text);
+            }
+            catch (FormatException)
+            {
+                MessageBoxWindow.Show(DialogType.Error, "Es wurde ein ungültiger Wert für die Startposition eingegeben!", "Fehler");
+                return;
+            }
+
             SaveFileDialog sfd = new SaveFileDialog { FileName = "Game.xml" };
 
             if (sfd.ShowDialog(this) == true)
@@ -276,7 +304,7 @@ namespace CastleEdit
                 return;
             }
 
-            Item item = new Item { Name = tbItemName.Text, Description = tbItemDescription.Text };
+            Item item = new Item(tbItemName.Text, tbItemDescription.Text);
 
             if (GameItems.Any(i => i.Name == item.Name))
             {
@@ -385,10 +413,18 @@ namespace CastleEdit
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
                 sliZoom.Value += e.Delta * 0.001;
-                //gridMatrix.Matrix.ScaleAtPrepend(sliZoom.Value, sliZoom.Value, e.GetPosition(roomGrid).X, e.GetPosition(roomGrid).Y);
+                Matrix matrix = roomGrid.RenderTransform.Value;
+                Point p = e.GetPosition(roomGrid);
+                if (e.Delta > 0)
+                    matrix.ScaleAtPrepend(1.1, 1.1, p.X, p.Y);
+                else
+                    matrix.ScaleAtPrepend(1 / 1.1, 1 / 1.1, p.X, p.Y);
+                roomGrid.RenderTransform = new MatrixTransform(matrix);
                 //Point position = e.GetPosition(roomGrid);
-                //Matrix matrix = (roomGrid.RenderTransform as MatrixTransform).Matrix;
-                //matrix.ScaleAtPrepend(sliZoom.Value, sliZoom.Value, position.X, position.Y);
+                //var transform = roomGrid.RenderTransform as MatrixTransform;
+                //var matrix = transform.Matrix;
+                //var scale = e.Delta >= 0 ? 1.1 : (1.0 / 1.1);
+                //matrix.ScaleAtPrepend(scale, scale, position.X, position.Y);
                 //roomGrid.RenderTransform = new MatrixTransform(matrix);
             }
 
@@ -574,7 +610,6 @@ namespace CastleEdit
         /// <param name="Path">Der Pfad der zu erstelllenden Datei</param>
         void SaveLevel(string Path)
         {
-            string direction = "Direction", necessary = "NecessaryItem", isLocked = "IsLocked";
             List<RoomControl> roomList = (from b in roomGrid.Children.OfType<Border>() where b.Child != null select b.Child as RoomControl).ToList();
             XmlDocument file = new XmlDocument();
             XmlDeclaration decl = file.CreateXmlDeclaration("1.0", "utf-8", "yes");
@@ -675,6 +710,91 @@ namespace CastleEdit
                     new XElement("Rooms")
                         new XElement("Room", from room in rooms select new XElement("as", room)));
             level.Save(Path);*/
+        }
+
+        /// <summary>
+        /// Lädt ein Level aus einer XML-Datei
+        /// </summary>
+        /// <param name="Path">Der Pfad zur XML-Datei</param>
+        void LoadLevel(string Path)
+        {
+            string[] layout, startPosition, roomPosition;
+            XElement level = XElement.Load(Path);
+            layout = level.Attribute("Layout").Value.Split(',');
+            startPosition = level.Attribute("StartPosition").Value.Split(',');
+            tbPosX.Text = startPosition[0];
+            tbPosY.Text = startPosition[1];
+
+            XElement items = level.Element("Items");
+
+            foreach (XElement item in items.Elements())
+            {
+                Item i = new Item(item.Attribute("Name").Value, item.Attribute("Description").Value);
+
+                if (GameItems.Contains(i))
+                    throw new Exception("There is more than one item with the same ID");
+
+                GameItems.Add(i);
+            }
+
+            XElement rooms = level.Element("Rooms");
+
+            foreach (XElement room in rooms.Elements())
+            {
+                roomPosition = room.Attribute("Position").Value.Split(',');
+                RoomControl newRoom = new RoomControl { RoomName = room.Attribute("Name").Value, RoomDescription = room.Element("Text").Value };
+                XElement exits = room.Element("Exits");
+
+                foreach (XElement exit in exits.Elements())
+                {
+                    switch (exit.Attribute(direction).Value)
+                    {
+                        case "nord":
+                            newRoom.HasExitNorth = true;
+                            if (exit.Attribute(isLocked)?.Value == "true")  // explizite Überprüfung auf NULL, da das Attribut nicht vorhanden sein muss
+                            {
+                                newRoom.IsExitNorthLocked = true;
+                                newRoom.ItemExitNorth = GameItems.First(x => x.Name == exit.Attribute(necessary).Value);
+                            }
+                            break;
+                        case "süd":
+                            newRoom.HasExitSouth = true;
+                            if (exit.Attribute(isLocked)?.Value == "true") 
+                            {
+                                newRoom.IsExitSouthLocked = true;
+                                newRoom.ItemExitSouth = GameItems.First(x => x.Name == exit.Attribute(necessary).Value);
+                            }
+                            break;
+                        case "ost":
+                            newRoom.HasExitEast = true;
+                            if (exit.Attribute(isLocked)?.Value == "true")
+                            {
+                                newRoom.IsExitEastLocked = true;
+                                newRoom.ItemExitEast = GameItems.First(x => x.Name == exit.Attribute(necessary).Value);
+                            }
+                            break;
+                        case "west":
+                            newRoom.HasExitWest = true;
+                            if (exit.Attribute(isLocked)?.Value == "true") 
+                            {
+                                newRoom.IsExitWestLocked = true;
+                                newRoom.ItemExitWest = GameItems.First(x => x.Name == exit.Attribute(necessary).Value);
+                            }
+                            break;
+                        default:
+                            throw new Exception("Invalid room exit");
+                    }
+                }
+
+                XElement roomItems = room.Element("Items");
+
+                foreach (XElement i in roomItems.Elements())
+                    newRoom.RoomItems.Add(GameItems.First(x => x.Name == i.Attribute("Name").Value));
+
+                
+                Grid.SetColumn(newRoom, Convert.ToInt32(roomPosition[0]));
+                Grid.SetRow(newRoom, Convert.ToInt32(roomPosition[0]));
+            }
         }
     }
 

@@ -7,12 +7,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-namespace CastleEdit.Classes
+namespace CastleEdit
 {
     /// <summary>
     /// Stellt einen Tooltip dar, der sich mit dem Mauszeiger mitbewegt
     /// </summary>
-    static class MovingTooltip
+    public static class MovingTooltip
     {
         public static readonly DependencyProperty TooltipProperty = DependencyProperty.RegisterAttached("Tooltip", typeof(string), typeof(MovingTooltip), new FrameworkPropertyMetadata(OnShowTooltip));
 
