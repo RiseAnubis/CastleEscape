@@ -125,7 +125,16 @@ namespace CastleEdit
             OpenFileDialog ofd = new OpenFileDialog { Filter = "Game.xml|Game.xml" };
 
             if (ofd.ShowDialog() == true)
-                LoadLevel(ofd.FileName);
+            {
+                try
+                {
+                    LoadLevel(ofd.FileName);
+                }
+                catch (GameException ex)
+                {
+                    MessageBoxWindow.Show(DialogType.Error, ex.Message, "Fehler beim Laden der Spieldatei");
+                }
+            }
         }
 
         void MiSaveLevel_Click(object sender, RoutedEventArgs e)
@@ -593,7 +602,7 @@ namespace CastleEdit
 
             foreach (RoomControl room in roomList)
             {
-                XElement roomElement = new XElement("Room", new XAttribute("Position", $"{Grid.GetColumn(room.Parent as Border)},{Grid.GetRow(room.Parent as Border)}"), new XAttribute("Name", room.RoomName), 
+                XElement roomElement = new XElement("Room", new XAttribute("Position", $"{Grid.GetColumn(room.Parent as Border)},{Grid.GetRow(room.Parent as Border)}"), new XAttribute("Name", room.RoomName),
                     new XElement("Text", room.RoomDescription));
                 XElement roomExits = new XElement("Exits");
                 XElement exit;
@@ -670,6 +679,10 @@ namespace CastleEdit
             string[] layout, startPosition, roomPosition;
             int row, column;
             XElement level = XElement.Load(Path);
+
+            if (level == null)
+                throw new GameException("Die Level-Sektion wurde in der XML nicht gefunden!");
+
             layout = level.Attribute("Layout").Value.Split(',');
             startPosition = level.Attribute("StartPosition").Value.Split(',');
             tbPosX.Text = startPosition[0];
@@ -677,17 +690,23 @@ namespace CastleEdit
 
             XElement items = level.Element("Items");  // Als erstes die Spiel-Items erstellen
 
+            if (items == null)
+                throw new GameException("Die Spiel-Item-Sektion wurde in der XML nicht gefunden!");
+
             foreach (XElement item in items.Elements())
             {
                 Item i = new Item(item.Attribute("Name").Value, item.Attribute("Description").Value);
 
-                if (GameItems.Contains(i))
-                    throw new GameException("Das Item ist mehrfach vorhanden!");
+                if (GameItems.Any(x => x.Name == i.Name))
+                    throw new GameException("Das Item " + i.Name + " ist mehrfach vorhanden!");
 
                 GameItems.Add(i);
             }
 
             XElement rooms = level.Element("Rooms");
+
+            if (rooms == null)
+                throw new GameException("Die Räume-Sektion wurde in der XML nicht gefunden!");
 
             foreach (XElement room in rooms.Elements())
             {
@@ -711,7 +730,7 @@ namespace CastleEdit
                             break;
                         case "süd":
                             newRoom.HasExitSouth = true;
-                            if (exit.Attribute(isLocked)?.Value == "true") 
+                            if (exit.Attribute(isLocked)?.Value == "true")
                             {
                                 newRoom.IsExitSouthLocked = true;
                                 newRoom.ItemExitSouth = GameItems.First(x => x.Name == exit.Attribute(necessary).Value);
@@ -727,19 +746,19 @@ namespace CastleEdit
                             break;
                         case "west":
                             newRoom.HasExitWest = true;
-                            if (exit.Attribute(isLocked)?.Value == "true") 
+                            if (exit.Attribute(isLocked)?.Value == "true")
                             {
                                 newRoom.IsExitWestLocked = true;
                                 newRoom.ItemExitWest = GameItems.First(x => x.Name == exit.Attribute(necessary).Value);
                             }
                             break;
                         default:
-                            throw new Exception("Invalid room exit");
+                            throw new GameException("Es wurde ein ungültiger Ausgang angegeben!");
                     }
                 }
 
                 XElement roomItems = room.Element("Items");
-
+                
                 foreach (XElement i in roomItems.Elements())  // Laden der Raum-Items, die nur hinzugefügt werden können, wenn das Items auch im Spiel existiert
                     newRoom.RoomItems.Add(GameItems.First(x => x.Name == i.Attribute("Name").Value));
 
