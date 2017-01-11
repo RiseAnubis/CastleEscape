@@ -28,10 +28,10 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <DataGrid Name="dgItems" Grid.Row="0" Margin="4" ItemsSource="{Binding GameItems, NotifyOnSourceUpdated=True}" DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}}" GridLinesVisibility="None" IsReadOnly="True" CanUserResizeRows="False" AutoGenerateColumns="False" SelectionMode="Single" RowBackground="Transparent">
+            <DataGrid Name="dgItems" Grid.Row="0" Margin="4" ItemsSource="{Binding GameItems}" DataContext="{Binding RelativeSource={RelativeSource AncestorType=Window}}" GridLinesVisibility="None" IsReadOnly="True" CanUserResizeRows="False" AutoGenerateColumns="False" SelectionMode="Single" RowBackground="Transparent">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" MinWidth="100" Binding="{Binding Name}"/>
-                    <DataGridTextColumn Header="Beschreibung" MinWidth="100" Width="*" Binding="{Binding Description}"/>
+                    <DataGridTextColumn Header="Name" MinWidth="100" Binding="{Binding Name, Mode=TwoWay}"/>
+                    <DataGridTextColumn Header="Beschreibung" MinWidth="100" Width="*" Binding="{Binding Description, Mode=OneWay}"/>
                 </DataGrid.Columns>
             </DataGrid>
             <GroupBox Grid.Row="1" Header="Item" Margin="4">
@@ -51,7 +51,6 @@
                     <TextBox Grid.Column="1" Grid.Row="1" Margin="0,2,0,2" TabIndex="3" Name="tbItemDescription" Height="100" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" local:MovingTooltip.Tooltip="Eine Beschreibung des Items"/>
                     <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,0">
                         <Button Name="btnAddItem" Content="Hinzufügen" Width="100"/>
-                        <!--<Button Name="btnChangeItem" IsEnabled="False" Width="100" Content="Ändern"/>-->
                         <Button Name="btnDeleteItem" IsEnabled="False" Width="100" Content="Löschen"/>
                     </StackPanel>
                 </Grid>

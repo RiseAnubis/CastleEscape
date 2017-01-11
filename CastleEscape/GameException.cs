@@ -8,5 +8,9 @@ namespace CastleEscape
 {
     public class GameException : Exception
     {
+        public GameException()
+        { }
+
+        public GameException(string Message) : base(Message) { }
     }
 }

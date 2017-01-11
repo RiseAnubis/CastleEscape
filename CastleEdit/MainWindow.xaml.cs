@@ -20,7 +20,6 @@ using System.Threading;
 using System.Windows.Controls.Primitives;
 using CastleEscape;
 using Microsoft.Win32;
-using System.Xml;
 using System.Xml.Linq;
 
 //TODO Eventlistener auf das Formular, welches auf Änderungen prüft und dann den Timer in gang setzt. 2s nach dem ändern eines Werts wird gespeichert solange er nicht in ein anderes Feld schreibt. Wird der Timer zurück gesetzt. Ebenfalls wenn er einen anderen Raum auswählt.Dann faded kurz eine grüne Box auf mit dem Hinweis "Änderungen gespeichert".
@@ -77,7 +76,6 @@ namespace CastleEdit
             chbLockWest.Unchecked += ChbLockWest_Unchecked;
             btnAddItem.Click += BtnAddItem_Click;
             btnDeleteItem.Click += (sender, e) => DeleteGameItem();
-            //btnChangeItem.Click += BtnChangeItem_Click;
             dgItems.SelectionChanged += DgItems_SelectionChanged;
             dgItems.PreviewKeyDown += DgItems_PreviewKeyDown;
             dgItems.MouseDown += DgItems_MouseDown;
@@ -185,9 +183,6 @@ namespace CastleEdit
             {
                 selectedRoom.RoomItems.Remove(lbRoomItems.SelectedItem as Item);
                 lbRoomItems.SelectedIndex = -1;
-                //ListBoxItem lbitem = lbRoomItems.SelectedItem as ListBoxItem;
-                //if (lbitem != null)
-                //    lbRoomItems.Items.Remove(lbitem);
             }
         }
 
@@ -195,8 +190,6 @@ namespace CastleEdit
         {
             Item item = (Item)e.Data.GetData(typeof(Item));
             selectedRoom.RoomItems.Add(item);
-            //lbRoomItems.Items.Add(item);
-            //lbRoomItems.DisplayMemberPath = "Name";
         }
 
         void LbRoomItems_DragOver(object sender, DragEventArgs e)
@@ -231,27 +224,9 @@ namespace CastleEdit
                 tbItemName.Text = item.Name;
                 tbItemDescription.Text = item.Description;
                 btnDeleteItem.IsEnabled = true;
-                //btnChangeItem.IsEnabled = true;
             }
             else
-            {
                 btnDeleteItem.IsEnabled = false;
-                //btnChangeItem.IsEnabled = false;
-            }
-        }
-
-        void BtnChangeItem_Click(object sender, RoutedEventArgs e)
-        {
-            Item item = GameItems.FirstOrDefault(x => x.Name == tbItemName.Text);
-
-            if (item == null)
-                return;
-            //GameItems.RemoveAt(GameItems.IndexOf(item));
-
-            item.Name = tbItemName.Text;
-            item.Description = tbItemDescription.Text;
-
-            tbItemName.Text = tbItemDescription.Text = "";
         }
 
         void Border_GotFocus(object sender, RoutedEventArgs e)
@@ -550,6 +525,7 @@ namespace CastleEdit
         /// </summary>
         /// <param name="Property">Die zu ändernde Eigenschaft</param>
         /// <param name="Value">Der neue Wert der Eigenschaft</param>
+        /// <exception cref="ArgumentException">Wird ausgelöst, wenn ein Raumparameter angegeben wird, der nicht existiert</exception>
         void ChangeRoomProperty(RoomProperties Property, object Value)
         {
             if (selectedRoom == null)
@@ -611,128 +587,102 @@ namespace CastleEdit
         void SaveLevel(string Path)
         {
             List<RoomControl> roomList = (from b in roomGrid.Children.OfType<Border>() where b.Child != null select b.Child as RoomControl).ToList();
-            XmlDocument file = new XmlDocument();
-            XmlDeclaration decl = file.CreateXmlDeclaration("1.0", "utf-8", "yes");
-            file.AppendChild(decl);
-
-            XmlElement level = file.CreateElement("Level"); // XML Root
-            level.SetAttribute("Layout", $"{MaxColumns},{MaxRows}");
-            level.SetAttribute("StartPosition", $"{tbPosX.Text},{tbPosY.Text}");
-
-            XmlElement rooms = file.CreateElement("Rooms"); // Rooms-Unterelement
-            level.AppendChild(rooms);
+            XDocument file = new XDocument(new XDeclaration("1.0", "UTF-8", "yes"));
+            XElement level = new XElement("Level", new XAttribute("Layout", $"{MaxColumns},{MaxRows}"), new XAttribute("StartPosition", $"{tbPosX.Text},{tbPosY.Text}"));
+            XElement rooms = new XElement("Rooms");
 
             foreach (RoomControl room in roomList)
             {
-                XmlElement roomElement = file.CreateElement("Room"); // einzelne Räume erstellen
-                roomElement.SetAttribute("Position", $"{Grid.GetColumn(room.Parent as Border)},{Grid.GetRow(room.Parent as Border)}");
-                roomElement.SetAttribute("Name", room.RoomName);
-                XmlElement roomText = file.CreateElement("Text"); // Raumbeschreibung
-                roomText.InnerText = room.RoomDescription;
-                roomElement.AppendChild(roomText);
-                XmlElement roomExits = file.CreateElement("Exits");
-                XmlElement exit;
+                XElement roomElement = new XElement("Room", new XAttribute("Position", $"{Grid.GetColumn(room.Parent as Border)},{Grid.GetRow(room.Parent as Border)}"), new XAttribute("Name", room.RoomName), 
+                    new XElement("Text", room.RoomDescription));
+                XElement roomExits = new XElement("Exits");
+                XElement exit;
 
                 if (room.HasExitNorth)
                 {
-                    exit = file.CreateElement("Exit");
-                    exit.SetAttribute(direction, "nord");
+                    exit = new XElement("Exit", new XAttribute(direction, "nord"));
                     if (room.IsExitNorthLocked)
                     {
-                        exit.SetAttribute(isLocked, "true");
-                        exit.SetAttribute(necessary, room.ItemExitNorth.Name);
+                        exit.SetAttributeValue(necessary, room.ItemExitNorth.Name);
+                        exit.SetAttributeValue(isLocked, "true");
                     }
-                    roomExits.AppendChild(exit);
+                    roomExits.Add(exit);
                 }
                 if (room.HasExitSouth)
                 {
-                    exit = file.CreateElement("Exit");
-                    exit.SetAttribute(direction, "süd");
+                    exit = new XElement("Exit", new XAttribute(direction, "süd"));
                     if (room.IsExitSouthLocked)
                     {
-                        exit.SetAttribute(isLocked, "true");
-                        exit.SetAttribute(necessary, room.ItemExitSouth.Name);
+                        exit.SetAttributeValue(isLocked, "true");
+                        exit.SetAttributeValue(necessary, room.ItemExitSouth.Name);
                     }
-                    roomExits.AppendChild(exit);
+                    roomExits.Add(exit);
                 }
                 if (room.HasExitEast)
                 {
-                    exit = file.CreateElement("Exit");
-                    exit.SetAttribute(direction, "ost");
+                    exit = new XElement("Exit", new XAttribute(direction, "ost"));
                     if (room.IsExitEastLocked)
                     {
-                        exit.SetAttribute(isLocked, "true");
-                        exit.SetAttribute(necessary, room.ItemExitEast.Name);
+                        exit.SetAttributeValue(isLocked, "true");
+                        exit.SetAttributeValue(necessary, room.ItemExitEast.Name);
                     }
-                    roomExits.AppendChild(exit);
+                    roomExits.Add(exit);
                 }
                 if (room.HasExitWest)
                 {
-                    exit = file.CreateElement("Exit");
-                    exit.SetAttribute(direction, "west");
+                    exit = new XElement("Exit", new XAttribute(direction, "west"));
                     if (room.IsExitWestLocked)
                     {
-                        exit.SetAttribute(isLocked, "true");
-                        exit.SetAttribute(necessary, room.ItemExitWest.Name);
+                        exit.SetAttributeValue(isLocked, "true");
+                        exit.SetAttributeValue(necessary, room.ItemExitWest.Name);
                     }
-                    roomExits.AppendChild(exit);
+                    roomExits.Add(exit);
                 }
+                roomElement.Add(roomExits);
 
-                roomElement.AppendChild(roomExits);
-                XmlElement roomItems = file.CreateElement("Items");
+                XElement roomItems = new XElement("Items");
 
-                foreach (Item item in room.RoomItems)
-                {
-                    XmlElement itemElement = file.CreateElement("Item");
-                    itemElement.SetAttribute("Name", item.Name);
-                    roomItems.AppendChild(itemElement);
-                }
+                foreach (XElement itemElement in room.RoomItems.Select(item => new XElement("Item", new XAttribute("Name", item.Name))))
+                    roomItems.Add(itemElement);
 
-                roomElement.AppendChild(roomItems);
-                rooms.AppendChild(roomElement);
+                roomElement.Add(roomItems);
+                rooms.Add(roomElement);
             }
+            level.Add(rooms);
 
-            XmlElement items = file.CreateElement("Items"); // Items-Unterelement
+            XElement items = new XElement("Items");
 
-            foreach (Item item in GameItems)
-            {
-                XmlElement itemElement = file.CreateElement("Item"); // einzelne Items erstellen
-                itemElement.SetAttribute("Name", item.Name);
-                itemElement.SetAttribute("Description", item.Description);
-                items.AppendChild(itemElement);
-            }
+            foreach (XElement itemElement in GameItems.Select(item => new XElement("Item", new XAttribute("Name", item.Name), new XAttribute("Description", item.Description))))
+                items.Add(itemElement);
 
-            level.AppendChild(items);
-            file.AppendChild(level);
+            level.Add(items);
+            file.Add(level);
             file.Save(Path);
-            /*XElement level =
-                new XElement("Level", new XAttribute("Layout", $"{MaxColumns},{MaxRows}"), new XAttribute("StartPosition", 0),
-                    new XElement("Rooms")
-                        new XElement("Room", from room in rooms select new XElement("as", room)));
-            level.Save(Path);*/
         }
 
         /// <summary>
         /// Lädt ein Level aus einer XML-Datei
         /// </summary>
         /// <param name="Path">Der Pfad zur XML-Datei</param>
+        /// <exception cref="GameException">Wird ausgelöst, wenn die Spieldatei inkonsistent ist</exception>
         void LoadLevel(string Path)
         {
             string[] layout, startPosition, roomPosition;
+            int row, column;
             XElement level = XElement.Load(Path);
             layout = level.Attribute("Layout").Value.Split(',');
             startPosition = level.Attribute("StartPosition").Value.Split(',');
             tbPosX.Text = startPosition[0];
             tbPosY.Text = startPosition[1];
 
-            XElement items = level.Element("Items");
+            XElement items = level.Element("Items");  // Als erstes die Spiel-Items erstellen
 
             foreach (XElement item in items.Elements())
             {
                 Item i = new Item(item.Attribute("Name").Value, item.Attribute("Description").Value);
 
                 if (GameItems.Contains(i))
-                    throw new Exception("There is more than one item with the same ID");
+                    throw new GameException("Das Item ist mehrfach vorhanden!");
 
                 GameItems.Add(i);
             }
@@ -742,6 +692,8 @@ namespace CastleEdit
             foreach (XElement room in rooms.Elements())
             {
                 roomPosition = room.Attribute("Position").Value.Split(',');
+                column = Convert.ToInt32(roomPosition[0]);
+                row = Convert.ToInt32(roomPosition[1]);
                 RoomControl newRoom = new RoomControl { RoomName = room.Attribute("Name").Value, RoomDescription = room.Element("Text").Value };
                 XElement exits = room.Element("Exits");
 
@@ -788,12 +740,11 @@ namespace CastleEdit
 
                 XElement roomItems = room.Element("Items");
 
-                foreach (XElement i in roomItems.Elements())
+                foreach (XElement i in roomItems.Elements())  // Laden der Raum-Items, die nur hinzugefügt werden können, wenn das Items auch im Spiel existiert
                     newRoom.RoomItems.Add(GameItems.First(x => x.Name == i.Attribute("Name").Value));
 
-                
-                Grid.SetColumn(newRoom, Convert.ToInt32(roomPosition[0]));
-                Grid.SetRow(newRoom, Convert.ToInt32(roomPosition[0]));
+                foreach (Border border in roomGrid.Children.OfType<Border>().Where(x => Grid.GetColumn(x) == column && Grid.GetRow(x) == row))
+                    border.Child = newRoom;
             }
         }
     }
