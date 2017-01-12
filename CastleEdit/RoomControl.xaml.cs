@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -15,33 +16,33 @@ namespace CastleEdit
             "HasExitNorth", typeof(bool), typeof(RoomControl), new PropertyMetadata(false, OnHasExitChanged));
 
         public static readonly DependencyProperty HasExitSouthProperty = DependencyProperty.Register(
-            "HasExitSouth", typeof (bool), typeof (RoomControl), new PropertyMetadata(false, OnHasExitChanged));
+            "HasExitSouth", typeof(bool), typeof(RoomControl), new PropertyMetadata(false, OnHasExitChanged));
 
         public static readonly DependencyProperty HasExitEastProperty = DependencyProperty.Register(
-            "HasExitEast", typeof (bool), typeof (RoomControl), new PropertyMetadata(false, OnHasExitChanged));
+            "HasExitEast", typeof(bool), typeof(RoomControl), new PropertyMetadata(false, OnHasExitChanged));
 
         public static readonly DependencyProperty HasExitWestProperty = DependencyProperty.Register(
-            "HasExitWest", typeof (bool), typeof (RoomControl), new PropertyMetadata(false, OnHasExitChanged));
+            "HasExitWest", typeof(bool), typeof(RoomControl), new PropertyMetadata(false, OnHasExitChanged));
 
         public static readonly DependencyProperty IsExitNorthLockedProperty = DependencyProperty.Register(
-            "IsExitNorthLocked", typeof (bool), typeof (RoomControl), new PropertyMetadata(false, OnExitLockedChanged));
+            "IsExitNorthLocked", typeof(bool), typeof(RoomControl), new PropertyMetadata(false, OnExitLockedChanged));
 
         public static readonly DependencyProperty IsExitSouthLockedProperty = DependencyProperty.Register(
-            "IsExitSouthLocked", typeof (bool), typeof (RoomControl), new PropertyMetadata(false, OnExitLockedChanged));
+            "IsExitSouthLocked", typeof(bool), typeof(RoomControl), new PropertyMetadata(false, OnExitLockedChanged));
 
         public static readonly DependencyProperty IsExitEastLockedProperty = DependencyProperty.Register(
-            "IsExitEastLocked", typeof (bool), typeof (RoomControl), new PropertyMetadata(false, OnExitLockedChanged));
+            "IsExitEastLocked", typeof(bool), typeof(RoomControl), new PropertyMetadata(false, OnExitLockedChanged));
 
         public static readonly DependencyProperty IsExitWestLockedProperty = DependencyProperty.Register(
-            "IsExitWestLocked", typeof (bool), typeof (RoomControl), new PropertyMetadata(false, OnExitLockedChanged));
+            "IsExitWestLocked", typeof(bool), typeof(RoomControl), new PropertyMetadata(false, OnExitLockedChanged));
 
-        public static readonly DependencyProperty ItemExitNorthProperty = DependencyProperty.Register("ItemExitNorth", typeof (Item), typeof (RoomControl));
+        public static readonly DependencyProperty ItemExitNorthProperty = DependencyProperty.Register("ItemExitNorth", typeof(Item), typeof(RoomControl));
 
-        public static readonly DependencyProperty ItemExitSouthProperty = DependencyProperty.Register("ItemExitSouth", typeof (Item), typeof (RoomControl));
+        public static readonly DependencyProperty ItemExitSouthProperty = DependencyProperty.Register("ItemExitSouth", typeof(Item), typeof(RoomControl));
 
-        public static readonly DependencyProperty ItemExitEastProperty = DependencyProperty.Register("ItemExitEast", typeof (Item), typeof (RoomControl));
+        public static readonly DependencyProperty ItemExitEastProperty = DependencyProperty.Register("ItemExitEast", typeof(Item), typeof(RoomControl));
 
-        public static readonly DependencyProperty ItemExitWestProperty = DependencyProperty.Register("ItemExitWest", typeof (Item), typeof (RoomControl));
+        public static readonly DependencyProperty ItemExitWestProperty = DependencyProperty.Register("ItemExitWest", typeof(Item), typeof(RoomControl));
 
         public Item ItemExitWest
         {
@@ -135,6 +136,13 @@ namespace CastleEdit
         public RoomControl()
         {
             InitializeComponent();
+
+            RoomItems.CollectionChanged += (sender, e) =>
+            {
+                tbItems.Visibility = RoomItems.Count > 0 ? Visibility.Visible : Visibility.Hidden;
+                string tooltip = RoomItems.Aggregate("Vorhandene Items", (current, i) => current + "\n" + i.Name);
+                MovingTooltip.SetTooltip(tbItems, tooltip);
+            };
         }
 
         static void OnHasExitChanged(DependencyObject O, DependencyPropertyChangedEventArgs Args)

@@ -17,7 +17,6 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="400"/>
         </Grid.ColumnDefinitions>
-        <!-- evtl. Toolbar nutzen -->
         <Menu Grid.Row="0" Grid.ColumnSpan="3">
             <MenuItem Header="Level laden..." Name="miLoadLevel"/>
             <MenuItem Header="Level speichern..." Name="miSaveLevel"/>
@@ -59,12 +58,12 @@
         <ScrollViewer Grid.Column="1" Grid.Row="1" Margin="4" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="scrollviewer" Focusable="False">
             <Grid Name="roomGrid" Margin="4">
                 <!--FocusManager.IsFocusScope="True"-->
-                <!--<Grid.LayoutTransform>
-                        <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=sliZoom, Path=Value}" ScaleY="{Binding ElementName=sliZoom, Path=Value}" x:Name="gridScale"/>
-                        <MatrixTransform/>
-                    </Grid.LayoutTransform>-->
-                </Grid>
-            </ScrollViewer>
+                <Grid.LayoutTransform>
+                    <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=sliZoom, Path=Value}" ScaleY="{Binding ElementName=sliZoom, Path=Value}" x:Name="gridScale"/>
+                    <!--<MatrixTransform/>-->
+                </Grid.LayoutTransform>
+            </Grid>
+        </ScrollViewer>
         <Grid Grid.Column="2" Grid.Row="1" Margin="4" Name="gridRoomProperties" IsEnabled="False">
             <Grid.RowDefinitions>
                 <RowDefinition Height="200"/>

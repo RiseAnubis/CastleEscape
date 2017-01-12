@@ -19,25 +19,13 @@
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
             <Polygon Name="dirNorth" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" local:MovingTooltip.Tooltip="Nördlicher Ausgang"/>
-            <Polygon Name="dirSouth" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" local:MovingTooltip.Tooltip="Südlicher Ausgang">
-                <Polygon.LayoutTransform>
-                    <RotateTransform Angle="180"/>
-                </Polygon.LayoutTransform>
-            </Polygon>
-            <Polygon Name="dirWest" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" local:MovingTooltip.Tooltip="Westlicher Ausgang">
-                <Polygon.LayoutTransform>
-                    <RotateTransform Angle="270"/>
-                </Polygon.LayoutTransform>
-            </Polygon>
-            <Polygon Name="dirEast" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" Points="25,0 0,50 50,50" Fill="LawnGreen" Visibility="Hidden" local:MovingTooltip.Tooltip="Östlicher Ausgang">
-                <Polygon.LayoutTransform>
-                    <RotateTransform Angle="90"/>
-                </Polygon.LayoutTransform>
-            </Polygon>
+            <Polygon Name="dirSouth" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" Points="0,0 25,50 50,0" Fill="LawnGreen" Visibility="Hidden" local:MovingTooltip.Tooltip="Südlicher Ausgang"/>
+            <Polygon Name="dirWest" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Points="50,0 0,25 50,50" Fill="LawnGreen" Visibility="Hidden" local:MovingTooltip.Tooltip="Westlicher Ausgang"/>
+            <Polygon Name="dirEast" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" Points="0,0 50,25 0,50" Fill="LawnGreen" Visibility="Hidden" local:MovingTooltip.Tooltip="Östlicher Ausgang"/>
             <Grid Grid.Row="1" Grid.Column="1">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Name="txt_RoomName"/>
-                    <TextBlock Name="txt_Items"/>
+                    <TextBox Text="..." IsReadOnly="True" HorizontalAlignment="Center" Visibility="Hidden" Name="tbItems"/>
                 </StackPanel>
             </Grid>
         </Grid>

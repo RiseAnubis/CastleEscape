@@ -126,6 +126,9 @@ namespace CastleEdit
 
             if (ofd.ShowDialog() == true)
             {
+                foreach (Border b in roomGrid.Children.OfType<Border>())  // Vor dem Laden erst alle Räume entfernen
+                    b.Child = null;
+
                 try
                 {
                     LoadLevel(ofd.FileName);
@@ -397,13 +400,6 @@ namespace CastleEdit
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
                 sliZoom.Value += e.Delta * 0.001;
-                Matrix matrix = roomGrid.RenderTransform.Value;
-                Point p = e.GetPosition(roomGrid);
-                if (e.Delta > 0)
-                    matrix.ScaleAtPrepend(1.1, 1.1, p.X, p.Y);
-                else
-                    matrix.ScaleAtPrepend(1 / 1.1, 1 / 1.1, p.X, p.Y);
-                roomGrid.RenderTransform = new MatrixTransform(matrix);
                 //Point position = e.GetPosition(roomGrid);
                 //var transform = roomGrid.RenderTransform as MatrixTransform;
                 //var matrix = transform.Matrix;
@@ -530,7 +526,7 @@ namespace CastleEdit
         }
 
         /// <summary>
-        /// Ändert eine Raumeigenschaft
+        /// Ändert eine Raumeigenschaft des derzeit ausgewählten Raumes
         /// </summary>
         /// <param name="Property">Die zu ändernde Eigenschaft</param>
         /// <param name="Value">Der neue Wert der Eigenschaft</param>
@@ -693,10 +689,8 @@ namespace CastleEdit
             if (items == null)
                 throw new GameException("Die Spiel-Item-Sektion wurde in der XML nicht gefunden!");
 
-            foreach (XElement item in items.Elements())
+            foreach (Item i in items.Elements().Select(item => new Item(item.Attribute("Name").Value, item.Attribute("Description").Value)))
             {
-                Item i = new Item(item.Attribute("Name").Value, item.Attribute("Description").Value);
-
                 if (GameItems.Any(x => x.Name == i.Name))
                     throw new GameException("Das Item " + i.Name + " ist mehrfach vorhanden!");
 
@@ -758,6 +752,9 @@ namespace CastleEdit
                 }
 
                 XElement roomItems = room.Element("Items");
+
+                if (roomItems == null)
+                    throw new GameException("Die Items-Sektion des Raumes " + newRoom.RoomName + " wurde nicht gefunden!");
                 
                 foreach (XElement i in roomItems.Elements())  // Laden der Raum-Items, die nur hinzugefügt werden können, wenn das Items auch im Spiel existiert
                     newRoom.RoomItems.Add(GameItems.First(x => x.Name == i.Attribute("Name").Value));
