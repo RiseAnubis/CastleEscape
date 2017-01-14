@@ -608,8 +608,8 @@ namespace CastleEdit
                     exit = new XElement("Exit", new XAttribute(direction, "nord"));
                     if (room.IsExitNorthLocked)
                     {
-                        exit.SetAttributeValue(necessary, room.ItemExitNorth.Name);
                         exit.SetAttributeValue(isLocked, "true");
+                        exit.SetAttributeValue(necessary, room.ItemExitNorth.Name);
                     }
                     roomExits.Add(exit);
                 }

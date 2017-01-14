@@ -4,35 +4,35 @@
     <Room Position="0,0" Name="BlueRoom">
       <Text>Das hier ist der blaue Raum. Die nördliche Tür ist verschlossen...</Text>
       <Exits>
-        <Exit Direction="nord" IsLocked="true" NecessaryItem="keyGreen"/>
-        <Exit Direction="ost" IsLocked="false"/>
+        <Exit Direction="nord" IsLocked="true" NecessaryItem="Schlüssel"/>
+        <Exit Direction="ost"/>
       </Exits>
       <Items>
-        <Item ID="sword"/>
+        <Item Name="Schwert"/>
       </Items>
     </Room>
     <Room Position="1,0" Name="RedRoom">
       <Text>Das hier ist der rote Raum.</Text>
       <Exits>
-        <Exit Direction="west" IsLocked="false"/>
+        <Exit Direction="west"/>
       </Exits>
       <Items>
-        <Item ID="keyGreen"/>
+        <Item Name="Schlüssel"/>
       </Items>
     </Room>
     <Room Position="0,1" Name="GreenRoom">
       <Text>Das hier ist der grüne Raum.</Text>
       <Exits>
-        <Exit Direction="süd" IsLocked="false"/>
+        <Exit Direction="süd"/>
       </Exits>
       <Items>
-        <Item ID="treasure"/>
+        <Item Name="Schatzkiste"/>
       </Items>
     </Room>
   </Rooms>
   <Items>
-    <Item ID="keyGreen" Name="Schlüssel" Description="Ein grüner Schlüssel"/>
-    <Item ID="treasure" Name="Schatzkiste" Description="Eine Kiste voller Reichtümer"/>
-    <Item ID="sword" Name="Schwert" Description="Ein Schwert zur Verteidigung"/>
+    <Item Name="Schlüssel" Description="Ein grüner Schlüssel"/>
+    <Item Name="Schatzkiste" Description="Eine Kiste voller Reichtümer"/>
+    <Item Name="Schwert" Description="Ein Schwert zur Verteidigung"/>
   </Items>
 </Level>
